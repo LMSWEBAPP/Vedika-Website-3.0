@@ -1,0 +1,24 @@
+:root {
+  /* Default variables fallback to Midnight Cyan */
+  --bg-deepest: #05070a;
+  --bg-primary: #081017;
+  --bg-secondary: #0d1821;
+  --text-primary: #f4f7f8;
+  --text-secondary: #9daab2;
+  --text-muted: #64727c;
+  --accent: #27d9e8;
+  --accent-bright: #5ee7f2;
+  --accent-warm: #f4b860;
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --glow-subtle: rgba(39, 217, 232, 0.2);
+  --bg-gradient: radial-gradient(circle at 72% 35%, rgba(39, 217, 232, 0.1) 0%, rgba(39, 217, 232, 0.04) 25%, transparent 55%), radial-gradient(circle at 25% 80%, rgba(244, 184, 96, 0.08) 0%, transparent 45%), linear-gradient(135deg, #05070a 0%, #081017 45%, #0d1821 75%, #05070a 100%);
+
+  /* Typography tokens */
+  --font-editorial: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --tracking-editorial: -0.035em;
+  --tracking-wide: 0.15em;
+  
+  /* Transitions */
+  --transition-theme: background 0.7s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease, border-color 0.5s ease;
+  --transition-hover: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
