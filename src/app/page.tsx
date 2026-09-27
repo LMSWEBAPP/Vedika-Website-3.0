@@ -379,7 +379,7 @@ export default function HomePage() {
             opacity: p5UiOpacity,
             transform: `translate3d(0, ${(1 - p5Ease) * 28}px, 0)`,
             transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
-            pointerEvents: scrollProgress >= 3.6 ? 'auto' : 'none',
+            pointerEvents: scrollProgress >= 3.45 ? 'auto' : 'none',
           }}
         >
           <ProblemSolutionSection />

@@ -127,18 +127,16 @@ export function VedikaModel() {
       targetRotX = THREE.MathUtils.lerp(p3RotX, p4RotX, p);
       targetZ = THREE.MathUtils.lerp(p3Z, p4Z, p);
     } else {
-      // Page 5: Vedika sits prominently in the center of the circular transformation engine
-      // Smoothly glides from Page 4 (scrollProgress 3.10 -> 3.75) and stays anchored as the central AI intelligence
-      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.10) / 0.65));
+      // Page 5: Dedicated 3-Panel Particle Experience (Student, Teacher, Admin)
+      // Smoothly scale down and fade 3D model to 0 so Page 5 has a clean, focused black stage
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.20) / 0.40));
       const p = pTravel * pTravel * (3 - 2 * pTravel);
-      const p5Y = isMobile ? -0.04 : -0.07;
-      const p5Scale = isMobile ? 0.44 : 0.52;
-      targetX = 0;
-      targetY = THREE.MathUtils.lerp(p4Y, p5Y, p);
-      targetScale = THREE.MathUtils.lerp(p4Scale, p5Scale, p);
-      targetRotY = Math.sin(state.clock.getElapsedTime() * 1.2) * 0.12;
-      targetRotX = Math.sin(state.clock.getElapsedTime() * 1.0) * 0.05;
-      targetZ = 0;
+      targetX = THREE.MathUtils.lerp(p4X, 0, p);
+      targetY = THREE.MathUtils.lerp(p4Y, -0.3, p);
+      targetScale = THREE.MathUtils.lerp(p4Scale, 0, p);
+      targetRotY = p4RotY;
+      targetRotX = p4RotX;
+      targetZ = THREE.MathUtils.lerp(p4Z, -0.8, p);
     }
     const lerpFactor = Math.min(delta * 7, 0.22);
 

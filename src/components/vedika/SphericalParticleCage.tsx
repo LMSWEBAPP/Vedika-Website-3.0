@@ -181,7 +181,7 @@ export function SphericalParticleCage() {
 
       // Prominent, radiant particle size and high opacity for crisp visibility
       const material = new THREE.PointsMaterial({
-        size: isMobile ? 0.030 : 0.026,
+        size: isMobile ? 0.038 : 0.032,
         map: texture || undefined,
         vertexColors: true,
         transparent: true,
@@ -228,9 +228,8 @@ export function SphericalParticleCage() {
     const posMultiplier = isMobile ? 0.78 : 1.0;
 
     satelliteData.forEach(({ material }, idx) => {
-      // Gently reduce mini sphere brightness / opacity when expanded so the 3D icons pop cleanly!
-      // In big sphere: opacity 0.85; In mini spheres: opacity 0.38
-      material.opacity = THREE.MathUtils.lerp(0.85, 0.38, easeT);
+      // Keep mini spheres bright, vibrant, and prominent around the 3D icons
+      material.opacity = THREE.MathUtils.lerp(0.98, 0.88, easeT);
     });
 
     SATELLITE_LABS.forEach((lab, idx) => {
