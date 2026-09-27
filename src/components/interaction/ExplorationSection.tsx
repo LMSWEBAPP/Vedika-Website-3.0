@@ -17,7 +17,7 @@ interface FeatureItem {
   icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
   color: string;
   leftPercent: number; // Horizontal placement
-  topPercent: number;  // Vertical placement (shifted slightly down for balance)
+  topPercent: number;  // Vertical placement (snuggled close to wave crests and troughs)
   description: string;
 }
 
@@ -28,7 +28,7 @@ const FEATURES: FeatureItem[] = [
     icon: Lightbulb,
     color: '#FBBF24', // Amber/Yellow
     leftPercent: 30,  // Crest 1
-    topPercent: 36.5, // Shifted down along wave crest 1
+    topPercent: 44.0, // Brought down close to wave crest 1
     description: 'Deep, intuitive breakdowns of fundamental principles in simple language.',
   },
   {
@@ -37,7 +37,7 @@ const FEATURES: FeatureItem[] = [
     icon: BookOpen,
     color: '#A855F7', // Violet
     leftPercent: 42,  // Trough 1
-    topPercent: 71.5, // Shifted down along wave trough 1
+    topPercent: 70.0, // Snuggled close to wave trough 1
     description: 'Real-world practical analogies, code snippets, and illustrated cases.',
   },
   {
@@ -46,7 +46,7 @@ const FEATURES: FeatureItem[] = [
     icon: GraduationCap,
     color: '#22D3EE', // Cyan
     leftPercent: 54,  // Crest 2
-    topPercent: 35.5, // Shifted down along wave crest 2
+    topPercent: 43.0, // Brought down close to wave crest 2
     description: 'Structured sequential paths that guide you from beginner to mastery.',
   },
   {
@@ -55,7 +55,7 @@ const FEATURES: FeatureItem[] = [
     icon: Settings,
     color: '#F43F5E', // Pink/Rose
     leftPercent: 66,  // Trough 2
-    topPercent: 71.5, // Shifted down along wave trough 2
+    topPercent: 70.0, // Snuggled close to wave trough 2
     description: 'Interactive diagnostic workflows and algorithmic reasoning methods.',
   },
   {
@@ -64,7 +64,7 @@ const FEATURES: FeatureItem[] = [
     icon: Code2,
     color: '#60A5FA', // Blue
     leftPercent: 78,  // Crest 3
-    topPercent: 36.5, // Shifted down along wave crest 3
+    topPercent: 44.0, // Brought down close to wave crest 3
     description: 'Syntax debugging, architectural review, and instant idiomatic refactors.',
   },
   {
@@ -73,7 +73,7 @@ const FEATURES: FeatureItem[] = [
     icon: BarChart3,
     color: '#C084FC', // Soft Purple
     leftPercent: 90,  // Trough 3
-    topPercent: 71.5, // Shifted down along wave trough 3
+    topPercent: 70.0, // Snuggled close to wave trough 3
     description: 'Adaptive knowledge synthesis tracking concept retention and mastery.',
   },
 ];
@@ -81,34 +81,44 @@ const FEATURES: FeatureItem[] = [
 export function ExplorationSection() {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const { scrollProgress } = useInteraction();
-  const [elementsVisible, setElementsVisible] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
 
   // Vedika arrives at Page 3 at scrollProgress >= 1.65
   const isVedikaInPosition = scrollProgress >= 1.65;
 
+  // Staggered sequential reveal: elements appear smoothly one after another along the wave
   useEffect(() => {
-    const handleFlowComplete = () => {
-      setElementsVisible(true);
-    };
+    let timers: NodeJS.Timeout[] = [];
 
-    const handleFlowReset = () => {
-      setElementsVisible(false);
-    };
+    if (isVedikaInPosition) {
+      const startDelay = 250;
+      const stepInterval = 280;
 
-    window.addEventListener('vedika_wave_flow_complete', handleFlowComplete);
-    window.addEventListener('vedika_wave_flow_reset', handleFlowReset);
+      for (let i = 0; i < FEATURES.length; i++) {
+        const timer = setTimeout(() => {
+          setVisibleCount((prev) => Math.max(prev, i + 1));
+        }, startDelay + i * stepInterval);
+        timers.push(timer);
+      }
+    } else {
+      setVisibleCount(0);
+    }
 
     return () => {
-      window.removeEventListener('vedika_wave_flow_complete', handleFlowComplete);
+      timers.forEach(clearTimeout);
+    };
+  }, [isVedikaInPosition]);
+
+  useEffect(() => {
+    const handleFlowReset = () => {
+      setVisibleCount(0);
+    };
+
+    window.addEventListener('vedika_wave_flow_reset', handleFlowReset);
+    return () => {
       window.removeEventListener('vedika_wave_flow_reset', handleFlowReset);
     };
   }, []);
-
-  useEffect(() => {
-    if (scrollProgress < 1.4) {
-      setElementsVisible(false);
-    }
-  }, [scrollProgress]);
 
   return (
     <section
@@ -122,11 +132,11 @@ export function ExplorationSection() {
         pointerEvents: 'none',
       }}
     >
-      {/* TOP HEADER: Headline & Subtitle (appears when Vedika comes into position, shifted down) */}
+      {/* TOP HEADER: Headline & Subtitle (brought down for navbar breathing space) */}
       <div
         style={{
           position: 'absolute',
-          top: 'clamp(3.8rem, 6.5vh, 5.5rem)',
+          top: 'clamp(5.5rem, 9.5vh, 7.5rem)',
           left: '50%',
           transform: isVedikaInPosition
             ? 'translateX(-50%) translateY(0)'
@@ -153,10 +163,15 @@ export function ExplorationSection() {
         >
           Ask anything to{' '}
           <span
+            className="vedika-gradient-text"
             style={{
-              background: 'linear-gradient(135deg, #A855F7 0%, #EC4899 50%, #22D3EE 100%)',
+              display: 'inline-block',
+              background: 'linear-gradient(135deg, #22D3EE 0%, #A855F7 50%, #F472B6 100%)',
               WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+              color: 'transparent',
+              textShadow: 'none',
             }}
           >
             Vedika
@@ -178,7 +193,7 @@ export function ExplorationSection() {
         </p>
       </div>
 
-      {/* FEATURE ELEMENTS: Appear one after another once wave reaches the right end, with black shadow */}
+      {/* FEATURE ELEMENTS: Appear smoothly one after the other along the wave */}
       <div
         className="features-container"
         style={{
@@ -191,9 +206,7 @@ export function ExplorationSection() {
         {FEATURES.map((feat, idx) => {
           const Icon = feat.icon;
           const isHovered = activeItem === feat.id;
-
-          // Staggered reveal timing: each element comes in 130ms after the previous
-          const staggerDelay = idx * 130 + 'ms';
+          const isRevealed = idx < visibleCount;
 
           return (
             <div
@@ -205,53 +218,49 @@ export function ExplorationSection() {
                 position: 'absolute',
                 left: feat.leftPercent + '%',
                 top: feat.topPercent + '%',
-                transform: elementsVisible
+                transform: isRevealed
                   ? (isHovered
-                      ? 'translate(-50%, -50%) translateY(-6px) scale(1.05)'
-                      : 'translate(-50%, -50%) scale(1.0)')
-                  : 'translate(-50%, -50%) scale(0.60) translateY(24px)',
-                opacity: elementsVisible ? 1 : 0,
-                transition: elementsVisible
-                  ? 'opacity 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + staggerDelay + ', transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) ' + staggerDelay
-                  : 'opacity 0.25s ease-out, transform 0.25s ease-out',
+                      ? 'translate(-50%, -50%) translateY(-6px) scale(1.06)'
+                      : 'translate(-50%, -50%) translateY(0) scale(1.0)')
+                  : 'translate(-50%, -50%) translateY(22px) scale(0.70)',
+                opacity: isRevealed ? 1 : 0,
+                transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 textAlign: 'center',
                 cursor: 'pointer',
-                pointerEvents: elementsVisible ? 'auto' : 'none',
+                pointerEvents: isRevealed ? 'auto' : 'none',
                 zIndex: isHovered ? 30 : 20,
               }}
             >
-              {/* Black Shadow Backing Capsule ensuring crisp separation from wave glow */}
+              {/* Feature item container: big background removed, clean transparent layout */}
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  background: 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.50) 65%, transparent 85%)',
-                  padding: '12px 18px',
-                  borderRadius: '24px',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 1.0)',
-                  transition: 'background 0.2s ease, transform 0.2s ease',
+                  background: 'transparent',
+                  padding: '6px 10px',
+                  transition: 'transform 0.2s ease',
                 }}
               >
-                {/* Pure Icon with distinct deep black drop-shadow */}
+                {/* Pure Icon with lite black drop-shadow behind icons only */}
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: '10px',
+                    marginBottom: '8px',
                     transform: isHovered ? 'scale(1.12)' : 'scale(1.0)',
                     transition: 'transform 0.25s ease',
-                    filter: 'drop-shadow(0 4px 14px rgba(0, 0, 0, 0.98)) drop-shadow(0 2px 4px #000000)',
+                    filter: 'drop-shadow(0 3px 8px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9))',
                   }}
                 >
                   <Icon size={38} color={feat.color} strokeWidth={2.2} />
                 </div>
 
-                {/* Title Label with heavy black text-shadow */}
+                {/* Title Label with clean text-shadow */}
                 <span
                   style={{
                     fontSize: '0.85rem',
@@ -263,57 +272,85 @@ export function ExplorationSection() {
                     lineHeight: 1.35,
                     transition: 'color 0.2s ease',
                     userSelect: 'none',
-                    textShadow: '0 2px 10px #000000, 0 4px 18px rgba(0,0,0,0.95), 0 1px 3px #000000',
+                    textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 2px #000000',
                   }}
                 >
                   {feat.title}
                 </span>
               </div>
 
-              {/* Clean Tooltip on Hover */}
-              {isHovered && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: feat.topPercent < 50 ? '118%' : 'auto',
-                    bottom: feat.topPercent >= 50 ? '118%' : 'auto',
-                    width: '210px',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    background: '#0F172A',
-                    border: '1px solid #334155',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.85)',
-                    zIndex: 40,
-                    animation: 'tooltipFade 0.15s ease-out',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  <p
+              {/* Clean Tooltip on Hover: Above for top elements, Below for bottom elements */}
+              {isHovered && (() => {
+                const isTop = feat.topPercent < 55;
+                const isFarRight = feat.leftPercent >= 85;
+
+                return (
+                  <div
                     style={{
-                      fontSize: '0.72rem',
-                      color: '#E2E8F0',
-                      margin: 0,
-                      lineHeight: 1.4,
+                      position: 'absolute',
+                      top: isTop ? 'auto' : 'calc(100% + 12px)',
+                      bottom: isTop ? 'calc(100% + 12px)' : 'auto',
+                      left: isFarRight ? 'auto' : '50%',
+                      right: isFarRight ? '-10px' : 'auto',
+                      transform: isFarRight ? 'none' : 'translateX(-50%)',
+                      width: '210px',
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      background: '#0F172A',
+                      border: '1px solid #334155',
+                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.85)',
+                      zIndex: 40,
+                      animation: isTop ? 'tooltipFadeAbove 0.16s ease-out' : 'tooltipFadeBelow 0.16s ease-out',
+                      pointerEvents: 'none',
                     }}
                   >
-                    {feat.description}
-                  </p>
-                </div>
-              )}
+                    <p
+                      style={{
+                        fontSize: '0.72rem',
+                        color: '#E2E8F0',
+                        margin: 0,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {feat.description}
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
           );
         })}
       </div>
 
       <style jsx>{`
-        @keyframes tooltipFade {
+        .vedika-gradient-text {
+          background: linear-gradient(135deg, #22D3EE 0%, #A855F7 50%, #F472B6 100%);
+          -webkit-background-clip: text !important;
+          background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          color: transparent !important;
+          text-shadow: none !important;
+        }
+
+        @keyframes tooltipFadeAbove {
           from {
             opacity: 0;
-            transform: translateY(4px);
+            margin-bottom: -4px;
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            margin-bottom: 0px;
+          }
+        }
+
+        @keyframes tooltipFadeBelow {
+          from {
+            opacity: 0;
+            margin-top: -4px;
+          }
+          to {
+            opacity: 1;
+            margin-top: 0px;
           }
         }
 

@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { VedikaModel } from '@/components/vedika/VedikaModel';
 import { VedikaLighting } from '@/components/vedika/VedikaLighting';
 import { VedikaEffects } from '@/components/vedika/VedikaEffects';
+import { SphericalParticleCage } from '@/components/vedika/SphericalParticleCage';
 import { ScrollState } from '@/hooks/useHeroScroll';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -62,6 +63,7 @@ export function HeroScene({ scrollRef }: HeroSceneProps) {
           <VedikaLighting />
           <VedikaEffects />
           <VedikaModel />
+          <SphericalParticleCage />
         </Suspense>
       </Canvas>
     </div>

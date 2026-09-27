@@ -11,16 +11,36 @@ export function AtmosphericBackground() {
   const { theme } = useTheme();
   const { scrollProgress } = useInteraction();
 
-  // Page 2: Pure White Stage (Peaks at scrollProgress = 1.0, fades out smoothly toward Page 3)
+  // Pure White Stage: Page 2 (peaks at scrollProgress = 1.0) AND Page 4 (peaks at scrollProgress = 3.0)
   let whiteOpacity = 0;
-  if (scrollProgress <= 1) {
+  if (scrollProgress <= 1.0) {
     whiteOpacity = Math.min(1, Math.max(0, (scrollProgress - 0.15) * 1.35));
-  } else {
+  } else if (scrollProgress <= 2.15) {
     whiteOpacity = Math.max(0, 1 - (scrollProgress - 1.0) * 2.2);
+  } else if (scrollProgress <= 3.30) {
+    // Page 4: Smoothly reaches 100% pure white
+    whiteOpacity = Math.min(1, Math.max(0, (scrollProgress - 2.15) / 0.45));
+  } else {
+    // Fade out white as user moves to Page 5 (pitch black)
+    whiteOpacity = Math.max(0, 1 - (scrollProgress - 3.30) / 0.40);
   }
 
-  // Page 3: Complete Solid Pitch Black Stage (Reaches 1.0 by scrollProgress = 1.45)
-  const blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 1.05) * 2.5));
+  // Pitch Black Stage: Page 3 (scrollProgress ~ 2.0) AND Page 5 (scrollProgress ~ 4.0)
+  let blackOpacity = 0;
+  if (scrollProgress <= 1.05) {
+    blackOpacity = 0;
+  } else if (scrollProgress <= 2.15) {
+    blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 1.05) * 2.5));
+  } else if (scrollProgress <= 3.30) {
+    // Fade out black as user moves to Page 4 (white)
+    blackOpacity = Math.max(0, 1 - (scrollProgress - 2.15) / 0.45);
+  } else {
+    // Page 5: Smoothly reaches 100% complete solid pitch black
+    blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 3.30) / 0.40));
+  }
+
+  const isSolidBlack =
+    (scrollProgress >= 1.4 && scrollProgress <= 2.2) || scrollProgress >= 3.7;
 
   return (
     <div
@@ -34,7 +54,7 @@ export function AtmosphericBackground() {
         overflow: 'hidden',
         pointerEvents: 'none',
         zIndex: 0,
-        backgroundColor: scrollProgress >= 1.4 ? '#000000' : theme.colors.backgroundDeepest,
+        backgroundColor: isSolidBlack ? '#000000' : theme.colors.backgroundDeepest,
         transition: 'background-color 0.4s ease',
       }}
     >

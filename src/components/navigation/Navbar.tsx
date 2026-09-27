@@ -8,9 +8,11 @@ export function Navbar() {
   const { theme } = useTheme();
   const { scrollProgress } = useInteraction();
 
-  // On Page 2 (0.5 <= scrollProgress <= 1.45), background is white, so text must be dark slate.
-  // On Page 1 (< 0.5) and Page 3 (> 1.45), background is dark/black, so text is light.
-  const isLight = scrollProgress >= 0.5 && scrollProgress <= 1.45;
+  // On Page 2 and Page 4, background is pure white, so text must be dark slate.
+  // On Page 1, Page 3, and Page 5, background is dark/pitch black, so text is light.
+  const isLight =
+    (scrollProgress >= 0.5 && scrollProgress <= 1.45) ||
+    (scrollProgress >= 2.5 && scrollProgress <= 3.45);
 
   return (
     <header

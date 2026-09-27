@@ -13,7 +13,8 @@ export function VedikaModel() {
   const modelRef = useRef<THREE.Group | null>(null);
   const { size } = useThree();
   const { values } = useModelTuner();
-  const { scrollProgress, interactionState, activeMode } = useInteraction();
+  const { scrollProgress, interactionState, activeMode, isLabsExpanded, setIsLabsExpanded } =
+    useInteraction();
 
   const isMobile = size.width < 768;
 
@@ -80,7 +81,15 @@ export function VedikaModel() {
     const p3RotX = (values.p3RotX * Math.PI) / 180;
     const p3Z = values.p3Z ?? 0;
 
-    // Smooth scrub interpolation across Page 1 -> Page 2 -> Page 3
+    // Page 4 targets: completely centered in the exact middle of the page
+    const p4X = 0;
+    const p4Y = isMobile ? -0.02 : -0.04;
+    const p4Scale = isMobile ? 0.46 : 0.54;
+    const p4RotY = 0;
+    const p4RotX = 0;
+    const p4Z = 0;
+
+    // Smooth scrub interpolation across Page 1 -> Page 2 -> Page 3 -> Page 4
     let targetX: number;
     let targetY: number;
     let targetScale: number;
@@ -96,7 +105,7 @@ export function VedikaModel() {
       targetRotY = THREE.MathUtils.lerp(p1RotY, p2RotY, p);
       targetRotX = THREE.MathUtils.lerp(p1RotX, p2RotX, p);
       targetZ = THREE.MathUtils.lerp(values.posZ || 0, 0, p);
-    } else {
+    } else if (scrollProgress <= 2.0) {
       // Vedika smoothly travels from Page 2 center (p2) to Page 3 left position (p3)
       // Completes transit by scrollProgress = 1.65 so she settles before waves and text emerge
       const pTravel = Math.max(0, Math.min(1, (scrollProgress - 1.0) / 0.65));
@@ -107,6 +116,38 @@ export function VedikaModel() {
       targetRotY = THREE.MathUtils.lerp(p2RotY, p3RotY, p);
       targetRotX = THREE.MathUtils.lerp(p2RotX, p3RotX, p);
       targetZ = THREE.MathUtils.lerp(0, p3Z, p);
+    } else if (scrollProgress <= 3.25) {
+      // Transition from Page 3 to Page 4: Vedika smoothly travels from left position to exact center inside spherical particles
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 2.0) / 0.70));
+      const p = pTravel * pTravel * (3 - 2 * pTravel);
+      targetX = THREE.MathUtils.lerp(p3X, p4X, p);
+      targetY = THREE.MathUtils.lerp(p3Y, p4Y, p);
+      targetScale = THREE.MathUtils.lerp(p3Scale, p4Scale, p);
+      targetRotY = THREE.MathUtils.lerp(p3RotY, p4RotY, p);
+      targetRotX = THREE.MathUtils.lerp(p3RotX, p4RotX, p);
+      targetZ = THREE.MathUtils.lerp(p3Z, p4Z, p);
+    } else if (scrollProgress <= 4.25) {
+      // Transition from Page 4 to Page 5: Vedika retreats into deep background
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.25) / 0.50));
+      const p = pTravel * pTravel * (3 - 2 * pTravel);
+      targetX = p4X;
+      targetY = THREE.MathUtils.lerp(p4Y, p4Y - 0.25, p);
+      targetScale = THREE.MathUtils.lerp(p4Scale, 0, p);
+      targetRotY = p4RotY;
+      targetRotX = p4RotX;
+      targetZ = THREE.MathUtils.lerp(0, -4.0, p);
+    } else {
+      // Transition from Page 5 to Page 6: Vedika comes from background and floats behind the teacher!
+      // Completes transit smoothly between 4.20 and 4.80 so she settles fully before teacher smiles!
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 4.20) / 0.60));
+      const p = pTravel * pTravel * (3 - 2 * pTravel);
+      targetX = 0;
+      targetY = THREE.MathUtils.lerp(p4Y - 0.25, isMobile ? 0.32 : 0.26, p);
+      // Made Vedika a little bit bigger (0.58 scale)
+      targetScale = THREE.MathUtils.lerp(0, isMobile ? 0.48 : 0.58, p);
+      targetRotY = Math.sin(state.clock.getElapsedTime() * 1.5) * 0.12;
+      targetRotX = Math.sin(state.clock.getElapsedTime() * 1.2) * 0.06;
+      targetZ = THREE.MathUtils.lerp(-4.0, -0.5, p);
     }
     const lerpFactor = Math.min(delta * 7, 0.22);
 
@@ -142,7 +183,25 @@ export function VedikaModel() {
   });
 
   return (
-    <group ref={groupRef} position={[isMobile ? 0 : values.posX, values.posY, 0]}>
+    <group
+      ref={groupRef}
+      position={[isMobile ? 0 : values.posX, values.posY, 0]}
+      onClick={(e) => {
+        if (scrollProgress >= 2.6 && scrollProgress <= 3.3) {
+          e.stopPropagation();
+          setIsLabsExpanded((prev) => !prev);
+        }
+      }}
+      onPointerOver={(e) => {
+        if (scrollProgress >= 2.6 && scrollProgress <= 3.3) {
+          e.stopPropagation();
+          document.body.style.cursor = 'pointer';
+        }
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'auto';
+      }}
+    >
       <group ref={modelRef}>
         <primitive object={clonedScene} />
       </group>

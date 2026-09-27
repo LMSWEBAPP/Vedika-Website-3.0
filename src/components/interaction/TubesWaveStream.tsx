@@ -314,7 +314,7 @@ export function TubesWaveStream() {
       ctx.fill();
       ctx.restore();
 
-      // 3. LEADING TIP ENERGY FLARE (When wave is actively streaming towards end)
+      // 3. LEADING TIP ENERGY GLOW (Smooth organic circular aura, no '+' cross)
       if (flowProgress > 0.02 && flowProgress < 0.99) {
         ctx.save();
         const tipX = visibleEndX;
@@ -322,25 +322,15 @@ export function TubesWaveStream() {
         const tipTheta = waveK * (tipX - crestRefX);
         const tipY = startY + ribbons[0].getY(tipNormX, tipTheta, 1.0);
 
-        const tipGlow = ctx.createRadialGradient(tipX, tipY, 2, tipX, tipY, 45);
-        tipGlow.addColorStop(0, '#FFFFFF');
-        tipGlow.addColorStop(0.25, 'rgba(34, 211, 238, 0.95)');
-        tipGlow.addColorStop(0.65, 'rgba(168, 85, 247, 0.50)');
+        const tipGlow = ctx.createRadialGradient(tipX, tipY, 2, tipX, tipY, 32);
+        tipGlow.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+        tipGlow.addColorStop(0.3, 'rgba(34, 211, 238, 0.55)');
+        tipGlow.addColorStop(0.7, 'rgba(168, 85, 247, 0.25)');
         tipGlow.addColorStop(1, 'rgba(168, 85, 247, 0)');
         ctx.fillStyle = tipGlow;
         ctx.beginPath();
-        ctx.arc(tipX, tipY, 45, 0, Math.PI * 2);
+        ctx.arc(tipX, tipY, 32, 0, Math.PI * 2);
         ctx.fill();
-
-        // 4-point Diamond leading flare
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(tipX - 16, tipY);
-        ctx.lineTo(tipX + 16, tipY);
-        ctx.moveTo(tipX, tipY - 16);
-        ctx.lineTo(tipX, tipY + 16);
-        ctx.stroke();
         ctx.restore();
       }
 
@@ -372,20 +362,6 @@ export function TubesWaveStream() {
         ctx.shadowColor = ribbon.spineGlow;
         ctx.shadowBlur = 8;
         ctx.fill();
-
-        if (s.hasFlare && s.size > 1.8 && blend > 0.4) {
-          ctx.strokeStyle = '#FFFFFF';
-          ctx.lineWidth = 0.85;
-          ctx.globalAlpha = (s.alpha * 0.8) * blend;
-
-          const flareLen = s.size * 2.2;
-          ctx.beginPath();
-          ctx.moveTo(currentX - flareLen, currentY);
-          ctx.lineTo(currentX + flareLen, currentY);
-          ctx.moveTo(currentX, currentY - flareLen);
-          ctx.lineTo(currentX, currentY + flareLen);
-          ctx.stroke();
-        }
         ctx.restore();
       });
 

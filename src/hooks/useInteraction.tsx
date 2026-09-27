@@ -20,6 +20,8 @@ interface InteractionContextType {
   setTtsInput: (text: string) => void;
   errorMessage: string | null;
   setErrorMessage: (msg: string | null) => void;
+  isLabsExpanded: boolean;
+  setIsLabsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const InteractionContext = createContext<InteractionContextType | undefined>(undefined);
@@ -34,6 +36,7 @@ export function InteractionProvider({ children }: { children: ReactNode }) {
     'Hello, I am Vedika. What would you like to explore together today?'
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLabsExpanded, setIsLabsExpanded] = useState(false);
 
   return (
     <InteractionContext.Provider
@@ -52,6 +55,8 @@ export function InteractionProvider({ children }: { children: ReactNode }) {
         setTtsInput,
         errorMessage,
         setErrorMessage,
+        isLabsExpanded,
+        setIsLabsExpanded,
       }}
     >
       {children}
