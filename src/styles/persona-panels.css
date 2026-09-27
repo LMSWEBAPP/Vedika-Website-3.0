@@ -42,7 +42,7 @@
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  padding-top: 52px; /* Perfect clearance below global fixed VEDIKA navbar */
+  padding-top: 68px; /* Ample clearance below global fixed VEDIKA navbar */
   box-sizing: border-box;
 }
 
@@ -105,7 +105,7 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  max-height: calc(100vh - 52px);
+  max-height: calc(100vh - 68px);
   display: flex;
   align-items: stretch;
   overflow: hidden !important;
@@ -131,11 +131,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 4px 22px 6px clamp(16px, 3vw, 36px);
-  height: 100%;
-  min-height: 0;
-  max-height: 100%;
-  box-sizing: border-box;
+  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
 }
 
 .persona-split-container.mode-student .student-side {
@@ -417,26 +413,26 @@
    STUDENT CONTENT: HEADER & ORBITAL COMPOSITION (FROM USER REFERENCE IMAGE)
    ========================================================================== */
 .student-header-box {
-  margin-bottom: 2px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
 .student-eyebrow {
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.10em;
   color: #C084FC;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .student-main-title {
-  font-size: clamp(1.22rem, 1.85vw, 1.62rem);
+  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0;
   color: #FFFFFF;
-  line-height: 1.16;
+  line-height: 1.22;
 }
 
 /* Symmetrical Orbital Stage for Student */
@@ -444,14 +440,12 @@
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 0;
-  height: 100%;
-  max-height: 100%;
-  overflow: visible !important;
+  min-height: 500px;
+  max-height: calc(100vh - 130px);
+  overflow: hidden !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
 }
 
 /* SVG Circuit / Orbital Path Lines */
@@ -471,8 +465,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: 220px;
+  width: 250px;
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -483,8 +477,8 @@
 /* Outer Concentric Dashed Ring */
 .concentric-ring.outer-ring {
   position: absolute;
-  width: 240px;
-  height: 240px;
+  width: 270px;
+  height: 270px;
   border-radius: 50%;
   border: 1.5px dashed rgba(56, 189, 248, 0.32);
   box-shadow: 0 0 25px rgba(6, 182, 212, 0.12);
@@ -494,8 +488,8 @@
 /* Inner Solid Concentric Ring with Radial Vignette */
 .concentric-ring.inner-ring {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   border: 1.5px solid rgba(56, 189, 248, 0.45);
   background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.5) 65%, transparent 80%);
@@ -506,8 +500,8 @@
 /* 3D Canvas Box Sized Exactly to Inner Ring */
 .orbital-center-canvas {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -517,11 +511,11 @@
 /* Glowing Holographic Platform at Vedika's Feet */
 .orbital-hologram-base {
   position: absolute;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 18px;
+  width: 135px;
+  height: 22px;
   border-radius: 50%;
   background: radial-gradient(ellipse, rgba(6, 182, 212, 0.6) 0%, rgba(56, 189, 248, 0.15) 50%, transparent 75%);
   border: 1px solid rgba(6, 182, 212, 0.5);
@@ -533,7 +527,7 @@
 /* Central Brand Identification Pill */
 .orbital-brand-pill {
   position: absolute;
-  bottom: -9px;
+  bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -546,7 +540,7 @@
 }
 
 .orbital-brand-title {
-  font-size: 0.96rem;
+  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0.16em;
   color: #FFFFFF;
@@ -555,10 +549,10 @@
 }
 
 .orbital-brand-sub {
-  font-size: 0.65rem;
+  font-size: 0.70rem;
   color: #38BDF8;
   font-weight: 600;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 /* 9 Orbital Capsules (Eye-Catching, Evenly Spaced, Non-Overlapping) */
@@ -568,78 +562,78 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 6px 10px 7px;
-  border-radius: 12px;
-  background: linear-gradient(150deg, rgba(17, 24, 39, 0.96) 0%, rgba(9, 14, 26, 0.98) 100%);
+  padding: 10px 12px 11px;
+  border-radius: 14px;
+  background: linear-gradient(150deg, rgba(17, 24, 39, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%);
   backdrop-filter: blur(14px);
   box-sizing: border-box;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   z-index: 12;
-  width: clamp(142px, 11.5vw, 164px);
+  width: clamp(155px, 13vw, 175px);
   border: 1.5px solid rgba(255, 255, 255, 0.15);
 }
 
 .student-capsule-card:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-3px) scale(1.02);
   border-color: #FFFFFF !important;
 }
 
-/* 9 Specific Non-Overlapping Positions with Even Spacing & Zero Bottom Clipping */
-/* Top-Center has ample clearance so its badge is never cut off */
+/* 9 Specific Non-Overlapping Positions with Even Spacing */
+/* Top-Center has 24px clearance from top edge so its badge is never cut off */
 .student-capsule-card.pos-top-center {
-  top: 14px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .student-capsule-card.pos-top-left {
-  top: 14px;
-  left: 4%;
+  top: 24px;
+  left: 5%;
 }
 
 .student-capsule-card.pos-top-right {
-  top: 14px;
-  right: 4%;
+  top: 24px;
+  right: 5%;
 }
 
 .student-capsule-card.pos-mid-left {
-  top: 24%;
+  top: 26%;
   left: 0.5%;
 }
 
 .student-capsule-card.pos-mid-right {
-  top: 24%;
+  top: 26%;
   right: 0.5%;
 }
 
 .student-capsule-card.pos-lower-left {
-  top: 48%;
+  top: 52%;
   left: 0.5%;
 }
 
 .student-capsule-card.pos-lower-right {
-  top: 48%;
+  top: 52%;
   right: 0.5%;
 }
 
 .student-capsule-card.pos-bottom-left {
-  bottom: 6px;
-  left: 17%;
+  bottom: 18px;
+  left: 18%;
 }
 
 .student-capsule-card.pos-bottom-right {
-  bottom: 6px;
-  right: 17%;
+  bottom: 18px;
+  right: 18%;
 }
 
 /* Eye-Catching Circular Icon Badges */
 .capsule-icon-badge {
   position: absolute;
-  top: -12px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -653,17 +647,17 @@
 }
 
 .capsule-title {
-  font-size: 0.75rem;
+  font-size: 0.80rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 3px 0 2px 0;
-  line-height: 1.20;
+  margin: 5px 0 2px 0;
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
 .capsule-desc {
-  font-size: 0.62rem;
-  line-height: 1.28;
+  font-size: 0.67rem;
+  line-height: 1.35;
   color: #CBD5E1;
   margin: 0;
   font-weight: 400;
@@ -1078,81 +1072,3 @@
     border-top: 2px solid rgba(245, 158, 11, 0.35);
   }
 }
-
-/* ==========================================================================
-   RESPONSIVE COMPACT VIEWPORTS (LAPTOPS / HIGH DPI SCALING)
-   Ensures 100% zero-clipping and full card visibility on all screens
-   ========================================================================== */
-@media (max-height: 820px) {
-  .persona-panels-wrapper {
-    padding-top: 48px;
-  }
-  .persona-split-container.mode-student .student-content {
-    padding: 3px 16px 5px clamp(14px, 2.5vw, 26px);
-  }
-  .student-header-box {
-    margin-bottom: 2px;
-  }
-  .student-main-title {
-    font-size: 1.20rem;
-  }
-  .student-capsule-card {
-    padding: 5px 8px 6px;
-    width: clamp(136px, 11vw, 154px);
-  }
-  .capsule-title {
-    font-size: 0.72rem;
-  }
-  .capsule-desc {
-    font-size: 0.59rem;
-    line-height: 1.22;
-  }
-  .student-capsule-card.pos-bottom-left,
-  .student-capsule-card.pos-bottom-right {
-    bottom: 4px;
-  }
-  .orbital-center-pod {
-    width: 205px;
-    height: 205px;
-  }
-  .concentric-ring.outer-ring {
-    width: 225px;
-    height: 225px;
-  }
-  .concentric-ring.inner-ring,
-  .orbital-center-canvas {
-    width: 165px;
-    height: 165px;
-  }
-}
-
-@media (max-height: 720px) {
-  .persona-panels-wrapper {
-    padding-top: 42px;
-  }
-  .student-main-title {
-    font-size: 1.10rem;
-  }
-  .student-capsule-card {
-    padding: 4px 7px 5px;
-    width: 134px;
-  }
-  .capsule-icon-badge {
-    width: 22px;
-    height: 22px;
-    top: -11px;
-  }
-  .capsule-title {
-    font-size: 0.68rem;
-    margin: 2px 0 1px 0;
-  }
-  .capsule-desc {
-    font-size: 0.56rem;
-    line-height: 1.18;
-  }
-  .student-capsule-card.pos-bottom-left,
-  .student-capsule-card.pos-bottom-right {
-    bottom: 2px;
-  }
-}
-
