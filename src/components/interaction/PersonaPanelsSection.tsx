@@ -2,15 +2,135 @@
 
 import React, { useState } from 'react';
 import PersonaParticleBot from './PersonaParticleBot';
+import CentralVedika3D from './CentralVedika3D';
 import '@/styles/persona-panels.css';
 
 export type PersonaRole = 'student' | 'teacher' | 'admin';
 
+const studentFeatures = [
+  {
+    id: 'top-center',
+    title: 'Non-Judgemental Space',
+    desc: 'Ask anything without fear. Mistakes are part of learning.',
+    color: '#EC4899',
+    positionClass: 'pos-top-center',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'top-left',
+    title: '24/7 Study Companion',
+    desc: 'Get help anytime, anywhere. Never feel stuck again.',
+    color: '#F59E0B',
+    positionClass: 'pos-top-left',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+  },
+  {
+    id: 'top-right',
+    title: 'Learn at Your Own Pace',
+    desc: 'Take your time, revisit topics, and learn comfortably.',
+    color: '#3B82F6',
+    positionClass: 'pos-top-right',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    ),
+  },
+  {
+    id: 'mid-left',
+    title: 'Ask Unlimited Questions',
+    desc: 'Ask at any point of time, as many times as you want.',
+    color: '#9333EA',
+    positionClass: 'pos-mid-left',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'mid-right',
+    title: 'Concept Clarity',
+    desc: 'Get simple, step-by-step explanations with examples.',
+    color: '#10B981',
+    positionClass: 'pos-mid-right',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'lower-left',
+    title: 'Interactive Learning',
+    desc: 'Explore 3D labs, simulations and real-world examples.',
+    color: '#06B6D4',
+    positionClass: 'pos-lower-left',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" />
+        <line x1="8.5" x2="15.5" y1="2" y2="2" />
+      </svg>
+    ),
+  },
+  {
+    id: 'lower-right',
+    title: 'Personalized Support',
+    desc: 'Adapts to your learning style and focuses on your weak areas.',
+    color: '#E11D48',
+    positionClass: 'pos-lower-right',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+      </svg>
+    ),
+  },
+  {
+    id: 'bottom-left',
+    title: 'Exam & Practice Ready',
+    desc: 'Get quizzes, practice sets and instant feedback.',
+    color: '#0284C7',
+    positionClass: 'pos-bottom-left',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" x2="12" y1="20" y2="10" />
+        <line x1="18" x2="18" y1="20" y2="4" />
+        <line x1="6" x2="6" y1="20" y2="16" />
+      </svg>
+    ),
+  },
+  {
+    id: 'bottom-right',
+    title: 'Build Confidence',
+    desc: 'Turn doubts into strengths and enjoy the learning journey.',
+    color: '#8B5CF6',
+    positionClass: 'pos-bottom-right',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z" />
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
+      </svg>
+    ),
+  },
+];
+
 export default function PersonaPanelsSection() {
   const [activeRole, setActiveRole] = useState<PersonaRole>('student');
 
-  // Carousel slide indexes for each role
-  const [studentSlide, setStudentSlide] = useState(0);
+  // Carousel slide indexes for teacher & admin roles
   const [teacherSlide, setTeacherSlide] = useState(0);
   const [adminSlide, setAdminSlide] = useState(0);
 
@@ -45,43 +165,43 @@ export default function PersonaPanelsSection() {
     },
   ];
 
+  // Role Switcher Tabs (Aligned with the 30% partition column)
+  const renderRoleTabs = () => (
+    <nav className="role-tabs-pill-bar" aria-label="Select Persona Role">
+      <button
+        type="button"
+        className={`role-tab-btn ${activeRole === 'student' ? 'active student' : ''}`}
+        onClick={() => setActiveRole('student')}
+        aria-selected={activeRole === 'student'}
+      >
+        <span>🎓</span>
+        <span>Student</span>
+      </button>
+
+      <button
+        type="button"
+        className={`role-tab-btn ${activeRole === 'teacher' ? 'active teacher' : ''}`}
+        onClick={() => setActiveRole('teacher')}
+        aria-selected={activeRole === 'teacher'}
+      >
+        <span>👩‍🏫</span>
+        <span>Teacher</span>
+      </button>
+
+      <button
+        type="button"
+        className={`role-tab-btn ${activeRole === 'admin' ? 'active admin' : ''}`}
+        onClick={() => setActiveRole('admin')}
+        aria-selected={activeRole === 'admin'}
+      >
+        <span>🏛️</span>
+        <span>Admin</span>
+      </button>
+    </nav>
+  );
+
   return (
     <div className="persona-panels-wrapper" aria-label="Vedika 3-Panel Platform Ecosystem">
-      {/* Top Header Row: Clean left space for global VEDIKA logo + Right-aligned role pills */}
-      <header className="persona-top-navbar">
-        <nav className="role-tabs-pill-bar" aria-label="Select Persona Role">
-          <button
-            type="button"
-            className={`role-tab-btn ${activeRole === 'student' ? 'active student' : ''}`}
-            onClick={() => setActiveRole('student')}
-            aria-selected={activeRole === 'student'}
-          >
-            <span>🎓</span>
-            <span>Student</span>
-          </button>
-
-          <button
-            type="button"
-            className={`role-tab-btn ${activeRole === 'teacher' ? 'active teacher' : ''}`}
-            onClick={() => setActiveRole('teacher')}
-            aria-selected={activeRole === 'teacher'}
-          >
-            <span>👩‍🏫</span>
-            <span>Teacher</span>
-          </button>
-
-          <button
-            type="button"
-            className={`role-tab-btn ${activeRole === 'admin' ? 'active admin' : ''}`}
-            onClick={() => setActiveRole('admin')}
-            aria-selected={activeRole === 'admin'}
-          >
-            <span>🏛️</span>
-            <span>Admin</span>
-          </button>
-        </nav>
-      </header>
-
       {/* Main Sliding Asymmetric Split Screen (Zero Vertical Scroll) */}
       <main className={`persona-split-container mode-${activeRole}`}>
         
@@ -89,163 +209,146 @@ export default function PersonaPanelsSection() {
         {/* 1. STUDENT CONTENT PANEL (70% Left when active)                 */}
         {/* ============================================================== */}
         <section className="panel-section-slot student-content" aria-label="Student Learning Experience">
-          <div className="content-header-bar">
-            <div className="content-eyebrow" style={{ color: '#C084FC' }}>
-              Student Experience • Infinite 1-on-1 AI Mentorship
+          <div className="student-header-box">
+            <div className="student-eyebrow">
+              STUDENT EXPERIENCE • INFINITE 1-ON-1 AI MENTORSHIP
             </div>
-            <h1 className="content-title">
-              Master Every Concept at Your Own Pace
+            <h1 className="student-main-title">
+              Learning Without Limits, <br />
+              at <span style={{ color: '#F43F5E' }}>Your</span>{' '}
+              <span style={{ color: '#06B6D4' }}>Own Pace</span>
             </h1>
-            <p className="content-subtitle">
-              Vedika guides you socratically through difficult problems, prepares you for oral viva exams, and brings science to life with interactive labs.
+            <p className="student-main-subtitle">
+              Vedika creates a safe, supportive, and truly personalized learning space where you can ask, explore, practice, and grow — anytime, as many times as you want.
             </p>
           </div>
 
-          {/* Zero-Scroll Horizontal Feature Carousel */}
-          <div className="persona-carousel-wrapper">
-            <div className="persona-carousel-viewport">
+          {/* Symmetrical Constellation / Orbital Stage */}
+          <div className="student-orbital-stage">
+            {/* SVG Connecting Circuits & Radial Orbital Paths */}
+            <svg
+              className="orbital-circuits-svg"
+              viewBox="0 0 1000 520"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#06B6D4" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+
+              {/* Concentric Orbital Rings */}
+              <circle cx="500" cy="245" r="148" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+              <circle cx="500" cy="245" r="106" stroke="rgba(56, 189, 248, 0.25)" strokeWidth="1.2" fill="none" />
+
+              {/* Connection Lines & Terminals */}
+              {/* 1. Top-Center (Pink) */}
+              <path d="M 500 139 L 500 64" stroke="rgba(236, 72, 153, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="500" cy="139" r="3" fill="#EC4899" />
+              <circle cx="500" cy="139" r="6" fill="#EC4899" opacity="0.3" />
+
+              {/* 2. Top-Left (Amber) */}
+              <path d="M 425 170 C 350 140, 260 110, 195 78" stroke="rgba(245, 158, 11, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="425" cy="170" r="3" fill="#F59E0B" />
+              <circle cx="425" cy="170" r="6" fill="#F59E0B" opacity="0.3" />
+
+              {/* 3. Top-Right (Blue) */}
+              <path d="M 575 170 C 650 140, 740 110, 805 78" stroke="rgba(59, 130, 246, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="575" cy="170" r="3" fill="#3B82F6" />
+              <circle cx="575" cy="170" r="6" fill="#3B82F6" opacity="0.3" />
+
+              {/* 4. Mid-Left (Purple) */}
+              <path d="M 394 245 L 115 245" stroke="rgba(147, 51, 234, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="394" cy="245" r="3" fill="#9333EA" />
+              <circle cx="394" cy="245" r="6" fill="#9333EA" opacity="0.3" />
+
+              {/* 5. Mid-Right (Emerald) */}
+              <path d="M 606 245 L 885 245" stroke="rgba(16, 185, 129, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="606" cy="245" r="3" fill="#10B981" />
+              <circle cx="606" cy="245" r="6" fill="#10B981" opacity="0.3" />
+
+              {/* 6. Lower-Left (Cyan) */}
+              <path d="M 425 320 C 340 350, 240 380, 155 405" stroke="rgba(6, 182, 212, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="425" cy="320" r="3" fill="#06B6D4" />
+              <circle cx="425" cy="320" r="6" fill="#06B6D4" opacity="0.3" />
+
+              {/* 7. Lower-Right (Rose) */}
+              <path d="M 575 320 C 660 350, 760 380, 845 405" stroke="rgba(225, 29, 72, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="575" cy="320" r="3" fill="#E11D48" />
+              <circle cx="575" cy="320" r="6" fill="#E11D48" opacity="0.3" />
+
+              {/* 8. Bottom-Left (Sky Blue) */}
+              <path d="M 460 345 C 410 390, 360 440, 330 475" stroke="rgba(2, 132, 199, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="460" cy="345" r="3" fill="#0284C7" />
+              <circle cx="460" cy="345" r="6" fill="#0284C7" opacity="0.3" />
+
+              {/* 9. Bottom-Right (Violet) */}
+              <path d="M 540 345 C 590 390, 640 440, 670 475" stroke="rgba(139, 92, 246, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
+              <circle cx="540" cy="345" r="3" fill="#8B5CF6" />
+              <circle cx="540" cy="345" r="6" fill="#8B5CF6" opacity="0.3" />
+            </svg>
+
+            {/* Central 3D Vedika Pod */}
+            <div className="orbital-center-pod">
+              <div className="orbital-center-canvas">
+                <CentralVedika3D />
+              </div>
+
+              {/* Holographic Glowing Elliptical Base */}
+              <div className="orbital-hologram-base" />
+
+              {/* Central Brand Identification */}
+              <div className="orbital-brand-pill">
+                <div className="orbital-brand-title">VEDIKA</div>
+                <div className="orbital-brand-sub">Your 24/7 Learning Companion</div>
+              </div>
+            </div>
+
+            {/* 9 Symmetrical Orbital Feature Capsules */}
+            {studentFeatures.map((feat) => (
               <div
-                className="persona-carousel-track"
-                style={{ transform: `translateX(-${studentSlide * 100}%)` }}
+                key={feat.id}
+                className={`student-capsule-card ${feat.positionClass}`}
+                style={{
+                  borderColor: `${feat.color}55`,
+                }}
               >
-                {/* Slide 1 */}
-                <div className="persona-carousel-slide">
-                  <div className="slide-cards-duo">
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">💡</div>
-                        <h2 className="card-headline">24/7 Socratic Doubt Solver</h2>
-                        <p className="card-desc">
-                          Ask doubts in voice or text. Instead of giving flat answers, Vedika asks guided questions that build genuine intuition and critical thinking.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">No judgment • Unlimited Qs</span>
-                    </div>
-
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">🎙️</div>
-                        <h2 className="card-headline">Interactive Oral Viva Defense</h2>
-                        <p className="card-desc">
-                          Speak answers aloud into your microphone. Receive immediate diagnostic evaluation on technical clarity, terminology, and reasoning.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">Speech-to-concept AI</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Slide 2 */}
-                <div className="persona-carousel-slide">
-                  <div className="slide-cards-duo">
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">🧪</div>
-                        <h2 className="card-headline">3D Celestial Virtual Labs</h2>
-                        <p className="card-desc">
-                          Manipulate 3D physics pendulums, chemical molecular bonds, biological cell structures, and run Python code in real-time.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">Hands-on experimentation</span>
-                    </div>
-
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">📈</div>
-                        <h2 className="card-headline">Adaptive Knowledge Graph</h2>
-                        <p className="card-desc">
-                          Continuous mastery mapping detects sub-concept weaknesses and automatically prescribes targeted practice sets.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">Personalized pacing</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Slide 3 */}
-                <div className="persona-carousel-slide">
-                  <div className="slide-cards-duo">
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">📝</div>
-                        <h2 className="card-headline">Smart Formula & Memory Cards</h2>
-                        <p className="card-desc">
-                          AI extracts core derivations, theorems, and definitions into interactive active-recall flashcards before examinations.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">Spaced repetition</span>
-                    </div>
-
-                    <div className="persona-feature-card student">
-                      <div>
-                        <div className="card-icon-pill student">🎯</div>
-                        <h2 className="card-headline">Exam Readiness Score</h2>
-                        <p className="card-desc">
-                          Predictive score indexing benchmarked against school boards and competitive exam standards.
-                        </p>
-                      </div>
-                      <span className="card-badge-tag">Real-time confidence</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Carousel Controls */}
-            <div className="carousel-controls-bar">
-              <div className="carousel-dots-group">
-                {[0, 1, 2].map((idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`carousel-dot ${studentSlide === idx ? 'active student' : ''}`}
-                    onClick={() => setStudentSlide(idx)}
-                    aria-label={`Go to student slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
-
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  type="button"
-                  className="carousel-nav-btn"
-                  onClick={() => setStudentSlide((prev) => Math.max(0, prev - 1))}
-                  disabled={studentSlide === 0}
+                {/* Circular Icon Badge */}
+                <div
+                  className="capsule-icon-badge"
+                  style={{
+                    backgroundColor: '#0F172A',
+                    borderColor: feat.color,
+                    color: feat.color,
+                  }}
                 >
-                  ‹ Prev
-                </button>
-                <button
-                  type="button"
-                  className="carousel-nav-btn"
-                  onClick={() => setStudentSlide((prev) => Math.min(2, prev + 1))}
-                  disabled={studentSlide === 2}
-                >
-                  Next ›
-                </button>
+                  {feat.icon}
+                </div>
+
+                <div className="capsule-title">{feat.title}</div>
+                <p className="capsule-desc">{feat.desc}</p>
               </div>
-            </div>
+            ))}
           </div>
         </section>
 
         {/* ============================================================== */}
-        {/* 2. STUDENT SIDEBAR (30% Right: Normal 3D Kid Particle Bot)     */}
+        {/* 2. STUDENT SIDEBAR (30% Right: Student Bot & Role Tabs)         */}
         {/* ============================================================== */}
         <aside className="panel-section-slot student-side" aria-label="Student AI Companion Persona">
           <div className="persona-sidebar-inner">
-            <div className="persona-status-badge student">
-              <span className="persona-pulse-dot student" />
-              <span>Student Experience</span>
-            </div>
+            {/* Role Switcher Pill Bar aligned directly with this partition */}
+            {renderRoleTabs()}
 
-            {/* Normal 3D Human Kid Particle Bot */}
+            {/* Normal 3D Human Kid Particle Bot (Gapless, Prominent Colors, Stable) */}
             <div className="persona-bot-halo-wrapper">
               <div className="persona-ambient-halo student" />
               <PersonaParticleBot
                 src="/assets/human-student.png"
-                colorMode="vibrant"
-                width={280}
-                height={345}
-                particleStep={2}
+                width={270}
+                height={335}
               />
             </div>
 
@@ -275,20 +378,16 @@ export default function PersonaPanelsSection() {
         {/* ============================================================== */}
         <aside className="panel-section-slot teacher-side" aria-label="Teacher Co-Pilot Persona">
           <div className="persona-sidebar-inner">
-            <div className="persona-status-badge teacher">
-              <span className="persona-pulse-dot teacher" />
-              <span>Teacher Co-Pilot</span>
-            </div>
+            {/* Role Switcher Pill Bar aligned directly with this partition */}
+            {renderRoleTabs()}
 
             {/* Normal 3D Human Teacher Particle Bot */}
             <div className="persona-bot-halo-wrapper">
               <div className="persona-ambient-halo teacher" />
               <PersonaParticleBot
                 src="/assets/human-teacher.png"
-                colorMode="vibrant"
-                width={280}
-                height={345}
-                particleStep={2}
+                width={270}
+                height={335}
               />
             </div>
 
@@ -550,20 +649,16 @@ export default function PersonaPanelsSection() {
         {/* ============================================================== */}
         <aside className="panel-section-slot admin-side" aria-label="Administrator and Governance Persona">
           <div className="persona-sidebar-inner">
-            <div className="persona-status-badge admin">
-              <span className="persona-pulse-dot admin" />
-              <span>Institution & Admin</span>
-            </div>
+            {/* Role Switcher Pill Bar aligned directly with this partition */}
+            {renderRoleTabs()}
 
             {/* Normal 3D Human Admin Particle Bot */}
             <div className="persona-bot-halo-wrapper">
               <div className="persona-ambient-halo admin" />
               <PersonaParticleBot
                 src="/assets/human-admin.png"
-                colorMode="vibrant"
-                width={280}
-                height={345}
-                particleStep={2}
+                width={270}
+                height={335}
               />
             </div>
 

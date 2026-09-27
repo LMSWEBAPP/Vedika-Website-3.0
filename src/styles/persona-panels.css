@@ -1,32 +1,27 @@
 /* ==========================================================================
    VEDIKA 3-PANEL ECOSYSTEM ARCHITECTURE (STUDENT, TEACHER, ADMIN)
-   - Zero vertical scroll for all panels (Horizontal Carousels)
+   - Zero vertical scroll for all panels
    - Clean spacing below global Navbar (no duplicate logo collision)
    - Normal human 3D character particle animations (Student, Teacher, Admin)
-   - Asymmetric 70% / 30% sliding panels with cubic-bezier flex interpolation
+   - Transparent partition backgrounds (circle with particle image only)
+   - Student Panel with Central 3D Vedika and 9 surrounding orbital capsules
    ========================================================================== */
 
 :root {
-  /* Student Tokens (Purple) */
+  /* Student Tokens (Purple / Cyan) */
   --persona-student-primary: #A855F7;
   --persona-student-dark: #7C3AED;
   --persona-student-glow: rgba(168, 85, 247, 0.35);
-  --persona-student-bg: linear-gradient(180deg, rgba(22, 14, 46, 0.90) 0%, rgba(8, 10, 22, 0.98) 100%);
-  --persona-student-border: rgba(168, 85, 247, 0.25);
 
   /* Teacher Tokens (Golden) */
   --persona-teacher-primary: #F59E0B;
   --persona-teacher-dark: #D97706;
   --persona-teacher-glow: rgba(245, 158, 11, 0.35);
-  --persona-teacher-bg: linear-gradient(180deg, rgba(38, 26, 12, 0.90) 0%, rgba(14, 12, 10, 0.98) 100%);
-  --persona-teacher-border: rgba(245, 158, 11, 0.28);
 
   /* Admin Tokens (Emerald Green) */
   --persona-admin-primary: #10B981;
   --persona-admin-dark: #059669;
   --persona-admin-glow: rgba(16, 185, 129, 0.35);
-  --persona-admin-bg: linear-gradient(180deg, rgba(10, 32, 22, 0.90) 0%, rgba(6, 16, 12, 0.98) 100%);
-  --persona-admin-border: rgba(16, 185, 129, 0.28);
 
   /* Common Dark Surface Tokens */
   --surface-pitch-black: #000000;
@@ -47,22 +42,11 @@
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  padding-top: 74px; /* Ample clearance below global fixed VEDIKA navbar */
+  padding-top: 68px; /* Ample clearance below global fixed VEDIKA navbar */
   box-sizing: border-box;
 }
 
-/* Sub-header Bar: Clean top row with right-aligned role switcher */
-.persona-top-navbar {
-  height: 54px;
-  min-height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Keeps left open for global VEDIKA logo */
-  padding: 0 clamp(20px, 4vw, 48px);
-  z-index: 20;
-}
-
-/* 3-Role Interactive Pill Switcher */
+/* Top Role Switcher Pill Bar (Aligned with sidebar column) */
 .role-tabs-pill-bar {
   display: flex;
   align-items: center;
@@ -72,18 +56,19 @@
   padding: 4px 6px;
   border-radius: 9999px;
   backdrop-filter: blur(12px);
+  margin-bottom: 6px;
 }
 
 .role-tab-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 18px;
+  padding: 6px 16px;
   border-radius: 9999px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-secondary-muted);
-  font-size: 0.82rem;
+  font-size: 0.80rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.22s ease;
@@ -120,7 +105,7 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  max-height: calc(100vh - 128px);
+  max-height: calc(100vh - 68px);
   display: flex;
   align-items: stretch;
   overflow: hidden !important;
@@ -146,7 +131,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 16px clamp(24px, 4vw, 48px) 24px;
+  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
 }
 
 .persona-split-container.mode-student .student-side {
@@ -154,9 +139,9 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 18px 20px;
-  background: var(--persona-student-bg);
-  border-left: 1px solid var(--persona-student-border);
+  padding: 10px 16px 18px;
+  background: transparent !important; /* Removed rectangular partition background per user request */
+  border: none !important;
 }
 
 .persona-split-container.mode-student .teacher-side,
@@ -181,9 +166,9 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 18px 20px;
-  background: var(--persona-teacher-bg);
-  border-right: 1px solid var(--persona-teacher-border);
+  padding: 10px 16px 18px;
+  background: transparent !important;
+  border: none !important;
 }
 
 .persona-split-container.mode-teacher .teacher-content {
@@ -191,7 +176,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 16px clamp(24px, 4vw, 48px) 24px;
+  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
 }
 
 .persona-split-container.mode-teacher .student-content,
@@ -216,7 +201,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 16px clamp(24px, 4vw, 48px) 24px;
+  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
 }
 
 .persona-split-container.mode-admin .admin-side {
@@ -224,9 +209,9 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 18px 20px;
-  background: var(--persona-admin-bg);
-  border-left: 1px solid var(--persona-admin-border);
+  padding: 10px 16px 18px;
+  background: transparent !important;
+  border: none !important;
 }
 
 .persona-split-container.mode-admin .student-content,
@@ -244,7 +229,7 @@
 }
 
 /* ==========================================================================
-   SIDEBAR COMPONENTS (PARTICLE BOT, STATUS BADGE, ACTION BUTTONS)
+   SIDEBAR COMPONENTS (PARTICLE BOT, CIRCULAR HALO, ACTION BUTTONS)
    ========================================================================== */
 .persona-sidebar-inner {
   width: 100%;
@@ -261,7 +246,7 @@
   gap: 8px;
   padding: 5px 14px;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -307,7 +292,7 @@
   box-shadow: 0 0 10px #10B981;
 }
 
-/* Particle Bot Halo Wrapper */
+/* Particle Bot Circular Pod (Kept circle with particle image per user request) */
 .persona-bot-halo-wrapper {
   position: relative;
   display: flex;
@@ -315,7 +300,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: 6px 0;
+  margin: 4px 0;
   z-index: 2;
 }
 
@@ -425,15 +410,240 @@
 }
 
 /* ==========================================================================
-   CONTENT PANEL DESIGN & ZERO-SCROLL CAROUSEL
+   STUDENT CONTENT: HEADER & ORBITAL COMPOSITION (FROM USER REFERENCE IMAGE)
+   ========================================================================== */
+.student-header-box {
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.student-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: #C084FC;
+  margin-bottom: 3px;
+}
+
+.student-main-title {
+  font-size: clamp(1.30rem, 2.0vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px 0;
+  color: #FFFFFF;
+  line-height: 1.25;
+}
+
+.student-main-subtitle {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #94A3B8;
+  max-width: 640px;
+  margin: 0;
+}
+
+/* Symmetrical Orbital Stage for Student */
+.student-orbital-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  max-height: calc(100vh - 165px);
+  overflow: hidden !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG Circuit / Orbital Path Lines */
+.orbital-circuits-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Central Pod with 3D Vedika */
+.orbital-center-pod {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -48%);
+  width: 180px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.orbital-center-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.orbital-hologram-base {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 125px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.40) 0%, rgba(56, 189, 248, 0.10) 50%, transparent 75%);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+  pointer-events: none;
+}
+
+.orbital-brand-pill {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.orbital-brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #FFFFFF;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+}
+
+.orbital-brand-sub {
+  font-size: 0.68rem;
+  color: #38BDF8;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* 9 Orbital Capsules (Classic, Clean, Not Over-Glowing) */
+.student-capsule-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 10px 9px;
+  border-radius: 14px;
+  background: rgba(11, 16, 32, 0.90);
+  backdrop-filter: blur(12px);
+  box-sizing: border-box;
+  transition: transform 0.22s ease, border-color 0.22s ease;
+  z-index: 12;
+  width: clamp(146px, 12.5vw, 172px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+.student-capsule-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* 9 Specific Positions */
+.student-capsule-card.pos-top-center {
+  top: 1%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.student-capsule-card.pos-top-left {
+  top: 5%;
+  left: 10%;
+}
+
+.student-capsule-card.pos-top-right {
+  top: 5%;
+  right: 10%;
+}
+
+.student-capsule-card.pos-mid-left {
+  top: 36%;
+  left: 1%;
+}
+
+.student-capsule-card.pos-mid-right {
+  top: 36%;
+  right: 1%;
+}
+
+.student-capsule-card.pos-lower-left {
+  top: 67%;
+  left: 6%;
+}
+
+.student-capsule-card.pos-lower-right {
+  top: 67%;
+  right: 6%;
+}
+
+.student-capsule-card.pos-bottom-left {
+  bottom: 1%;
+  left: 24%;
+}
+
+.student-capsule-card.pos-bottom-right {
+  bottom: 1%;
+  right: 24%;
+}
+
+.capsule-icon-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  background: #0F172A;
+}
+
+.capsule-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 5px 0 2px 0;
+  line-height: 1.25;
+}
+
+.capsule-desc {
+  font-size: 0.63rem;
+  line-height: 1.35;
+  color: #94A3B8;
+  margin: 0;
+}
+
+/* ==========================================================================
+   TEACHER & ADMIN CAROUSEL CARDS
    ========================================================================== */
 .content-header-bar {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   flex-shrink: 0;
 }
 
 .content-eyebrow {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -449,14 +659,13 @@
 }
 
 .content-subtitle {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   line-height: 1.5;
   color: var(--text-secondary-muted);
   max-width: 660px;
   margin: 0;
 }
 
-/* Carousel Architecture */
 .persona-carousel-wrapper {
   flex: 1;
   min-height: 0;
@@ -491,12 +700,11 @@
   box-sizing: border-box;
 }
 
-/* Carousel Controls & Pagination Bar */
 .carousel-controls-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 14px;
+  padding-top: 12px;
   flex-shrink: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -516,12 +724,6 @@
   padding: 0;
   cursor: pointer;
   transition: all 0.25s ease;
-}
-
-.carousel-dot.active.student {
-  width: 24px;
-  background: #A855F7;
-  box-shadow: 0 0 10px #A855F7;
 }
 
 .carousel-dot.active.teacher {
@@ -560,7 +762,6 @@
   cursor: not-allowed;
 }
 
-/* Feature Slide Layout (2 cards per slide) */
 .slide-cards-duo {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -574,7 +775,7 @@
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 22px 24px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -587,35 +788,20 @@
   transform: translateY(-2px);
 }
 
-.persona-feature-card.student:hover {
-  border-color: rgba(168, 85, 247, 0.45);
-  box-shadow: 0 8px 28px rgba(168, 85, 247, 0.15);
-}
-
 .persona-feature-card.admin:hover {
   border-color: rgba(16, 185, 129, 0.45);
   box-shadow: 0 8px 28px rgba(16, 185, 129, 0.15);
 }
 
 .card-icon-pill {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  margin-bottom: 12px;
-}
-
-.card-icon-pill.student {
-  background: rgba(168, 85, 247, 0.18);
-  border: 1px solid rgba(168, 85, 247, 0.35);
-}
-
-.card-icon-pill.teacher {
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  font-size: 1.20rem;
+  margin-bottom: 10px;
 }
 
 .card-icon-pill.admin {
@@ -624,14 +810,14 @@
 }
 
 .card-headline {
-  font-size: 1.12rem;
+  font-size: 1.10rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
 }
 
 .card-desc {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   line-height: 1.55;
   color: var(--text-secondary-muted);
   margin: 0;
@@ -640,19 +826,16 @@
 
 .card-badge-tag {
   align-self: flex-start;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-secondary-muted);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
-/* ==========================================================================
-   TEACHER DILEMMA VS RECTIFICATION SLIDE CARDS
-   ========================================================================== */
 .teacher-slide-container {
   width: 100%;
   height: 100%;
@@ -668,7 +851,7 @@
   background: rgba(15, 23, 42, 0.65);
   border: 1px solid rgba(245, 158, 11, 0.22);
   border-radius: 18px;
-  padding: 26px 30px;
+  padding: 24px 28px;
   box-sizing: border-box;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
@@ -785,19 +968,14 @@
 }
 
 /* ==========================================================================
-   MOBILE & TABLET RESPONSIVE ADAPTATIONS (<960px)
+   MOBILE RESPONSIVENESS (<960px)
    ========================================================================== */
 @media (max-width: 960px) {
   .persona-panels-wrapper {
     height: auto;
     min-height: 100vh;
-    padding-top: 64px;
+    padding-top: 60px;
     overflow-y: auto !important;
-  }
-
-  .persona-top-navbar {
-    justify-content: center;
-    padding: 10px 16px;
   }
 
   .persona-split-container {
@@ -812,7 +990,7 @@
     flex: none !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 18px 16px !important;
+    padding: 16px 14px !important;
     order: 2;
   }
 
@@ -822,11 +1000,25 @@
     flex: none !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 20px 16px !important;
+    padding: 16px 14px !important;
     order: 1;
-    border-left: none !important;
-    border-right: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .student-orbital-stage {
+    min-height: 520px;
+  }
+
+  .student-capsule-card {
+    width: 140px;
+    padding: 6px 8px 8px;
+  }
+
+  .capsule-title {
+    font-size: 0.70rem;
+  }
+
+  .capsule-desc {
+    font-size: 0.60rem;
   }
 
   .slide-cards-duo {
@@ -836,8 +1028,8 @@
 
   .comparison-duo-panel {
     grid-template-columns: 1fr;
-    padding: 20px 18px;
-    gap: 14px;
+    padding: 18px 16px;
+    gap: 12px;
   }
 
   .comparison-arrow {
@@ -846,7 +1038,7 @@
 
   .rectification-block {
     padding-left: 0;
-    padding-top: 12px;
+    padding-top: 10px;
     border-left: none;
     border-top: 2px solid rgba(245, 158, 11, 0.35);
   }
