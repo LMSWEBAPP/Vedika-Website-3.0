@@ -42,7 +42,7 @@ const SATELLITE_LABS: SatelliteConfig[] = [
     targetX: 0,
     targetY: 0.84,
     rotYOffset: 0,
-    labelPlacement: 'top',
+    labelPlacement: 'right',
   },
   {
     id: 'physics',

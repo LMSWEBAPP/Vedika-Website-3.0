@@ -191,7 +191,13 @@ export function TeacherDilemmaSection() {
               className="inner-drawer"
               style={{
                 background: 'rgba(15, 23, 42, 0.96)',
-                border: isSolutionStage
+                borderLeft: isSolutionStage
+                  ? '1px solid rgba(52, 211, 153, 0.35)'
+                  : '1px solid rgba(248, 113, 113, 0.35)',
+                borderRight: isSolutionStage
+                  ? '1px solid rgba(52, 211, 153, 0.35)'
+                  : '1px solid rgba(248, 113, 113, 0.35)',
+                borderBottom: isSolutionStage
                   ? '1px solid rgba(52, 211, 153, 0.35)'
                   : '1px solid rgba(248, 113, 113, 0.35)',
                 borderTop: 'none', // Seamless junction with outer box!
@@ -362,7 +368,13 @@ export function TeacherDilemmaSection() {
               className="inner-drawer"
               style={{
                 background: 'rgba(15, 23, 42, 0.96)',
-                border: isSolutionStage
+                borderLeft: isSolutionStage
+                  ? '1px solid rgba(96, 165, 250, 0.35)'
+                  : '1px solid rgba(244, 114, 182, 0.35)',
+                borderRight: isSolutionStage
+                  ? '1px solid rgba(96, 165, 250, 0.35)'
+                  : '1px solid rgba(244, 114, 182, 0.35)',
+                borderBottom: isSolutionStage
                   ? '1px solid rgba(96, 165, 250, 0.35)'
                   : '1px solid rgba(244, 114, 182, 0.35)',
                 borderTop: 'none', // Seamless junction with outer box!

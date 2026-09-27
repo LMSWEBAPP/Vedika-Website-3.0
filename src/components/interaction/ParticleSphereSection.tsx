@@ -61,13 +61,13 @@ export function ParticleSphereSection() {
           zIndex: 32,
         }}
       >
-        {/* Math Lab: Top (High above Math sphere, completely clearing Vedika's head) */}
+        {/* Math Lab: Right side of Top Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: '50%',
-            top: 'calc(50% - 370px)',
-            transform: 'translate(-50%, -100%)',
+            left: 'calc(50% + 115px)',
+            top: 'calc(50% - 295px)',
+            transform: 'translate(0%, -50%)',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
