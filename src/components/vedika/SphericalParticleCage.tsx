@@ -86,15 +86,15 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   },
 ];
 
-// Balanced particle count: 12 slices x 36 particles = 432 particles per sphere
-// Gives a clean, complete spherical contour without crowding out the 3D icon!
-const SLICES_PER_SATELLITE = 12;
-const PARTICLES_PER_SLICE = 36;
+// Prominent particle count: 14 slices x 48 particles = 672 particles per sphere
+// Rich, luminous contour that stands out with high clarity on pure white!
+const SLICES_PER_SATELLITE = 14;
+const PARTICLES_PER_SLICE = 48;
 const BIG_SPHERE_RADIUS = 0.84;
 const MINI_SPHERE_SCALE = 0.28;
 
 /**
- * Creates smooth anti-aliased radial disc texture for particles
+ * Creates smooth anti-aliased radial disc texture for luminous prominent particles
  */
 function createSparkleTexture(): THREE.Texture {
   const canvas = document.createElement('canvas');
@@ -104,7 +104,8 @@ function createSparkleTexture(): THREE.Texture {
   if (ctx) {
     const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
     grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    grad.addColorStop(0.6, 'rgba(255, 255, 255, 0.9)');
+    grad.addColorStop(0.35, 'rgba(255, 255, 255, 0.95)');
+    grad.addColorStop(0.70, 'rgba(255, 255, 255, 0.75)');
     grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = grad;
     ctx.beginPath();
@@ -178,13 +179,13 @@ export function SphericalParticleCage() {
         slices.push({ geometry, rotX, rotY, rotZ });
       }
 
-      // Slightly reduced particle size and subtle opacity for clean transparency
+      // Prominent, radiant particle size and high opacity for crisp visibility
       const material = new THREE.PointsMaterial({
-        size: isMobile ? 0.020 : 0.016,
+        size: isMobile ? 0.030 : 0.026,
         map: texture || undefined,
         vertexColors: true,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.98,
         blending: THREE.NormalBlending,
         depthWrite: false,
       });

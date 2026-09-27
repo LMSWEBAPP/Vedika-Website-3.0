@@ -10,7 +10,7 @@ import { MultimodalWaveStream } from '@/components/interaction/MultimodalWaveStr
 import { TubesWaveStream } from '@/components/interaction/TubesWaveStream';
 import { ExplorationSection } from '@/components/interaction/ExplorationSection';
 import { ParticleSphereSection } from '@/components/interaction/ParticleSphereSection';
-import { TeacherDilemmaSection } from '@/components/interaction/TeacherDilemmaSection';
+import { ProblemSolutionSection } from '@/components/interaction/ProblemSolutionSection';
 // ModelTuner removed
 import { useInteraction } from '@/hooks/useInteraction';
 
@@ -32,7 +32,7 @@ export default function HomePage() {
     let wheelSilenceTimer: NodeJS.Timeout;
     let transitionStartTime = 0;
 
-    const pageCount = 6; // Pages 0 to 5
+    const pageCount = 5; // Pages 0 to 4 (5 pages total)
 
     // Navigate to a specific page safely
     const goToPage = (pageIdx: number) => {
@@ -185,8 +185,8 @@ export default function HomePage() {
     (1 - p4Exit * p4Exit * (3 - 2 * p4Exit));
   const p4UiOpacity = p4Ease;
 
-  // Page 5: Blank Complete Solid Black Stage
-  const p5Reveal = Math.max(0, Math.min(1, (scrollProgress - 3.35) / 0.45));
+  // Page 5: From Challenges to Confident Teaching (Solid Black Canvas)
+  const p5Reveal = Math.max(0, Math.min(1, (scrollProgress - 3.25) / 0.50));
   const p5Ease = p5Reveal * p5Reveal * (3 - 2 * p5Reveal);
   const p5UiOpacity = p5Ease;
 
@@ -213,7 +213,7 @@ export default function HomePage() {
       style={{
         position: 'relative',
         width: '100%',
-        minHeight: '600vh',
+        minHeight: '500vh',
         backgroundColor: bgStyle,
         transition: 'background-color 0.3s ease',
       }}
@@ -226,12 +226,11 @@ export default function HomePage() {
           top: 0,
           left: 0,
           width: '100%',
-          height: '600vh',
+          height: '500vh',
           pointerEvents: 'none',
           zIndex: 1,
         }}
       >
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
         <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
         <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
         <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
@@ -372,7 +371,7 @@ export default function HomePage() {
           <ParticleSphereSection />
         </div>
 
-        {/* PAGE 5 & 6: The Teacher Dilemma -> Vedika Solution Story (Solid Black Canvas) */}
+        {/* PAGE 5: From Challenges to Confident Teaching (Solid Black Canvas) */}
         <div
           style={{
             position: 'absolute',
@@ -383,7 +382,7 @@ export default function HomePage() {
             pointerEvents: scrollProgress >= 3.6 ? 'auto' : 'none',
           }}
         >
-          <TeacherDilemmaSection />
+          <ProblemSolutionSection />
         </div>
       </div>
 

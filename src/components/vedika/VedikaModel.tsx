@@ -126,28 +126,19 @@ export function VedikaModel() {
       targetRotY = THREE.MathUtils.lerp(p3RotY, p4RotY, p);
       targetRotX = THREE.MathUtils.lerp(p3RotX, p4RotX, p);
       targetZ = THREE.MathUtils.lerp(p3Z, p4Z, p);
-    } else if (scrollProgress <= 4.25) {
-      // Transition from Page 4 to Page 5: Vedika retreats into deep background
-      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.25) / 0.50));
-      const p = pTravel * pTravel * (3 - 2 * pTravel);
-      targetX = p4X;
-      targetY = THREE.MathUtils.lerp(p4Y, p4Y - 0.25, p);
-      targetScale = THREE.MathUtils.lerp(p4Scale, 0, p);
-      targetRotY = p4RotY;
-      targetRotX = p4RotX;
-      targetZ = THREE.MathUtils.lerp(0, -4.0, p);
     } else {
-      // Transition from Page 5 to Page 6: Vedika comes from background and floats behind the teacher!
-      // Completes transit smoothly between 4.20 and 4.80 so she settles fully before teacher smiles!
-      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 4.20) / 0.60));
+      // Page 5: Vedika sits prominently in the center of the circular transformation engine
+      // Smoothly glides from Page 4 (scrollProgress 3.10 -> 3.75) and stays anchored as the central AI intelligence
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.10) / 0.65));
       const p = pTravel * pTravel * (3 - 2 * pTravel);
+      const p5Y = isMobile ? -0.04 : -0.07;
+      const p5Scale = isMobile ? 0.44 : 0.52;
       targetX = 0;
-      targetY = THREE.MathUtils.lerp(p4Y - 0.25, isMobile ? 0.32 : 0.26, p);
-      // Made Vedika a little bit bigger (0.58 scale)
-      targetScale = THREE.MathUtils.lerp(0, isMobile ? 0.48 : 0.58, p);
-      targetRotY = Math.sin(state.clock.getElapsedTime() * 1.5) * 0.12;
-      targetRotX = Math.sin(state.clock.getElapsedTime() * 1.2) * 0.06;
-      targetZ = THREE.MathUtils.lerp(-4.0, -0.5, p);
+      targetY = THREE.MathUtils.lerp(p4Y, p5Y, p);
+      targetScale = THREE.MathUtils.lerp(p4Scale, p5Scale, p);
+      targetRotY = Math.sin(state.clock.getElapsedTime() * 1.2) * 0.12;
+      targetRotX = Math.sin(state.clock.getElapsedTime() * 1.0) * 0.05;
+      targetZ = 0;
     }
     const lerpFactor = Math.min(delta * 7, 0.22);
 
