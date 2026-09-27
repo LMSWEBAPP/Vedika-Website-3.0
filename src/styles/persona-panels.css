@@ -321,25 +321,29 @@
 
 .persona-ambient-halo {
   position: absolute;
-  inset: -14px;
+  width: 330px;
+  height: 330px;
   border-radius: 50%;
   pointer-events: none;
-  animation: pulseGlowRing 3s infinite ease-in-out;
+  animation: pulseGlowRing 3.5s infinite ease-in-out;
 }
 
 .persona-ambient-halo.student {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(124, 58, 237, 0.06) 60%, transparent 80%);
-  border: 1px solid rgba(168, 85, 247, 0.25);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(124, 58, 237, 0.05) 55%, transparent 75%);
+  border: 1px solid rgba(168, 85, 247, 0.22);
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.18);
 }
 
 .persona-ambient-halo.teacher {
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.06) 60%, transparent 80%);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.05) 55%, transparent 75%);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.18);
 }
 
 .persona-ambient-halo.admin {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.06) 60%, transparent 80%);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.05) 55%, transparent 75%);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  box-shadow: 0 0 40px rgba(16, 185, 129, 0.18);
 }
 
 /* Sidebar Navigation Buttons */

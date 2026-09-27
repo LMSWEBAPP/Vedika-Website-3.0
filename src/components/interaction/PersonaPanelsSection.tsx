@@ -243,8 +243,8 @@ export default function PersonaPanelsSection() {
               <PersonaParticleBot
                 src="/assets/human-student.png"
                 colorMode="vibrant"
-                width={240}
-                height={290}
+                width={280}
+                height={345}
                 particleStep={2}
               />
             </div>
@@ -286,8 +286,8 @@ export default function PersonaPanelsSection() {
               <PersonaParticleBot
                 src="/assets/human-teacher.png"
                 colorMode="vibrant"
-                width={240}
-                height={290}
+                width={280}
+                height={345}
                 particleStep={2}
               />
             </div>
@@ -561,8 +561,8 @@ export default function PersonaPanelsSection() {
               <PersonaParticleBot
                 src="/assets/human-admin.png"
                 colorMode="vibrant"
-                width={240}
-                height={290}
+                width={280}
+                height={345}
                 particleStep={2}
               />
             </div>

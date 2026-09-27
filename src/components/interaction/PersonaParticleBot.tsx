@@ -190,7 +190,7 @@ export default function PersonaParticleBot({
       updateCanvasSize();
       const step = particleStep || 2;
       const imageSrc = sourceImg?.currentSrc || sourceImg?.src || src;
-      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v4`;
+      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v5`;
 
       if (TARGET_CACHE.has(cacheKey)) {
         const cached = TARGET_CACHE.get(cacheKey)!;
@@ -256,21 +256,38 @@ export default function PersonaParticleBot({
           // Discard pure solid white background padding
           if (luminance > 248 && maxC - minC < 10 && a > 240) continue;
 
-          // Faithful natural color preservation with subtle luminous vibrancy
-          let baseR = r;
-          let baseG = g;
-          let baseB = b;
-          let baseAlpha = Math.min(1.0, (a / 255) * 1.05);
+          // Pure, prominent color processing:
+          // 1. Boost color saturation by 35% so natural tones pop brilliantly
+          const avg = (r + g + b) / 3;
+          const satFactor = 1.35;
+          let cr = avg + (r - avg) * satFactor;
+          let cg = avg + (g - avg) * satFactor;
+          let cb = avg + (b - avg) * satFactor;
 
-          // Make darker shadows gently visible against pitch black background
-          if (luminance < 35) {
-            baseR = Math.max(baseR, 28);
-            baseG = Math.max(baseG, 28);
-            baseB = Math.max(baseB, 38);
+          // 2. Boost brightness & vibrancy by 24% for luminous starlight radiance
+          const brightFactor = 1.24;
+          cr = cr * brightFactor;
+          cg = cg * brightFactor;
+          cb = cb * brightFactor;
+
+          let baseR = Math.min(255, Math.max(0, Math.round(cr)));
+          let baseG = Math.min(255, Math.max(0, Math.round(cg)));
+          let baseB = Math.min(255, Math.max(0, Math.round(cb)));
+
+          // 3. Lift darker shadows and hair contours so they are clearly visible against pitch black
+          const lum = 0.299 * baseR + 0.587 * baseG + 0.114 * baseB;
+          if (lum < 54) {
+            const lift = 54 - lum;
+            baseR = Math.min(255, Math.round(baseR + lift * 0.75));
+            baseG = Math.min(255, Math.round(baseG + lift * 0.75));
+            baseB = Math.min(255, Math.round(baseB + lift * 0.95));
           }
 
-          // Delicate starlight dot size: ~1.2px - 1.5px (never giant clumpy blobs)
-          const pSize = 1.35;
+          // 4. Pure solid opacity for 100% color punch and clarity
+          const baseAlpha = 1.0;
+
+          // 5. Prominent starlight dot size (meets seamlessly on 2px grid for continuous crisp image)
+          const pSize = 1.95;
 
           const relX = x * scaleX;
           const relY = y * scaleY;
@@ -430,7 +447,7 @@ export default function PersonaParticleBot({
           p.y += p.vy;
 
           // Render micro-particle pixel (crisp starlight fillRect for performance and sharpness)
-          ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${p.baseAlpha.toFixed(2)})`;
+          ctx.fillStyle = `rgb(${p.baseR}, ${p.baseG}, ${p.baseB})`;
           ctx.fillRect(p.x, p.y, p.size, p.size);
         }
       }
