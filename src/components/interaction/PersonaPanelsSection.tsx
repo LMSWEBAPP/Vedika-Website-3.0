@@ -239,49 +239,49 @@ export default function PersonaPanelsSection() {
               aria-hidden="true"
             >
               {/* 1. Top-Center (Pink) */}
-              <path d="M 500 185 L 500 55" stroke="rgba(236, 72, 153, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="500" cy="185" r="7" fill="#EC4899" opacity="0.25" />
-              <circle cx="500" cy="185" r="3.5" fill="#EC4899" />
+              <path d="M 500 195 L 500 48" stroke="rgba(236, 72, 153, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="500" cy="195" r="7" fill="#EC4899" opacity="0.25" />
+              <circle cx="500" cy="195" r="3.5" fill="#EC4899" />
 
               {/* 2. Top-Left (Amber) */}
-              <path d="M 410 220 C 330 180, 240 130, 160 82" stroke="rgba(245, 158, 11, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="410" cy="220" r="7" fill="#F59E0B" opacity="0.25" />
-              <circle cx="410" cy="220" r="3.5" fill="#F59E0B" />
+              <path d="M 420 225 C 320 160, 220 95, 135 48" stroke="rgba(245, 158, 11, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="420" cy="225" r="7" fill="#F59E0B" opacity="0.25" />
+              <circle cx="420" cy="225" r="3.5" fill="#F59E0B" />
 
               {/* 3. Top-Right (Blue) */}
-              <path d="M 590 220 C 670 180, 760 130, 840 82" stroke="rgba(59, 130, 246, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="590" cy="220" r="7" fill="#3B82F6" opacity="0.25" />
-              <circle cx="590" cy="220" r="3.5" fill="#3B82F6" />
+              <path d="M 580 225 C 680 160, 780 95, 865 48" stroke="rgba(59, 130, 246, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="580" cy="225" r="7" fill="#3B82F6" opacity="0.25" />
+              <circle cx="580" cy="225" r="3.5" fill="#3B82F6" />
 
               {/* 4. Mid-Left (Purple) */}
-              <path d="M 370 300 L 105 270" stroke="rgba(168, 85, 247, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="370" cy="300" r="7" fill="#A855F7" opacity="0.25" />
-              <circle cx="370" cy="300" r="3.5" fill="#A855F7" />
+              <path d="M 375 275 L 85 195" stroke="rgba(168, 85, 247, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="375" cy="275" r="7" fill="#A855F7" opacity="0.25" />
+              <circle cx="375" cy="275" r="3.5" fill="#A855F7" />
 
               {/* 5. Mid-Right (Emerald) */}
-              <path d="M 630 300 L 895 270" stroke="rgba(16, 185, 129, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="630" cy="300" r="7" fill="#10B981" opacity="0.25" />
-              <circle cx="630" cy="300" r="3.5" fill="#10B981" />
+              <path d="M 625 275 L 915 195" stroke="rgba(16, 185, 129, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="625" cy="275" r="7" fill="#10B981" opacity="0.25" />
+              <circle cx="625" cy="275" r="3.5" fill="#10B981" />
 
               {/* 6. Lower-Left (Cyan) */}
-              <path d="M 410 380 C 320 410, 220 440, 140 460" stroke="rgba(6, 182, 212, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="410" cy="380" r="7" fill="#06B6D4" opacity="0.25" />
-              <circle cx="410" cy="380" r="3.5" fill="#06B6D4" />
+              <path d="M 385 345 L 85 355" stroke="rgba(6, 182, 212, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="385" cy="345" r="7" fill="#06B6D4" opacity="0.25" />
+              <circle cx="385" cy="345" r="3.5" fill="#06B6D4" />
 
               {/* 7. Lower-Right (Rose) */}
-              <path d="M 590 380 C 680 410, 780 440, 860 460" stroke="rgba(244, 63, 94, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="590" cy="380" r="7" fill="#F43F5E" opacity="0.25" />
-              <circle cx="590" cy="380" r="3.5" fill="#F43F5E" />
+              <path d="M 615 345 L 915 355" stroke="rgba(244, 63, 94, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="615" cy="345" r="7" fill="#F43F5E" opacity="0.25" />
+              <circle cx="615" cy="345" r="3.5" fill="#F43F5E" />
 
               {/* 8. Bottom-Left (Sky Blue) */}
-              <path d="M 450 395 C 410 445, 360 495, 310 545" stroke="rgba(2, 132, 199, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="450" cy="395" r="7" fill="#0284C7" opacity="0.25" />
-              <circle cx="450" cy="395" r="3.5" fill="#0284C7" />
+              <path d="M 440 395 C 380 445, 320 495, 265 545" stroke="rgba(2, 132, 199, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="440" cy="395" r="7" fill="#0284C7" opacity="0.25" />
+              <circle cx="440" cy="395" r="3.5" fill="#0284C7" />
 
               {/* 9. Bottom-Right (Violet) */}
-              <path d="M 550 395 C 590 445, 640 495, 690 545" stroke="rgba(139, 92, 246, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="550" cy="395" r="7" fill="#8B5CF6" opacity="0.25" />
-              <circle cx="550" cy="395" r="3.5" fill="#8B5CF6" />
+              <path d="M 560 395 C 620 445, 680 495, 735 545" stroke="rgba(139, 92, 246, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="560" cy="395" r="7" fill="#8B5CF6" opacity="0.25" />
+              <circle cx="560" cy="395" r="3.5" fill="#8B5CF6" />
             </svg>
 
             {/* Central 3D Vedika Pod (Perfect Concentric Circular Framing) */}

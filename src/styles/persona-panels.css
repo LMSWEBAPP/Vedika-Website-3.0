@@ -555,21 +555,21 @@
   margin-top: 2px;
 }
 
-/* 9 Orbital Capsules (Eye-Catching, High-Contrast, Glassmorphism) */
+/* 9 Orbital Capsules (Eye-Catching, Evenly Spaced, Non-Overlapping) */
 .student-capsule-card {
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 12px 14px 13px;
-  border-radius: 16px;
+  padding: 10px 12px 11px;
+  border-radius: 14px;
   background: linear-gradient(150deg, rgba(17, 24, 39, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%);
   backdrop-filter: blur(14px);
   box-sizing: border-box;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   z-index: 12;
-  width: clamp(160px, 13.8vw, 192px);
+  width: clamp(155px, 13vw, 175px);
   border: 1.5px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -578,61 +578,62 @@
   border-color: #FFFFFF !important;
 }
 
-/* 9 Specific Positions */
+/* 9 Specific Non-Overlapping Positions with Even Spacing */
+/* Top-Center has 24px clearance from top edge so its badge is never cut off */
 .student-capsule-card.pos-top-center {
-  top: 1%;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .student-capsule-card.pos-top-left {
-  top: 5%;
-  left: 8%;
+  top: 24px;
+  left: 5%;
 }
 
 .student-capsule-card.pos-top-right {
-  top: 5%;
-  right: 8%;
+  top: 24px;
+  right: 5%;
 }
 
 .student-capsule-card.pos-mid-left {
-  top: 37%;
-  left: 1%;
+  top: 26%;
+  left: 0.5%;
 }
 
 .student-capsule-card.pos-mid-right {
-  top: 37%;
-  right: 1%;
+  top: 26%;
+  right: 0.5%;
 }
 
 .student-capsule-card.pos-lower-left {
-  top: 69%;
-  left: 4%;
+  top: 52%;
+  left: 0.5%;
 }
 
 .student-capsule-card.pos-lower-right {
-  top: 69%;
-  right: 4%;
+  top: 52%;
+  right: 0.5%;
 }
 
 .student-capsule-card.pos-bottom-left {
-  bottom: 2%;
-  left: 23%;
+  bottom: 18px;
+  left: 18%;
 }
 
 .student-capsule-card.pos-bottom-right {
-  bottom: 2%;
-  right: 23%;
+  bottom: 18px;
+  right: 18%;
 }
 
 /* Eye-Catching Circular Icon Badges */
 .capsule-icon-badge {
   position: absolute;
-  top: -15px;
+  top: -14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -646,17 +647,17 @@
 }
 
 .capsule-title {
-  font-size: 0.86rem;
+  font-size: 0.80rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 6px 0 3px 0;
+  margin: 5px 0 2px 0;
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
 .capsule-desc {
-  font-size: 0.70rem;
-  line-height: 1.40;
+  font-size: 0.67rem;
+  line-height: 1.35;
   color: #CBD5E1;
   margin: 0;
   font-weight: 400;

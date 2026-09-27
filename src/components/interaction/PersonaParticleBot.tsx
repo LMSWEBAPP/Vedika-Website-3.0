@@ -62,10 +62,10 @@ export default function PersonaParticleBot({
 
     function sampleFromImage(sourceImg: HTMLImageElement) {
       updateCanvasSize();
-      // Ultra-tight 1.15px step with 1.95px particles = 100% gapless, dense, solid starlight mosaic
-      const step = particleStep || 1.15;
+      // Step of 2.05px with 1.05px radius creates distinct, beautifully separated starlight particles
+      const step = particleStep || 2.05;
       const imageSrc = sourceImg?.currentSrc || sourceImg?.src || src;
-      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v8_gapless`;
+      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v10_particles`;
 
       if (TARGET_CACHE.has(cacheKey)) {
         const cached = TARGET_CACHE.get(cacheKey)!;
@@ -133,12 +133,12 @@ export default function PersonaParticleBot({
 
           // Pure, saturated, prominent color tuning
           const avg = (r + g + b) / 3;
-          const satFactor = 1.45;
+          const satFactor = 1.40;
           let cr = avg + (r - avg) * satFactor;
           let cg = avg + (g - avg) * satFactor;
           let cb = avg + (b - avg) * satFactor;
 
-          const brightFactor = 1.25;
+          const brightFactor = 1.22;
           cr *= brightFactor;
           cg *= brightFactor;
           cb *= brightFactor;
@@ -149,15 +149,15 @@ export default function PersonaParticleBot({
 
           // Lift dark shadow areas so hair and clothing silhouettes are visibly clear
           const lum = 0.299 * baseR + 0.587 * baseG + 0.114 * baseB;
-          if (lum < 52) {
-            const lift = 52 - lum;
+          if (lum < 48) {
+            const lift = 48 - lum;
             baseR = Math.min(255, Math.round(baseR + lift * 0.72));
             baseG = Math.min(255, Math.round(baseG + lift * 0.72));
             baseB = Math.min(255, Math.round(baseB + lift * 0.92));
           }
 
-          // 1.95px particle size with 1.15px step ensures 100% gap-free, seamless, solid starlight coverage
-          const pSize = 1.95;
+          // 1.05px radius circular particle (diameter 2.1px) with 2.05px step gives genuine particle dispersion
+          const pRadius = 1.05;
 
           const relX = x * scaleX;
           const relY = y * scaleY;
@@ -165,7 +165,7 @@ export default function PersonaParticleBot({
           targets.push({
             relX,
             relY,
-            size: pSize,
+            radius: pRadius,
             baseR,
             baseG,
             baseB,
@@ -188,7 +188,7 @@ export default function PersonaParticleBot({
           pindex: i,
           relX: t.relX,
           relY: t.relY,
-          size: t.size,
+          radius: t.radius,
           baseR: t.baseR,
           baseG: t.baseG,
           baseB: t.baseB,
@@ -206,10 +206,10 @@ export default function PersonaParticleBot({
     };
     img.src = src;
 
-    // Classy, stable render loop:
-    // - NO erratic individual particle jitter
-    // - NO mouse hover scattering (stays 100% stable on hover per user request)
-    // - Subtle organic character breathing
+    // Genuine Starlight Particle Hologram Render Loop:
+    // - Circular arc dots with delicate optical spacing (NOT blocky square pixels)
+    // - Subtle micro-shimmer across particles
+    // - Stable figure with whole-body gentle organic breathing
     const render = () => {
       if (!isMounted) return;
       time += 0.022;
@@ -228,9 +228,13 @@ export default function PersonaParticleBot({
           const px = robotX + p.relX;
           const py = robotY + p.relY + breathY;
 
-          // Pure solid color fill with zero gaps
-          ctx.fillStyle = `rgb(${p.baseR}, ${p.baseG}, ${p.baseB})`;
-          ctx.fillRect(px, py, p.size, p.size);
+          // Subtle organic starlight shimmer gives undeniable holographic particle depth
+          const alpha = 0.85 + Math.sin(time * 2.2 + p.pindex * 0.32) * 0.15;
+
+          ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${alpha.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(px, py, p.radius, 0, 6.28318);
+          ctx.fill();
         }
       }
 
