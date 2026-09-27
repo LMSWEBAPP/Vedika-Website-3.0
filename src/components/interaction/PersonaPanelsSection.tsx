@@ -13,9 +13,10 @@ const studentFeatures = [
     title: 'Non-Judgemental Space',
     desc: 'Ask anything without fear. Mistakes are part of learning.',
     color: '#EC4899',
+    rgb: '236, 72, 153',
     positionClass: 'pos-top-center',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
       </svg>
     ),
@@ -25,9 +26,10 @@ const studentFeatures = [
     title: '24/7 Study Companion',
     desc: 'Get help anytime, anywhere. Never feel stuck again.',
     color: '#F59E0B',
+    rgb: '245, 158, 11',
     positionClass: 'pos-top-left',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <polyline points="12 6 12 12 16 14" />
       </svg>
@@ -38,9 +40,10 @@ const studentFeatures = [
     title: 'Learn at Your Own Pace',
     desc: 'Take your time, revisit topics, and learn comfortably.',
     color: '#3B82F6',
+    rgb: '59, 130, 246',
     positionClass: 'pos-top-right',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
@@ -50,10 +53,11 @@ const studentFeatures = [
     id: 'mid-left',
     title: 'Ask Unlimited Questions',
     desc: 'Ask at any point of time, as many times as you want.',
-    color: '#9333EA',
+    color: '#A855F7',
+    rgb: '168, 85, 247',
     positionClass: 'pos-mid-left',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
     ),
@@ -63,9 +67,10 @@ const studentFeatures = [
     title: 'Concept Clarity',
     desc: 'Get simple, step-by-step explanations with examples.',
     color: '#10B981',
+    rgb: '16, 185, 129',
     positionClass: 'pos-mid-right',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
       </svg>
@@ -76,9 +81,10 @@ const studentFeatures = [
     title: 'Interactive Learning',
     desc: 'Explore 3D labs, simulations and real-world examples.',
     color: '#06B6D4',
+    rgb: '6, 182, 212',
     positionClass: 'pos-lower-left',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" />
         <line x1="8.5" x2="15.5" y1="2" y2="2" />
       </svg>
@@ -88,10 +94,11 @@ const studentFeatures = [
     id: 'lower-right',
     title: 'Personalized Support',
     desc: 'Adapts to your learning style and focuses on your weak areas.',
-    color: '#E11D48',
+    color: '#F43F5E',
+    rgb: '244, 63, 94',
     positionClass: 'pos-lower-right',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="6" />
         <circle cx="12" cy="12" r="2" />
@@ -103,9 +110,10 @@ const studentFeatures = [
     title: 'Exam & Practice Ready',
     desc: 'Get quizzes, practice sets and instant feedback.',
     color: '#0284C7',
+    rgb: '2, 132, 199',
     positionClass: 'pos-bottom-left',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <line x1="12" x2="12" y1="20" y2="10" />
         <line x1="18" x2="18" y1="20" y2="4" />
         <line x1="6" x2="6" y1="20" y2="16" />
@@ -117,9 +125,10 @@ const studentFeatures = [
     title: 'Build Confidence',
     desc: 'Turn doubts into strengths and enjoy the learning journey.',
     color: '#8B5CF6',
+    rgb: '139, 92, 246',
     positionClass: 'pos-bottom-right',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z" />
         <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z" />
       </svg>
@@ -218,9 +227,6 @@ export default function PersonaPanelsSection() {
               at <span style={{ color: '#F43F5E' }}>Your</span>{' '}
               <span style={{ color: '#06B6D4' }}>Own Pace</span>
             </h1>
-            <p className="student-main-subtitle">
-              Vedika creates a safe, supportive, and truly personalized learning space where you can ask, explore, practice, and grow — anytime, as many times as you want.
-            </p>
           </div>
 
           {/* Symmetrical Constellation / Orbital Stage */}
@@ -228,76 +234,71 @@ export default function PersonaPanelsSection() {
             {/* SVG Connecting Circuits & Radial Orbital Paths */}
             <svg
               className="orbital-circuits-svg"
-              viewBox="0 0 1000 520"
+              viewBox="0 0 1000 600"
               preserveAspectRatio="none"
               aria-hidden="true"
             >
-              <defs>
-                <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#06B6D4" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-
-              {/* Concentric Orbital Rings */}
-              <circle cx="500" cy="245" r="148" stroke="rgba(56, 189, 248, 0.18)" strokeWidth="1" strokeDasharray="4 4" fill="none" />
-              <circle cx="500" cy="245" r="106" stroke="rgba(56, 189, 248, 0.25)" strokeWidth="1.2" fill="none" />
-
-              {/* Connection Lines & Terminals */}
               {/* 1. Top-Center (Pink) */}
-              <path d="M 500 139 L 500 64" stroke="rgba(236, 72, 153, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="500" cy="139" r="3" fill="#EC4899" />
-              <circle cx="500" cy="139" r="6" fill="#EC4899" opacity="0.3" />
+              <path d="M 500 185 L 500 55" stroke="rgba(236, 72, 153, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="500" cy="185" r="7" fill="#EC4899" opacity="0.25" />
+              <circle cx="500" cy="185" r="3.5" fill="#EC4899" />
 
               {/* 2. Top-Left (Amber) */}
-              <path d="M 425 170 C 350 140, 260 110, 195 78" stroke="rgba(245, 158, 11, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="425" cy="170" r="3" fill="#F59E0B" />
-              <circle cx="425" cy="170" r="6" fill="#F59E0B" opacity="0.3" />
+              <path d="M 410 220 C 330 180, 240 130, 160 82" stroke="rgba(245, 158, 11, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="410" cy="220" r="7" fill="#F59E0B" opacity="0.25" />
+              <circle cx="410" cy="220" r="3.5" fill="#F59E0B" />
 
               {/* 3. Top-Right (Blue) */}
-              <path d="M 575 170 C 650 140, 740 110, 805 78" stroke="rgba(59, 130, 246, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="575" cy="170" r="3" fill="#3B82F6" />
-              <circle cx="575" cy="170" r="6" fill="#3B82F6" opacity="0.3" />
+              <path d="M 590 220 C 670 180, 760 130, 840 82" stroke="rgba(59, 130, 246, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="590" cy="220" r="7" fill="#3B82F6" opacity="0.25" />
+              <circle cx="590" cy="220" r="3.5" fill="#3B82F6" />
 
               {/* 4. Mid-Left (Purple) */}
-              <path d="M 394 245 L 115 245" stroke="rgba(147, 51, 234, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="394" cy="245" r="3" fill="#9333EA" />
-              <circle cx="394" cy="245" r="6" fill="#9333EA" opacity="0.3" />
+              <path d="M 370 300 L 105 270" stroke="rgba(168, 85, 247, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="370" cy="300" r="7" fill="#A855F7" opacity="0.25" />
+              <circle cx="370" cy="300" r="3.5" fill="#A855F7" />
 
               {/* 5. Mid-Right (Emerald) */}
-              <path d="M 606 245 L 885 245" stroke="rgba(16, 185, 129, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="606" cy="245" r="3" fill="#10B981" />
-              <circle cx="606" cy="245" r="6" fill="#10B981" opacity="0.3" />
+              <path d="M 630 300 L 895 270" stroke="rgba(16, 185, 129, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="630" cy="300" r="7" fill="#10B981" opacity="0.25" />
+              <circle cx="630" cy="300" r="3.5" fill="#10B981" />
 
               {/* 6. Lower-Left (Cyan) */}
-              <path d="M 425 320 C 340 350, 240 380, 155 405" stroke="rgba(6, 182, 212, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="425" cy="320" r="3" fill="#06B6D4" />
-              <circle cx="425" cy="320" r="6" fill="#06B6D4" opacity="0.3" />
+              <path d="M 410 380 C 320 410, 220 440, 140 460" stroke="rgba(6, 182, 212, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="410" cy="380" r="7" fill="#06B6D4" opacity="0.25" />
+              <circle cx="410" cy="380" r="3.5" fill="#06B6D4" />
 
               {/* 7. Lower-Right (Rose) */}
-              <path d="M 575 320 C 660 350, 760 380, 845 405" stroke="rgba(225, 29, 72, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="575" cy="320" r="3" fill="#E11D48" />
-              <circle cx="575" cy="320" r="6" fill="#E11D48" opacity="0.3" />
+              <path d="M 590 380 C 680 410, 780 440, 860 460" stroke="rgba(244, 63, 94, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="590" cy="380" r="7" fill="#F43F5E" opacity="0.25" />
+              <circle cx="590" cy="380" r="3.5" fill="#F43F5E" />
 
               {/* 8. Bottom-Left (Sky Blue) */}
-              <path d="M 460 345 C 410 390, 360 440, 330 475" stroke="rgba(2, 132, 199, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="460" cy="345" r="3" fill="#0284C7" />
-              <circle cx="460" cy="345" r="6" fill="#0284C7" opacity="0.3" />
+              <path d="M 450 395 C 410 445, 360 495, 310 545" stroke="rgba(2, 132, 199, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="450" cy="395" r="7" fill="#0284C7" opacity="0.25" />
+              <circle cx="450" cy="395" r="3.5" fill="#0284C7" />
 
               {/* 9. Bottom-Right (Violet) */}
-              <path d="M 540 345 C 590 390, 640 440, 670 475" stroke="rgba(139, 92, 246, 0.45)" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
-              <circle cx="540" cy="345" r="3" fill="#8B5CF6" />
-              <circle cx="540" cy="345" r="6" fill="#8B5CF6" opacity="0.3" />
+              <path d="M 550 395 C 590 445, 640 495, 690 545" stroke="rgba(139, 92, 246, 0.55)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="550" cy="395" r="7" fill="#8B5CF6" opacity="0.25" />
+              <circle cx="550" cy="395" r="3.5" fill="#8B5CF6" />
             </svg>
 
-            {/* Central 3D Vedika Pod */}
+            {/* Central 3D Vedika Pod (Perfect Concentric Circular Framing) */}
             <div className="orbital-center-pod">
+              {/* Outer Dashed Concentric Ring */}
+              <div className="concentric-ring outer-ring" />
+
+              {/* Inner Solid Concentric Ring with Radial Vignette */}
+              <div className="concentric-ring inner-ring" />
+
+              {/* Holographic Glowing Elliptical Platform under Vedika */}
+              <div className="orbital-hologram-base" />
+
+              {/* 3D Vedika Canvas (Dead Centered Inside Ring) */}
               <div className="orbital-center-canvas">
                 <CentralVedika3D />
               </div>
-
-              {/* Holographic Glowing Elliptical Base */}
-              <div className="orbital-hologram-base" />
 
               {/* Central Brand Identification */}
               <div className="orbital-brand-pill">
@@ -312,16 +313,18 @@ export default function PersonaPanelsSection() {
                 key={feat.id}
                 className={`student-capsule-card ${feat.positionClass}`}
                 style={{
-                  borderColor: `${feat.color}55`,
+                  borderColor: `${feat.color}77`,
+                  boxShadow: `0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px ${feat.color}25`,
                 }}
               >
                 {/* Circular Icon Badge */}
                 <div
                   className="capsule-icon-badge"
                   style={{
-                    backgroundColor: '#0F172A',
+                    backgroundColor: '#090E1A',
                     borderColor: feat.color,
                     color: feat.color,
+                    boxShadow: `0 0 12px ${feat.color}66, 0 4px 8px rgba(0, 0, 0, 0.7)`,
                   }}
                 >
                   {feat.icon}

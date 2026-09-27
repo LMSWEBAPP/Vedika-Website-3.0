@@ -413,34 +413,26 @@
    STUDENT CONTENT: HEADER & ORBITAL COMPOSITION (FROM USER REFERENCE IMAGE)
    ========================================================================== */
 .student-header-box {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
 .student-eyebrow {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.10em;
   color: #C084FC;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .student-main-title {
-  font-size: clamp(1.30rem, 2.0vw, 1.75rem);
+  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin: 0 0 4px 0;
-  color: #FFFFFF;
-  line-height: 1.25;
-}
-
-.student-main-subtitle {
-  font-size: 0.82rem;
-  line-height: 1.45;
-  color: #94A3B8;
-  max-width: 640px;
   margin: 0;
+  color: #FFFFFF;
+  line-height: 1.22;
 }
 
 /* Symmetrical Orbital Stage for Student */
@@ -448,8 +440,8 @@
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 0;
-  max-height: calc(100vh - 165px);
+  min-height: 500px;
+  max-height: calc(100vh - 130px);
   overflow: hidden !important;
   display: flex;
   align-items: center;
@@ -467,45 +459,75 @@
   z-index: 1;
 }
 
-/* Central Pod with 3D Vedika */
+/* Central Pod with 3D Vedika (Dead Centered to Rings) */
 .orbital-center-pod {
   position: absolute;
-  top: 48%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -48%);
-  width: 180px;
-  height: 180px;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10;
   pointer-events: none;
 }
 
-.orbital-center-canvas {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.orbital-hologram-base {
+/* Outer Concentric Dashed Ring */
+.concentric-ring.outer-ring {
   position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 125px;
-  height: 20px;
+  width: 270px;
+  height: 270px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.40) 0%, rgba(56, 189, 248, 0.10) 50%, transparent 75%);
-  border: 1px solid rgba(6, 182, 212, 0.35);
-  box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+  border: 1.5px dashed rgba(56, 189, 248, 0.32);
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.12);
   pointer-events: none;
 }
 
+/* Inner Solid Concentric Ring with Radial Vignette */
+.concentric-ring.inner-ring {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.5) 65%, transparent 80%);
+  box-shadow: 0 0 22px rgba(6, 182, 212, 0.25), inset 0 0 16px rgba(6, 182, 212, 0.15);
+  pointer-events: none;
+}
+
+/* 3D Canvas Box Sized Exactly to Inner Ring */
+.orbital-center-canvas {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* Glowing Holographic Platform at Vedika's Feet */
+.orbital-hologram-base {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 135px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.6) 0%, rgba(56, 189, 248, 0.15) 50%, transparent 75%);
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Central Brand Identification Pill */
 .orbital-brand-pill {
   position: absolute;
-  bottom: -30px;
+  bottom: -6px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -514,46 +536,46 @@
   text-align: center;
   white-space: nowrap;
   pointer-events: auto;
+  z-index: 15;
 }
 
 .orbital-brand-title {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   color: #FFFFFF;
   margin: 0;
-  text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
 }
 
 .orbital-brand-sub {
-  font-size: 0.68rem;
+  font-size: 0.70rem;
   color: #38BDF8;
   font-weight: 600;
   margin-top: 2px;
 }
 
-/* 9 Orbital Capsules (Classic, Clean, Not Over-Glowing) */
+/* 9 Orbital Capsules (Eye-Catching, High-Contrast, Glassmorphism) */
 .student-capsule-card {
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 8px 10px 9px;
-  border-radius: 14px;
-  background: rgba(11, 16, 32, 0.90);
-  backdrop-filter: blur(12px);
+  padding: 12px 14px 13px;
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(17, 24, 39, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%);
+  backdrop-filter: blur(14px);
   box-sizing: border-box;
-  transition: transform 0.22s ease, border-color 0.22s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   z-index: 12;
-  width: clamp(146px, 12.5vw, 172px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  width: clamp(160px, 13.8vw, 192px);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
 }
 
 .student-capsule-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px) scale(1.02);
+  border-color: #FFFFFF !important;
 }
 
 /* 9 Specific Positions */
@@ -565,73 +587,79 @@
 
 .student-capsule-card.pos-top-left {
   top: 5%;
-  left: 10%;
+  left: 8%;
 }
 
 .student-capsule-card.pos-top-right {
   top: 5%;
-  right: 10%;
+  right: 8%;
 }
 
 .student-capsule-card.pos-mid-left {
-  top: 36%;
+  top: 37%;
   left: 1%;
 }
 
 .student-capsule-card.pos-mid-right {
-  top: 36%;
+  top: 37%;
   right: 1%;
 }
 
 .student-capsule-card.pos-lower-left {
-  top: 67%;
-  left: 6%;
+  top: 69%;
+  left: 4%;
 }
 
 .student-capsule-card.pos-lower-right {
-  top: 67%;
-  right: 6%;
+  top: 69%;
+  right: 4%;
 }
 
 .student-capsule-card.pos-bottom-left {
-  bottom: 1%;
-  left: 24%;
+  bottom: 2%;
+  left: 23%;
 }
 
 .student-capsule-card.pos-bottom-right {
-  bottom: 1%;
-  right: 24%;
+  bottom: 2%;
+  right: 23%;
 }
 
+/* Eye-Catching Circular Icon Badges */
 .capsule-icon-badge {
   position: absolute;
-  top: -12px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid currentColor;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  background: #0F172A;
+  border: 1.5px solid currentColor;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.student-capsule-card:hover .capsule-icon-badge {
+  transform: translateX(-50%) scale(1.1);
 }
 
 .capsule-title {
-  font-size: 0.74rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 5px 0 2px 0;
+  margin: 6px 0 3px 0;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .capsule-desc {
-  font-size: 0.63rem;
-  line-height: 1.35;
-  color: #94A3B8;
+  font-size: 0.70rem;
+  line-height: 1.40;
+  color: #CBD5E1;
   margin: 0;
+  font-weight: 400;
 }
 
 /* ==========================================================================
