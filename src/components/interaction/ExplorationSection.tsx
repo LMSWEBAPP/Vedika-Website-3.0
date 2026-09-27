@@ -28,7 +28,7 @@ const FEATURES: FeatureItem[] = [
     icon: Lightbulb,
     color: '#FBBF24', // Amber/Yellow
     leftPercent: 30,  // Crest 1
-    topPercent: 44.0, // Brought down close to wave crest 1
+    topPercent: 38.0, // Above wave crest 1: title on top, icon below, not touching wave
     description: 'Deep, intuitive breakdowns of fundamental principles in simple language.',
   },
   {
@@ -37,7 +37,7 @@ const FEATURES: FeatureItem[] = [
     icon: BookOpen,
     color: '#A855F7', // Violet
     leftPercent: 42,  // Trough 1
-    topPercent: 70.0, // Snuggled close to wave trough 1
+    topPercent: 77.0, // Below wave trough 1: icon on top, title below, near wave but not touching
     description: 'Real-world practical analogies, code snippets, and illustrated cases.',
   },
   {
@@ -46,7 +46,7 @@ const FEATURES: FeatureItem[] = [
     icon: GraduationCap,
     color: '#22D3EE', // Cyan
     leftPercent: 54,  // Crest 2
-    topPercent: 43.0, // Brought down close to wave crest 2
+    topPercent: 37.0, // Above wave crest 2: title on top, icon below, not touching wave
     description: 'Structured sequential paths that guide you from beginner to mastery.',
   },
   {
@@ -55,7 +55,7 @@ const FEATURES: FeatureItem[] = [
     icon: Settings,
     color: '#F43F5E', // Pink/Rose
     leftPercent: 66,  // Trough 2
-    topPercent: 70.0, // Snuggled close to wave trough 2
+    topPercent: 77.0, // Below wave trough 2: icon on top, title below, near wave but not touching
     description: 'Interactive diagnostic workflows and algorithmic reasoning methods.',
   },
   {
@@ -64,7 +64,7 @@ const FEATURES: FeatureItem[] = [
     icon: Code2,
     color: '#60A5FA', // Blue
     leftPercent: 78,  // Crest 3
-    topPercent: 44.0, // Brought down close to wave crest 3
+    topPercent: 38.0, // Above wave crest 3: title on top, icon below, not touching wave
     description: 'Syntax debugging, architectural review, and instant idiomatic refactors.',
   },
   {
@@ -73,7 +73,7 @@ const FEATURES: FeatureItem[] = [
     icon: BarChart3,
     color: '#C084FC', // Soft Purple
     leftPercent: 90,  // Trough 3
-    topPercent: 70.0, // Snuggled close to wave trough 3
+    topPercent: 77.0, // Below wave trough 3: icon on top, title below, near wave but not touching
     description: 'Adaptive knowledge synthesis tracking concept retention and mastery.',
   },
 ];
@@ -83,8 +83,8 @@ export function ExplorationSection() {
   const { scrollProgress } = useInteraction();
   const [visibleCount, setVisibleCount] = useState(0);
 
-  // Vedika arrives at Page 3 at scrollProgress >= 1.65
-  const isVedikaInPosition = scrollProgress >= 1.65;
+  // Vedika is settled into Page 3 position between 1.65 and 2.08 (works forward and reverse)
+  const isVedikaInPosition = scrollProgress >= 1.65 && scrollProgress <= 2.08;
 
   // Staggered sequential reveal: elements appear smoothly one after another along the wave
   useEffect(() => {
@@ -245,38 +245,78 @@ export function ExplorationSection() {
                   transition: 'transform 0.2s ease',
                 }}
               >
-                {/* Pure Icon with lite black drop-shadow behind icons only */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '8px',
-                    transform: isHovered ? 'scale(1.12)' : 'scale(1.0)',
-                    transition: 'transform 0.25s ease',
-                    filter: 'drop-shadow(0 3px 8px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9))',
-                  }}
-                >
-                  <Icon size={38} color={feat.color} strokeWidth={2.2} />
-                </div>
+                {/* Top 3 elements: Name ON TOP, Icon BELOW. Bottom 3 elements: Icon ON TOP, Name BELOW */}
+                {feat.topPercent < 55 ? (
+                  <>
+                    {/* Title Label on Top */}
+                    <span
+                      style={{
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.015em',
+                        color: isHovered ? '#FFFFFF' : '#CBD5E1',
+                        minWidth: '120px',
+                        maxWidth: '160px',
+                        lineHeight: 1.35,
+                        marginBottom: '8px',
+                        transition: 'color 0.2s ease',
+                        userSelect: 'none',
+                        textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 2px #000000',
+                      }}
+                    >
+                      {feat.title}
+                    </span>
 
-                {/* Title Label with clean text-shadow */}
-                <span
-                  style={{
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.015em',
-                    color: isHovered ? '#FFFFFF' : '#CBD5E1',
-                    minWidth: '120px',
-                    maxWidth: '160px',
-                    lineHeight: 1.35,
-                    transition: 'color 0.2s ease',
-                    userSelect: 'none',
-                    textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 2px #000000',
-                  }}
-                >
-                  {feat.title}
-                </span>
+                    {/* Icon Below */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transform: isHovered ? 'scale(1.12)' : 'scale(1.0)',
+                        transition: 'transform 0.25s ease',
+                        filter: 'drop-shadow(0 3px 8px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9))',
+                      }}
+                    >
+                      <Icon size={38} color={feat.color} strokeWidth={2.2} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Icon on Top */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '8px',
+                        transform: isHovered ? 'scale(1.12)' : 'scale(1.0)',
+                        transition: 'transform 0.25s ease',
+                        filter: 'drop-shadow(0 3px 8px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9))',
+                      }}
+                    >
+                      <Icon size={38} color={feat.color} strokeWidth={2.2} />
+                    </div>
+
+                    {/* Title Label Below */}
+                    <span
+                      style={{
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.015em',
+                        color: isHovered ? '#FFFFFF' : '#CBD5E1',
+                        minWidth: '120px',
+                        maxWidth: '160px',
+                        lineHeight: 1.35,
+                        transition: 'color 0.2s ease',
+                        userSelect: 'none',
+                        textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 1px 2px #000000',
+                      }}
+                    >
+                      {feat.title}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Clean Tooltip on Hover: Above for top elements, Below for bottom elements */}

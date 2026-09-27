@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
@@ -841,157 +841,44 @@ export function BiologyLab3D({ hovered }: { hovered: boolean }) {
 }
 
 // ============================================================================
-// 5. COMPUTER LAB 3D: AUTHENTIC 3D PYTHON LOGO
-// Interlocking dimensional Python Blue and Python Gold snake bodies,
-// rounded snout heads, pupil eye nodes, and orbiting cyber data ring!
+// 5. COMPUTER LAB 3D: AUTHENTIC OFFICIAL PYTHON 3D LOGO
+// Uses the exact, official Python Software Foundation vector paths & gradients.
+// Rendered on a gleaming 3D cyber acrylic disc with metallic bezel,
+// dual-sided emblem, and orbiting holographic data ring!
 // ============================================================================
-interface PythonHalfProps {
-  color: string;
-  emissive: string;
-  eyeColor: string;
-  eyeEmissive: string;
-  rotationZ: number;
-}
-
-function PythonSnakeHalf({
-  color,
-  emissive,
-  eyeColor,
-  eyeEmissive,
-  rotationZ,
-}: PythonHalfProps) {
-  // Proportions scaled to fit comfortably within the satellite sphere
-  const depth = 0.028;
-
-  return (
-    <group rotation={[0, 0, rotationZ]}>
-      {/* 1. Horizontal Head Section */}
-      <mesh position={[0.015, 0.052, 0]}>
-        <boxGeometry args={[0.060, 0.026, depth]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* Rounded Snout Cap (Head Front at Right) */}
-      <mesh position={[0.045, 0.052, 0]}>
-        <cylinderGeometry args={[0.013, 0.013, depth, 16]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* 2. Top-Left Shoulder */}
-      <mesh position={[-0.038, 0.052, 0]}>
-        <boxGeometry args={[0.030, 0.026, depth]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-      <mesh position={[-0.038, 0.052, 0]}>
-        <cylinderGeometry args={[0.013, 0.013, depth, 16]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* 3. Left Vertical Body Trunk */}
-      <mesh position={[-0.038, 0.016, 0]}>
-        <boxGeometry args={[0.026, 0.046, depth]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* 4. Bottom-Left Tail Turn Corner */}
-      <mesh position={[-0.038, -0.014, 0]}>
-        <boxGeometry args={[0.026, 0.020, depth]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-      <mesh position={[-0.038, -0.014, 0]}>
-        <cylinderGeometry args={[0.010, 0.010, depth, 16]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* 5. Horizontal Tail Hook (Tucks into center cavity) */}
-      <mesh position={[-0.015, -0.014, 0]}>
-        <boxGeometry args={[0.030, 0.020, depth]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-      {/* Rounded Tail Tip */}
-      <mesh position={[0.000, -0.014, 0]}>
-        <cylinderGeometry args={[0.010, 0.010, depth, 16]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={0.5}
-          metalness={0.35}
-          roughness={0.25}
-        />
-      </mesh>
-
-      {/* 6. Python Eye Dots (Front and Back for 3D visibility) */}
-      <mesh position={[0.032, 0.056, depth / 2 + 0.002]}>
-        <sphereGeometry args={[0.0048, 12, 12]} />
-        <meshStandardMaterial
-          color={eyeColor}
-          emissive={eyeEmissive}
-          emissiveIntensity={1.5}
-        />
-      </mesh>
-      <mesh position={[0.032, 0.056, -(depth / 2 + 0.002)]}>
-        <sphereGeometry args={[0.0048, 12, 12]} />
-        <meshStandardMaterial
-          color={eyeColor}
-          emissive={eyeEmissive}
-          emissiveIntensity={1.5}
-        />
-      </mesh>
-    </group>
-  );
-}
+const PYTHON_SVG_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="110px" height="110px" viewBox="0.21 -0.077 110 110"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="63.8159" y1="56.6829" x2="118.4934" y2="1.8225" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#387EB8"/><stop offset="1" style="stop-color:#366994"/></linearGradient><path fill="url(#SVGID_1_)" d="M55.023-0.077c-25.971,0-26.25,10.081-26.25,12.156c0,3.148,0,12.594,0,12.594h26.75v3.781 c0,0-27.852,0-37.375,0c-7.949,0-17.938,4.833-17.938,26.25c0,19.673,7.792,27.281,15.656,27.281c2.335,0,9.344,0,9.344,0 s0-9.765,0-13.125c0-5.491,2.721-15.656,15.406-15.656c15.91,0,19.971,0,26.531,0c3.902,0,14.906-1.696,14.906-14.406 c0-13.452,0-17.89,0-24.219C82.054,11.426,81.515-0.077,55.023-0.077z M40.273,8.392c2.662,0,4.813,2.15,4.813,4.813 c0,2.661-2.151,4.813-4.813,4.813s-4.813-2.151-4.813-4.813C35.46,10.542,37.611,8.392,40.273,8.392z"/><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="97.0444" y1="21.6321" x2="155.6665" y2="-34.5308" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#FFE052"/><stop offset="1" style="stop-color:#FFC331"/></linearGradient><path fill="url(#SVGID_2_)" d="M55.397,109.923c25.959,0,26.282-10.271,26.282-12.156c0-3.148,0-12.594,0-12.594H54.897v-3.781 c0,0,28.032,0,37.375,0c8.009,0,17.938-4.954,17.938-26.25c0-23.322-10.538-27.281-15.656-27.281c-2.336,0-9.344,0-9.344,0 s0,10.216,0,13.125c0,5.491-2.631,15.656-15.406,15.656c-15.91,0-19.476,0-26.532,0c-3.892,0-14.906,1.896-14.906,14.406 c0,14.475,0,18.265,0,24.219C28.366,100.497,31.562,109.923,55.397,109.923z M70.148,101.454c-2.662,0-4.813-2.151-4.813-4.813 s2.15-4.813,4.813-4.813c2.661,0,4.813,2.151,4.813,4.813S72.809,101.454,70.148,101.454z"/></svg>`
+)}`;
 
 export function ComputerLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
   const ringRef = useRef<THREE.Group | null>(null);
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.clearRect(0, 0, 1024, 1024);
+      // Center the official Python logo with crisp breathing margins
+      ctx.drawImage(img, 72, 72, 880, 880);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+      setTexture(tex);
+    };
+    img.src = PYTHON_SVG_DATA_URI;
+  }, []);
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
@@ -1010,42 +897,76 @@ export function ComputerLab3D({ hovered }: { hovered: boolean }) {
 
   return (
     <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
-      {/* Central 3D Python Logo: Two Interlocking 180-degree symmetrical halves */}
+      {/* 3D Cyber Emblem Token holding the authentic official Python logo */}
       <group>
-        {/* Top Half: Python Blue Snake */}
-        <PythonSnakeHalf
-          color="#366994"
-          emissive="#1E4870"
-          eyeColor="#FFFFFF"
-          eyeEmissive="#93C5FD"
-          rotationZ={0}
-        />
+        {/* Sleek Dark Navy Disc Chassis */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.096, 0.096, 0.016, 40]} />
+          <meshStandardMaterial
+            color="#0B132B"
+            emissive="#1E3A8A"
+            emissiveIntensity={0.55}
+            metalness={0.85}
+            roughness={0.18}
+          />
+        </mesh>
 
-        {/* Bottom Half: Python Yellow Snake (Exact 180° rotation around Z) */}
-        <PythonSnakeHalf
-          color="#FFD43B"
-          emissive="#D49B00"
-          eyeColor="#1E3A8A"
-          eyeEmissive="#0F172A"
-          rotationZ={Math.PI}
-        />
+        {/* Outer Dual-Tone Glowing Rim */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.096, 0.0045, 16, 48]} />
+          <meshStandardMaterial
+            color="#38BDF8"
+            emissive="#0284C7"
+            emissiveIntensity={1.4}
+            metalness={0.9}
+            roughness={0.15}
+          />
+        </mesh>
+
+        {/* Front Face: Official Python Logo */}
+        {texture && (
+          <>
+            <mesh position={[0, 0, 0.009]}>
+              <planeGeometry args={[0.165, 0.165]} />
+              <meshStandardMaterial
+                map={texture}
+                transparent
+                alphaTest={0.01}
+                roughness={0.2}
+                metalness={0.1}
+              />
+            </mesh>
+
+            {/* Back Face: Symmetrical for 3D viewing */}
+            <mesh position={[0, 0, -0.009]} rotation={[0, Math.PI, 0]}>
+              <planeGeometry args={[0.165, 0.165]} />
+              <meshStandardMaterial
+                map={texture}
+                transparent
+                alphaTest={0.01}
+                roughness={0.2}
+                metalness={0.1}
+              />
+            </mesh>
+          </>
+        )}
       </group>
 
       {/* Orbiting Holographic Cyber Ring */}
       <group ref={ringRef}>
         <mesh>
-          <torusGeometry args={[0.116, 0.0035, 16, 48]} />
+          <torusGeometry args={[0.118, 0.0035, 16, 48]} />
           <meshStandardMaterial
             color="#38BDF8"
             emissive="#0284C7"
             emissiveIntensity={1.2}
           />
         </mesh>
-        <mesh position={[0.116, 0, 0]}>
+        <mesh position={[0.118, 0, 0]}>
           <sphereGeometry args={[0.009, 12, 12]} />
           <meshBasicMaterial color="#FFFFFF" />
         </mesh>
-        <mesh position={[-0.116, 0, 0]}>
+        <mesh position={[-0.118, 0, 0]}>
           <sphereGeometry args={[0.007, 12, 12]} />
           <meshBasicMaterial color="#FFD43B" />
         </mesh>

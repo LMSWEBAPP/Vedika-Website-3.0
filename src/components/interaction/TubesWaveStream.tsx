@@ -83,8 +83,8 @@ export function TubesWaveStream() {
       const endX = width + 40;
       const totalSpan = endX - startX;
 
-      // Check if Vedika has arrived in Page 3 position
-      const isVedikaInPosition = currentScroll >= 1.65;
+      // Check if Vedika has arrived and settled into Page 3 position (both forward and reverse)
+      const isVedikaInPosition = currentScroll >= 1.65 && currentScroll <= 2.08;
 
       if (!isVedikaInPosition) {
         // Reset wave flow so it re-triggers fresh when scrolling back down

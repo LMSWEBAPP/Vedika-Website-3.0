@@ -166,10 +166,10 @@ export default function HomePage() {
       : Math.max(0, 1 - (scrollProgress - 1.0) * 4.5);
 
   // Page 3: Strictly ZERO waves and ZERO text until Vedika finishes transit at scrollProgress >= 1.65
-  // And smoothly fades out as user transitions to Page 4 (between 2.05 and 2.45)
+  // In reverse also, waves and UI stay ZERO until Vedika arrives at scrollProgress <= 2.08
   const p3Reveal = Math.max(0, Math.min(1, (scrollProgress - 1.65) / 0.30));
   const p3Ease = p3Reveal * p3Reveal * (3 - 2 * p3Reveal); // Smooth cubic ease
-  const p3Exit = Math.max(0, Math.min(1, (scrollProgress - 2.05) / 0.40));
+  const p3Exit = Math.max(0, Math.min(1, (scrollProgress - 2.05) / 0.10));
   const p3FadeOut = 1 - (p3Exit * p3Exit * (3 - 2 * p3Exit));
 
   const p3WaveOpacity = p3Ease * p3FadeOut;
