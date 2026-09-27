@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 /**
  * TouchTexture:
- * Off-screen trail canvas implementation from Bruno Imbrizi (interactive-particles).
+ * Off-screen trail canvas from Bruno Imbrizi (interactive-particles).
  * Maintains a fading history of cursor positions drawn with soft radial gradients
  * and easeOutSine easing.
  */
@@ -115,7 +115,7 @@ class TouchTexture {
   }
 }
 
-// Global target coordinate cache for zero latency on revisits
+// Global target cache for zero latency on revisits
 const TARGET_CACHE = new Map<string, { targetWidth: number; targetHeight: number; targets: any[] }>();
 
 interface PersonaParticleBotProps {
@@ -124,17 +124,15 @@ interface PersonaParticleBotProps {
   height?: number;
   colorMode?: 'purple' | 'cosmic-purple' | 'golden' | 'emerald-green' | 'green' | 'vibrant' | string;
   className?: string;
-  inline?: boolean;
   particleStep?: number;
 }
 
 export default function PersonaParticleBot({
-  src = '/assets/vedika-bot-school.png',
+  src = '/assets/human-student.png',
   width = 240,
   height = 320,
-  colorMode = 'cosmic-purple',
+  colorMode = 'vibrant',
   className = '',
-  inline = true,
   particleStep = 2,
 }: PersonaParticleBotProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -192,7 +190,7 @@ export default function PersonaParticleBot({
       updateCanvasSize();
       const step = particleStep || 2;
       const imageSrc = sourceImg?.currentSrc || sourceImg?.src || src;
-      const cacheKey = `${imageSrc}_${width}_${height}_${colorMode}_s${step}_v2`;
+      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v4`;
 
       if (TARGET_CACHE.has(cacheKey)) {
         const cached = TARGET_CACHE.get(cacheKey)!;
@@ -237,7 +235,6 @@ export default function PersonaParticleBot({
       const scaleX = targetWidth / sampleW;
       const scaleY = targetHeight / sampleH;
       const targets: any[] = [];
-      const sizeFactor = 0.98;
 
       for (let y = 0; y < sampleH; y += step) {
         for (let x = 0; x < sampleW; x += step) {
@@ -253,128 +250,35 @@ export default function PersonaParticleBot({
           const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
           const maxC = Math.max(r, g, b);
           const minC = Math.min(r, g, b);
-          const alphaNorm = a / 255;
 
-          // Discard near-black background
-          if (luminance < 14 && maxC < 20) continue;
+          // Discard pure black or background edges
+          if (luminance < 12 && maxC < 18) continue;
           // Discard pure solid white background padding
-          if (luminance > 248 && maxC - minC < 12 && a > 240) continue;
+          if (luminance > 248 && maxC - minC < 10 && a > 240) continue;
 
-          let pSize = 1.9 * sizeFactor;
+          // Faithful natural color preservation with subtle luminous vibrancy
           let baseR = r;
           let baseG = g;
           let baseB = b;
-          let baseAlpha = 1.0;
+          let baseAlpha = Math.min(1.0, (a / 255) * 1.05);
 
-          const saturation = maxC > 0 ? (maxC - minC) / maxC : 0;
-
-          if (colorMode === 'purple' || colorMode === 'cosmic-purple') {
-            if ((luminance > 170 && saturation < 0.26) || luminance > 215) {
-              baseR = 255;
-              baseG = 255;
-              baseB = 255;
-              baseAlpha = 1.0;
-              pSize = 2.1 * sizeFactor;
-            } else if (luminance < 115 && ((b > 35 && b > g + 8) || (r > 25 && b > 40) || luminance < 65)) {
-              baseR = 35;
-              baseG = 15;
-              baseB = 75;
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if ((b > 115 && b > g + 20) || saturation > 0.18) {
-              baseR = Math.min(255, Math.round(r * 1.25));
-              baseG = Math.min(255, Math.round(g * 1.05));
-              baseB = Math.min(255, Math.round(b * 1.30));
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if (luminance > 75) {
-              baseR = Math.min(255, Math.round(r * 1.10));
-              baseG = Math.min(255, Math.round(g * 1.05));
-              baseB = Math.min(255, Math.round(b * 1.20));
-              baseAlpha = Math.min(0.96, Math.max(0.85, alphaNorm * 0.95));
-              pSize = 1.85 * sizeFactor;
-            } else {
-              baseR = Math.max(45, Math.round(r * 0.9));
-              baseG = Math.max(20, Math.round(g * 0.8));
-              baseB = Math.max(80, Math.round(b * 1.05));
-              baseAlpha = Math.min(0.88, Math.max(0.70, alphaNorm * 0.85));
-              pSize = 1.7 * sizeFactor;
-            }
-          } else if (colorMode === 'golden' || colorMode === 'gold') {
-            if ((luminance > 175 && saturation < 0.28) || luminance > 215) {
-              baseR = 255;
-              baseG = 255;
-              baseB = 255;
-              baseAlpha = 1.0;
-              pSize = 2.1 * sizeFactor;
-            } else if (luminance < 115 && (saturation < 0.35 || luminance < 60)) {
-              baseR = 25;
-              baseG = 20;
-              baseB = 10;
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if (saturation > 0.20 || maxC > 140) {
-              baseR = Math.min(255, Math.round(r * 1.25 + 15));
-              baseG = Math.min(255, Math.round(g * 1.15 + 10));
-              baseB = Math.max(0, Math.round(b * 0.8));
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if (luminance > 70) {
-              baseR = 245;
-              baseG = 165;
-              baseB = 35;
-              baseAlpha = Math.min(0.96, Math.max(0.85, alphaNorm * 0.95));
-              pSize = 1.85 * sizeFactor;
-            } else {
-              baseR = 190;
-              baseG = 115;
-              baseB = 20;
-              baseAlpha = Math.min(0.88, Math.max(0.70, alphaNorm * 0.85));
-              pSize = 1.7 * sizeFactor;
-            }
-          } else if (colorMode === 'emerald-green' || colorMode === 'green') {
-            if ((luminance > 175 && saturation < 0.28) || luminance > 215) {
-              baseR = 255;
-              baseG = 255;
-              baseB = 255;
-              baseAlpha = 1.0;
-              pSize = 2.1 * sizeFactor;
-            } else if (luminance < 115 && (saturation < 0.35 || luminance < 60)) {
-              baseR = 8;
-              baseG = 30;
-              baseB = 20;
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if (saturation > 0.18 || maxC > 130) {
-              baseR = Math.min(255, Math.round(r * 0.85));
-              baseG = Math.min(255, Math.round(g * 1.35 + 20));
-              baseB = Math.min(255, Math.round(b * 1.15 + 15));
-              baseAlpha = 1.0;
-              pSize = 2.0 * sizeFactor;
-            } else if (luminance > 70) {
-              baseR = 20;
-              baseG = 195;
-              baseB = 145;
-              baseAlpha = Math.min(0.96, Math.max(0.85, alphaNorm * 0.95));
-              pSize = 1.85 * sizeFactor;
-            } else {
-              baseR = 10;
-              baseG = 125;
-              baseB = 90;
-              baseAlpha = Math.min(0.88, Math.max(0.70, alphaNorm * 0.85));
-              pSize = 1.7 * sizeFactor;
-            }
+          // Make darker shadows gently visible against pitch black background
+          if (luminance < 35) {
+            baseR = Math.max(baseR, 28);
+            baseG = Math.max(baseG, 28);
+            baseB = Math.max(baseB, 38);
           }
+
+          // Delicate starlight dot size: ~1.2px - 1.5px (never giant clumpy blobs)
+          const pSize = 1.35;
 
           const relX = x * scaleX;
           const relY = y * scaleY;
-          const pColor = `rgba(${baseR}, ${baseG}, ${baseB}, ${baseAlpha.toFixed(2)})`;
 
           targets.push({
             relX,
             relY,
             size: pSize,
-            color: pColor,
             baseR,
             baseG,
             baseB,
@@ -397,30 +301,29 @@ export default function PersonaParticleBot({
       const newParticles: any[] = [];
       for (let i = 0; i < targets.length; i++) {
         const t = targets[i];
-        const spawnX = robotX + t.relX + (Math.random() - 0.5) * 14;
-        const spawnY = robotY + t.relY + (Math.random() - 0.5) * 14;
-        const spawnZ = -30 - Math.random() * 30;
+        const spawnX = robotX + t.relX + (Math.random() - 0.5) * 10;
+        const spawnY = robotY + t.relY + (Math.random() - 0.5) * 10;
+        const spawnZ = -20 - Math.random() * 25;
 
         newParticles.push({
           relX: t.relX,
           relY: t.relY,
           angle: Math.random() * Math.PI * 2,
-          rnd: 0.6 + Math.random() * 1.4,
+          rnd: 0.7 + Math.random() * 0.8,
           x: spawnX,
           y: spawnY,
           z: spawnZ,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: (Math.random() - 0.5) * 0.8,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
           vz: 0,
           size: t.size,
-          color: t.color,
           baseR: t.baseR,
           baseG: t.baseG,
           baseB: t.baseB,
           baseAlpha: t.baseAlpha,
-          spring: 0.095,
-          friction: 0.74,
-          floatPower: 10.0,
+          spring: 0.098,
+          friction: 0.76,
+          floatPower: 8.5,
         });
       }
 
@@ -476,7 +379,7 @@ export default function PersonaParticleBot({
     // Simulation render loop
     const render = () => {
       if (!isMounted) return;
-      time += 0.022;
+      time += 0.020;
 
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -491,13 +394,13 @@ export default function PersonaParticleBot({
           const p = particles[i];
 
           // Gentle ambient float oscillation
-          const floatX = Math.cos(p.angle + time * 0.75) * 1.35 * p.rnd;
-          const floatY = Math.sin(p.angle + time * 0.65) * 1.35 * p.rnd;
+          const floatX = Math.cos(p.angle + time * 0.70) * 1.1 * p.rnd;
+          const floatY = Math.sin(p.angle + time * 0.60) * 1.1 * p.rnd;
 
-          let targetX = robotX + p.relX + floatX;
-          let targetY = robotY + p.relY + floatY;
+          const targetX = robotX + p.relX + floatX;
+          const targetY = robotY + p.relY + floatY;
 
-          // Touch texture interaction
+          // Touch texture repulsion interaction
           if (touchData) {
             const uvX = Math.max(0, Math.min(63, Math.floor((p.relX / targetWidth) * 64)));
             const uvY = Math.max(0, Math.min(63, Math.floor((p.relY / targetHeight) * 64)));
@@ -509,13 +412,13 @@ export default function PersonaParticleBot({
                 p.relY - (mouse.y - robotY),
                 p.relX - (mouse.x - robotX)
               );
-              const push = touchForce * 32.0;
-              p.vx += Math.cos(repelAngle) * push * 0.35;
-              p.vy += Math.sin(repelAngle) * push * 0.35;
+              const push = touchForce * 24.0;
+              p.vx += Math.cos(repelAngle) * push * 0.32;
+              p.vy += Math.sin(repelAngle) * push * 0.32;
             }
           }
 
-          // Spring physics back to target anchor
+          // Spring pull back to target anchor
           const dx = targetX - p.x;
           const dy = targetY - p.y;
           p.vx += dx * p.spring;
@@ -526,11 +429,9 @@ export default function PersonaParticleBot({
           p.x += p.vx;
           p.y += p.vy;
 
-          // Render particle dot
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
+          // Render micro-particle pixel (crisp starlight fillRect for performance and sharpness)
+          ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${p.baseAlpha.toFixed(2)})`;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
         }
       }
 

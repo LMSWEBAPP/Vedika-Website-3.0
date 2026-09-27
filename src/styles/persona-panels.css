@@ -1,117 +1,92 @@
 /* ==========================================================================
    VEDIKA 3-PANEL ECOSYSTEM ARCHITECTURE (STUDENT, TEACHER, ADMIN)
-   - Mode 1 (Student): 70% Content Left / 30% Kid Particle Bot Right (Purple)
-   - Mode 2 (Teacher): 30% Teacher Particle Bot Left / 70% Content Right (Golden)
-   - Mode 3 (Admin):   70% Content Left / 30% Admin Particle Bot Right (Emerald Green)
-   - Zero-jank cubic bezier flex sliding transitions
-   - Pitch black cinematic SaaS background
+   - Zero vertical scroll for all panels (Horizontal Carousels)
+   - Clean spacing below global Navbar (no duplicate logo collision)
+   - Normal human 3D character particle animations (Student, Teacher, Admin)
+   - Asymmetric 70% / 30% sliding panels with cubic-bezier flex interpolation
    ========================================================================== */
 
 :root {
-  /* Purple Theme (Student) */
+  /* Student Tokens (Purple) */
   --persona-student-primary: #A855F7;
   --persona-student-dark: #7C3AED;
   --persona-student-glow: rgba(168, 85, 247, 0.35);
-  --persona-student-bg: linear-gradient(180deg, rgba(22, 14, 46, 0.88) 0%, rgba(8, 10, 22, 0.96) 100%);
+  --persona-student-bg: linear-gradient(180deg, rgba(22, 14, 46, 0.90) 0%, rgba(8, 10, 22, 0.98) 100%);
   --persona-student-border: rgba(168, 85, 247, 0.25);
 
-  /* Golden Theme (Teacher) */
+  /* Teacher Tokens (Golden) */
   --persona-teacher-primary: #F59E0B;
   --persona-teacher-dark: #D97706;
   --persona-teacher-glow: rgba(245, 158, 11, 0.35);
-  --persona-teacher-bg: linear-gradient(180deg, rgba(38, 26, 12, 0.88) 0%, rgba(14, 12, 10, 0.96) 100%);
+  --persona-teacher-bg: linear-gradient(180deg, rgba(38, 26, 12, 0.90) 0%, rgba(14, 12, 10, 0.98) 100%);
   --persona-teacher-border: rgba(245, 158, 11, 0.28);
 
-  /* Emerald Green Theme (Admin) */
+  /* Admin Tokens (Emerald Green) */
   --persona-admin-primary: #10B981;
   --persona-admin-dark: #059669;
   --persona-admin-glow: rgba(16, 185, 129, 0.35);
-  --persona-admin-bg: linear-gradient(180deg, rgba(10, 32, 22, 0.88) 0%, rgba(6, 16, 12, 0.96) 100%);
+  --persona-admin-bg: linear-gradient(180deg, rgba(10, 32, 22, 0.90) 0%, rgba(6, 16, 12, 0.98) 100%);
   --persona-admin-border: rgba(16, 185, 129, 0.28);
 
   /* Common Dark Surface Tokens */
   --surface-pitch-black: #000000;
-  --surface-panel-card: rgba(15, 23, 42, 0.65);
   --text-primary-bright: #F8FAFC;
   --text-secondary-muted: #94A3B8;
   --text-tertiary-subtle: #64748B;
 }
 
-/* Master 5th Page Wrapper */
+/* Master 5th Page Wrapper - Fits 100vh with room for persistent top navbar */
 .persona-panels-wrapper {
   position: relative;
   width: 100%;
   height: 100vh;
-  min-height: 100vh;
+  max-height: 100vh;
   background-color: var(--surface-pitch-black);
   color: var(--text-primary-bright);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  overflow: hidden;
+  overflow: hidden !important;
   display: flex;
   flex-direction: column;
+  padding-top: 74px; /* Ample clearance below global fixed VEDIKA navbar */
+  box-sizing: border-box;
 }
 
-/* Top Role Switcher Header Bar */
+/* Sub-header Bar: Clean top row with right-aligned role switcher */
 .persona-top-navbar {
-  height: 68px;
-  min-height: 68px;
+  height: 54px;
+  min-height: 54px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 clamp(16px, 4vw, 40px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
+  justify-content: flex-end; /* Keeps left open for global VEDIKA logo */
+  padding: 0 clamp(20px, 4vw, 48px);
   z-index: 20;
 }
 
-.persona-logo-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.persona-logo-badge {
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  color: #FFFFFF;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 5px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.persona-logo-sub {
-  font-size: 0.82rem;
-  color: var(--text-secondary-muted);
-}
-
-/* 3-Role Pill Switcher */
+/* 3-Role Interactive Pill Switcher */
 .role-tabs-pill-bar {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 6px;
   border-radius: 9999px;
+  backdrop-filter: blur(12px);
 }
 
 .role-tab-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 18px;
+  padding: 6px 18px;
   border-radius: 9999px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-secondary-muted);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.22s ease;
 }
 
 .role-tab-btn:hover {
@@ -120,42 +95,43 @@
 }
 
 .role-tab-btn.active.student {
-  background: rgba(168, 85, 247, 0.2);
-  border-color: rgba(168, 85, 247, 0.5);
-  color: #E9D5FF;
+  background: rgba(168, 85, 247, 0.22);
+  border-color: rgba(168, 85, 247, 0.55);
+  color: #F3E8FF;
   box-shadow: 0 0 16px rgba(168, 85, 247, 0.35);
 }
 
 .role-tab-btn.active.teacher {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: rgba(245, 158, 11, 0.5);
-  color: #FDE68A;
+  background: rgba(245, 158, 11, 0.22);
+  border-color: rgba(245, 158, 11, 0.55);
+  color: #FEF3C7;
   box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
 }
 
 .role-tab-btn.active.admin {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.5);
-  color: #A7F3D0;
+  background: rgba(16, 185, 129, 0.22);
+  border-color: rgba(16, 185, 129, 0.55);
+  color: #D1FAE5;
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
 }
 
-/* Master Asymmetric Split Container */
+/* Master Asymmetric Split Screen (70% / 30%) */
 .persona-split-container {
   width: 100%;
   flex: 1;
-  max-height: calc(100vh - 68px);
+  min-height: 0;
+  max-height: calc(100vh - 128px);
   display: flex;
   align-items: stretch;
-  overflow: hidden;
+  overflow: hidden !important;
   position: relative;
   box-sizing: border-box;
 }
 
-/* Flex Base Transition for All Panels */
+/* Base Panel Slot */
 .panel-section-slot {
   transition: all 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+  overflow: hidden !important;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -170,8 +146,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 32px clamp(20px, 3.5vw, 44px);
-  overflow-y: auto;
+  padding: 16px clamp(24px, 4vw, 48px) 24px;
 }
 
 .persona-split-container.mode-student .student-side {
@@ -179,7 +154,7 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 24px 20px;
+  padding: 18px 20px;
   background: var(--persona-student-bg);
   border-left: 1px solid var(--persona-student-border);
 }
@@ -206,7 +181,7 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 24px 20px;
+  padding: 18px 20px;
   background: var(--persona-teacher-bg);
   border-right: 1px solid var(--persona-teacher-border);
 }
@@ -216,8 +191,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 32px clamp(20px, 3.5vw, 44px);
-  overflow-y: auto;
+  padding: 16px clamp(24px, 4vw, 48px) 24px;
 }
 
 .persona-split-container.mode-teacher .student-content,
@@ -242,8 +216,7 @@
   max-width: 72% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 32px clamp(20px, 3.5vw, 44px);
-  overflow-y: auto;
+  padding: 16px clamp(24px, 4vw, 48px) 24px;
 }
 
 .persona-split-container.mode-admin .admin-side {
@@ -251,7 +224,7 @@
   max-width: 28% !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 24px 20px;
+  padding: 18px 20px;
   background: var(--persona-admin-bg);
   border-left: 1px solid var(--persona-admin-border);
 }
@@ -286,9 +259,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 5px 14px;
   border-radius: 9999px;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -313,8 +286,8 @@
 }
 
 .persona-pulse-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   animation: pulseDot 1.8s infinite ease-in-out;
 }
@@ -342,31 +315,31 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: 12px 0;
+  margin: 6px 0;
   z-index: 2;
 }
 
 .persona-ambient-halo {
   position: absolute;
-  inset: -16px;
+  inset: -14px;
   border-radius: 50%;
   pointer-events: none;
   animation: pulseGlowRing 3s infinite ease-in-out;
 }
 
 .persona-ambient-halo.student {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.32) 0%, rgba(124, 58, 237, 0.08) 60%, transparent 80%);
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(124, 58, 237, 0.06) 60%, transparent 80%);
+  border: 1px solid rgba(168, 85, 247, 0.25);
 }
 
 .persona-ambient-halo.teacher {
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.32) 0%, rgba(217, 119, 6, 0.08) 60%, transparent 80%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.06) 60%, transparent 80%);
+  border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .persona-ambient-halo.admin {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.08) 60%, transparent 80%);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.06) 60%, transparent 80%);
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 /* Sidebar Navigation Buttons */
@@ -374,19 +347,19 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
 .persona-primary-btn {
   width: 100%;
-  max-width: 280px;
-  padding: 12px 20px;
+  max-width: 270px;
+  padding: 11px 18px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -397,45 +370,42 @@
 
 .persona-primary-btn.student-btn {
   background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
 }
 
 .persona-primary-btn.student-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(168, 85, 247, 0.65);
+  box-shadow: 0 10px 24px rgba(168, 85, 247, 0.65);
 }
 
 .persona-primary-btn.teacher-btn {
   background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.45);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
 }
 
 .persona-primary-btn.teacher-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(245, 158, 11, 0.65);
+  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.65);
 }
 
 .persona-primary-btn.admin-btn {
   background: linear-gradient(135deg, #059669 0%, #10B981 100%);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
 }
 
 .persona-primary-btn.admin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.65);
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.65);
 }
 
 .persona-secondary-btn {
   background: transparent;
   border: none;
   color: var(--text-secondary-muted);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .persona-secondary-btn:hover {
@@ -445,84 +415,193 @@
 .persona-chips-row {
   display: flex;
   gap: 8px;
-  font-size: 0.72rem;
+  font-size: 0.70rem;
   color: var(--text-tertiary-subtle);
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* ==========================================================================
-   CONTENT PANEL DESIGN (CARDS, COMPARISONS, GRIDS)
+   CONTENT PANEL DESIGN & ZERO-SCROLL CAROUSEL
    ========================================================================== */
 .content-header-bar {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .content-eyebrow {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .content-title {
-  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
   color: #FFFFFF;
 }
 
 .content-subtitle {
-  font-size: 0.95rem;
-  line-height: 1.55;
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: var(--text-secondary-muted);
-  max-width: 680px;
+  max-width: 660px;
   margin: 0;
 }
 
-/* Feature Grid for Student & Admin */
-.persona-feature-grid {
+/* Carousel Architecture */
+.persona-carousel-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden !important;
+}
+
+.persona-carousel-viewport {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden !important;
+  position: relative;
+  width: 100%;
+}
+
+.persona-carousel-track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.persona-carousel-slide {
+  min-width: 100%;
+  width: 100%;
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+/* Carousel Controls & Pagination Bar */
+.carousel-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.carousel-dots-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.carousel-dot.active.student {
+  width: 24px;
+  background: #A855F7;
+  box-shadow: 0 0 10px #A855F7;
+}
+
+.carousel-dot.active.teacher {
+  width: 24px;
+  background: #F59E0B;
+  box-shadow: 0 0 10px #F59E0B;
+}
+
+.carousel-dot.active.admin {
+  width: 24px;
+  background: #10B981;
+  box-shadow: 0 0 10px #10B981;
+}
+
+.carousel-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-size: 0.80rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carousel-nav-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.carousel-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Feature Slide Layout (2 cards per slide) */
+.slide-cards-duo {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-top: 20px;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
 }
 
 .persona-feature-card {
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 18px;
-  transition: all 0.25s ease;
+  border-radius: 16px;
+  padding: 22px 24px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
 }
 
 .persona-feature-card:hover {
+  background: rgba(22, 32, 54, 0.8);
   transform: translateY(-2px);
-  background: rgba(20, 30, 52, 0.75);
 }
 
 .persona-feature-card.student:hover {
-  border-color: rgba(168, 85, 247, 0.4);
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: 0 8px 28px rgba(168, 85, 247, 0.15);
 }
 
 .persona-feature-card.admin:hover {
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.15);
 }
 
 .card-icon-pill {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
 }
 
 .card-icon-pill.student {
@@ -541,85 +620,83 @@
 }
 
 .card-headline {
-  font-size: 1.02rem;
+  font-size: 1.12rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0;
+  margin: 0 0 8px 0;
 }
 
 .card-desc {
-  font-size: 0.84rem;
-  line-height: 1.5;
+  font-size: 0.88rem;
+  line-height: 1.55;
   color: var(--text-secondary-muted);
   margin: 0;
+  flex: 1;
 }
 
 .card-badge-tag {
   align-self: flex-start;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-secondary-muted);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 14px;
 }
 
 /* ==========================================================================
-   TEACHER TRADITIONAL DILEMMA VS VEDIKA RECTIFICATION CARDS
+   TEACHER DILEMMA VS RECTIFICATION SLIDE CARDS
    ========================================================================== */
-.teacher-comparison-flow {
+.teacher-slide-container {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 20px;
+  justify-content: center;
 }
 
-.comparison-row-card {
+.comparison-duo-panel {
   display: grid;
-  grid-template-columns: 1fr 40px 1.25fr;
+  grid-template-columns: 1fr 48px 1.25fr;
   align-items: center;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(245, 158, 11, 0.18);
-  border-radius: 14px;
-  padding: 16px 20px;
-  transition: all 0.25s ease;
-}
-
-.comparison-row-card:hover {
-  border-color: rgba(245, 158, 11, 0.45);
-  background: rgba(24, 20, 36, 0.85);
-  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
-  transform: translateY(-2px);
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+  border-radius: 18px;
+  padding: 26px 30px;
+  box-sizing: border-box;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .dilemma-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .dilemma-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #F87171;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .dilemma-title {
-  font-size: 0.96rem;
-  font-weight: 700;
-  color: #E2E8F0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
   margin: 0;
 }
 
 .dilemma-desc {
-  font-size: 0.82rem;
-  color: var(--text-tertiary-subtle);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-secondary-muted);
   margin: 0;
 }
 
@@ -629,14 +706,14 @@
   justify-content: center;
   color: #F59E0B;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
 }
 
 .rectification-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-left: 12px;
+  gap: 8px;
+  padding-left: 20px;
   border-left: 2px solid rgba(245, 158, 11, 0.35);
 }
 
@@ -644,28 +721,43 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #FBBF24;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .rectification-title {
-  font-size: 0.98rem;
-  font-weight: 700;
+  font-size: 1.18rem;
+  font-weight: 800;
   color: #FFFFFF;
   margin: 0;
 }
 
 .rectification-desc {
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-size: 0.90rem;
+  line-height: 1.55;
   color: #CBD5E1;
   margin: 0;
 }
 
-/* Keyframes */
+.impact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FDE68A;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Keyframe Animations */
 @keyframes pulseDot {
   0%, 100% {
     transform: scale(1);
@@ -695,30 +787,28 @@
   .persona-panels-wrapper {
     height: auto;
     min-height: 100vh;
-    overflow-y: auto;
+    padding-top: 64px;
+    overflow-y: auto !important;
   }
 
   .persona-top-navbar {
-    flex-direction: column;
-    height: auto;
-    padding: 12px 16px;
-    gap: 12px;
+    justify-content: center;
+    padding: 10px 16px;
   }
 
   .persona-split-container {
     flex-direction: column;
     max-height: none;
-    overflow-y: visible;
+    overflow-y: visible !important;
   }
 
-  /* When on mobile, sidebar sits neatly on top or bottom without 0px flex squash */
   .persona-split-container.mode-student .student-content,
   .persona-split-container.mode-teacher .teacher-content,
   .persona-split-container.mode-admin .admin-content {
     flex: none !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 20px 16px !important;
+    padding: 18px 16px !important;
     order: 2;
   }
 
@@ -728,16 +818,22 @@
     flex: none !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 24px 16px !important;
+    padding: 20px 16px !important;
     order: 1;
     border-left: none !important;
     border-right: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   }
 
-  .comparison-row-card {
+  .slide-cards-duo {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .comparison-duo-panel {
+    grid-template-columns: 1fr;
+    padding: 20px 18px;
+    gap: 14px;
   }
 
   .comparison-arrow {
@@ -746,7 +842,7 @@
 
   .rectification-block {
     padding-left: 0;
-    padding-top: 10px;
+    padding-top: 12px;
     border-left: none;
     border-top: 2px solid rgba(245, 158, 11, 0.35);
   }
