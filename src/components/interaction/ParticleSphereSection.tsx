@@ -61,90 +61,90 @@ export function ParticleSphereSection() {
           zIndex: 32,
         }}
       >
-        {/* Math Lab: Top */}
+        {/* Math Lab: Top (High above Math sphere, completely clearing Vedika's head) */}
         <div
           style={{
             position: 'absolute',
             left: '50%',
-            top: 'calc(50% - 240px)',
+            top: 'calc(50% - 370px)',
             transform: 'translate(-50%, -100%)',
             fontWeight: 700,
-            fontSize: '12.5px',
+            fontSize: '13px',
             letterSpacing: '0.04em',
             color: '#0F172A',
-            textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           Math Lab
         </div>
 
-        {/* Computer Lab: Upper Left */}
+        {/* Computer Lab: Upper Left (Pushed further left) */}
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% - 235px)',
-            top: 'calc(50% - 78px)',
+            left: 'calc(50% - 395px)',
+            top: 'calc(50% - 90px)',
             transform: 'translate(-100%, -50%)',
             fontWeight: 700,
-            fontSize: '12.5px',
+            fontSize: '13px',
             letterSpacing: '0.04em',
             color: '#0F172A',
-            textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           Computer Lab
         </div>
 
-        {/* Biology Lab: Lower Left */}
+        {/* Biology Lab: Lower Left (Pushed further left) */}
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% - 235px)',
-            top: 'calc(50% + 122px)',
+            left: 'calc(50% - 290px)',
+            top: 'calc(50% + 238px)',
             transform: 'translate(-100%, -50%)',
             fontWeight: 700,
-            fontSize: '12.5px',
+            fontSize: '13px',
             letterSpacing: '0.04em',
             color: '#0F172A',
-            textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           Biology Lab
         </div>
 
-        {/* Physics Lab: Upper Right */}
+        {/* Physics Lab: Upper Right (Pushed further right) */}
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% + 235px)',
-            top: 'calc(50% - 78px)',
+            left: 'calc(50% + 395px)',
+            top: 'calc(50% - 90px)',
             transform: 'translate(0%, -50%)',
             fontWeight: 700,
-            fontSize: '12.5px',
+            fontSize: '13px',
             letterSpacing: '0.04em',
             color: '#0F172A',
-            textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           Physics Lab
         </div>
 
-        {/* Chemistry Lab: Lower Right */}
+        {/* Chemistry Lab: Lower Right (Pushed further right) */}
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% + 235px)',
-            top: 'calc(50% + 122px)',
+            left: 'calc(50% + 290px)',
+            top: 'calc(50% + 238px)',
             transform: 'translate(0%, -50%)',
             fontWeight: 700,
-            fontSize: '12.5px',
+            fontSize: '13px',
             letterSpacing: '0.04em',
             color: '#0F172A',
-            textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >

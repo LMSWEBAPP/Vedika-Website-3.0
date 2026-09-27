@@ -27,8 +27,13 @@ export function TeacherDilemmaSection() {
   const isSolutionStage = expressionEase > 0.45;
 
   // Hover and Click state for interactive card drawer expansion
-  const [leftOpen, setLeftOpen] = useState(false);
-  const [rightOpen, setRightOpen] = useState(false);
+  const [leftHovered, setLeftHovered] = useState(false);
+  const [rightHovered, setRightHovered] = useState(false);
+  const [leftClicked, setLeftClicked] = useState(false);
+  const [rightClicked, setRightClicked] = useState(false);
+
+  const isLeftOpen = leftHovered || leftClicked;
+  const isRightOpen = rightHovered || rightClicked;
 
   if (!isSectionActive) return null;
 
@@ -117,25 +122,25 @@ export function TeacherDilemmaSection() {
       </div>
 
       {/* ===================================================================== */}
-      {/* 1. LEFT CARD: ONE COHESIVE BOX -> INNER BOX SLIDES OUT SMOOTHLY      */}
+      {/* 1. LEFT CARD: OUTER BOX -> INNER BOX SLIDES OUT SEAMLESSLY FROM BELOW */}
       {/* ===================================================================== */}
       <div
         className="card-dock left-dock"
-        onMouseEnter={() => setLeftOpen(true)}
-        onMouseLeave={() => setLeftOpen(false)}
-        onClick={() => setLeftOpen((prev) => !prev)}
+        onMouseEnter={() => setLeftHovered(true)}
+        onMouseLeave={() => setLeftHovered(false)}
+        onClick={() => setLeftClicked((prev) => !prev)}
         style={{
           position: 'absolute',
           left: 'clamp(2rem, 7.5vw, 8.5rem)',
-          top: '50%',
+          top: '48%',
           transform: 'translateY(-50%)',
           pointerEvents: 'auto',
           zIndex: 20,
           cursor: 'pointer',
         }}
       >
-        <div className={`card-shell ${leftOpen ? 'is-open' : ''}`}>
-          {/* A. OUTER BOX (FRONT PRIMARY CARD) */}
+        <div className={`card-shell ${isLeftOpen ? 'is-open' : ''}`}>
+          {/* A. OUTER BOX (TOP PRIMARY CARD) */}
           <div
             className="outer-box"
             style={{
@@ -145,10 +150,12 @@ export function TeacherDilemmaSection() {
               border: isSolutionStage
                 ? '1px solid rgba(52, 211, 153, 0.45)'
                 : '1px solid rgba(248, 113, 113, 0.45)',
+              borderBottomLeftRadius: isLeftOpen ? '0px' : '20px',
+              borderBottomRightRadius: isLeftOpen ? '0px' : '20px',
               boxShadow: isSolutionStage
                 ? '0 15px 35px rgba(6, 78, 59, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
                 : '0 15px 35px rgba(127, 29, 29, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-              transition: 'background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease',
+              transition: 'background 0.5s ease, border-color 0.5s ease, border-radius 0.35s ease, box-shadow 0.5s ease',
             }}
           >
             <div className="icon-badge" style={{ background: isSolutionStage ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)' }}>
@@ -165,54 +172,69 @@ export function TeacherDilemmaSection() {
               {isSolutionStage ? 'Instant 1-on-1 Guidance' : 'Hours of Same Doubts'}
             </span>
             <div className="reveal-hint">
-              <span>{leftOpen ? 'Click to close' : 'Hover to view details'}</span>
-              <ChevronDown size={13} style={{ transform: leftOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }} />
+              <span>{isLeftOpen ? 'Click to collapse' : 'Hover to reveal details'}</span>
+              <ChevronDown size={13} style={{ transform: isLeftOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.35s ease' }} />
             </div>
           </div>
 
-          {/* B. INNER BOX (SLIDES OUT SMOOTHLY FROM THE OUTER BOX) */}
+          {/* B. INNER DRAWER: SLIDES OUT SMOOTHLY FROM THE BOTTOM OF OUTER CARD */}
           <div
-            className="inner-box"
+            className="drawer-wrapper"
             style={{
-              background: 'rgba(15, 23, 42, 0.96)',
-              border: isSolutionStage
-                ? '1px solid rgba(52, 211, 153, 0.35)'
-                : '1px solid rgba(248, 113, 113, 0.35)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.5)',
+              maxHeight: isLeftOpen ? '260px' : '0px',
+              opacity: isLeftOpen ? 1 : 0,
+              transform: isLeftOpen ? 'translateY(0)' : 'translateY(-12px)',
+              transition: 'max-height 0.60s cubic-bezier(0.16, 1, 0.3, 1), transform 0.60s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.40s ease',
             }}
           >
-            <h5
-              style={{
-                margin: '0 0 6px 0',
-                fontSize: '0.90rem',
-                fontWeight: 700,
-                color: isSolutionStage ? '#34D399' : '#F87171',
-              }}
-            >
-              {isSolutionStage
-                ? 'Vedika Answers 24/7'
-                : 'Constant Repetition Burnout'}
-            </h5>
-            <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.45, color: '#CBD5E1' }}>
-              {isSolutionStage
-                ? 'Vedika resolves repetitive student queries in real time with step-by-step Socratic voice guidance, freeing teachers to focus on classroom excellence.'
-                : 'Teachers lose up to 3 hours every day answering identical foundational doubts to 50+ students, causing deep mental exhaustion.'}
-            </p>
             <div
-              className="stat-pill"
+              className="inner-drawer"
               style={{
-                background: isSolutionStage
-                  ? 'rgba(16, 185, 129, 0.15)'
-                  : 'rgba(239, 68, 68, 0.15)',
-                color: isSolutionStage ? '#6EE7B7' : '#FCA5A5',
+                background: 'rgba(15, 23, 42, 0.96)',
+                border: isSolutionStage
+                  ? '1px solid rgba(52, 211, 153, 0.35)'
+                  : '1px solid rgba(248, 113, 113, 0.35)',
+                borderTop: 'none', // Seamless junction with outer box!
+                borderTopLeftRadius: '0px', // Straight junction corners!
+                borderTopRightRadius: '0px', // Straight junction corners!
+                borderBottomLeftRadius: '20px',
+                borderBottomRightRadius: '20px',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 10px 20px rgba(0, 0, 0, 0.5)',
               }}
             >
-              {isSolutionStage ? <CheckCircle2 size={12} /> : <Clock size={12} />}
-              <span>
+              <h5
+                style={{
+                  margin: '0 0 6px 0',
+                  fontSize: '0.90rem',
+                  fontWeight: 700,
+                  color: isSolutionStage ? '#34D399' : '#F87171',
+                }}
+              >
                 {isSolutionStage
-                  ? 'Zero teacher burnout • 100% doubt coverage'
-                  : '85% of queries are repeated concepts'}
-              </span>
+                  ? 'Vedika Answers 24/7'
+                  : 'Constant Repetition Burnout'}
+              </h5>
+              <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.45, color: '#CBD5E1' }}>
+                {isSolutionStage
+                  ? 'Vedika resolves repetitive student queries in real time with step-by-step Socratic voice guidance, freeing teachers to focus on classroom excellence.'
+                  : 'Teachers lose up to 3 hours every day answering identical foundational doubts to 50+ students, causing deep mental exhaustion.'}
+              </p>
+              <div
+                className="stat-pill"
+                style={{
+                  background: isSolutionStage
+                    ? 'rgba(16, 185, 129, 0.15)'
+                    : 'rgba(239, 68, 68, 0.15)',
+                  color: isSolutionStage ? '#6EE7B7' : '#FCA5A5',
+                }}
+              >
+                {isSolutionStage ? <CheckCircle2 size={12} /> : <Clock size={12} />}
+                <span>
+                  {isSolutionStage
+                    ? 'Zero teacher burnout • 100% doubt coverage'
+                    : '85% of queries are repeated concepts'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -271,25 +293,25 @@ export function TeacherDilemmaSection() {
       </div>
 
       {/* ===================================================================== */}
-      {/* 3. RIGHT CARD: ONE COHESIVE BOX -> INNER BOX SLIDES OUT SMOOTHLY     */}
+      {/* 3. RIGHT CARD: OUTER BOX -> INNER BOX SLIDES OUT SEAMLESSLY FROM BELOW */}
       {/* ===================================================================== */}
       <div
         className="card-dock right-dock"
-        onMouseEnter={() => setRightOpen(true)}
-        onMouseLeave={() => setRightOpen(false)}
-        onClick={() => setRightOpen((prev) => !prev)}
+        onMouseEnter={() => setRightHovered(true)}
+        onMouseLeave={() => setRightHovered(false)}
+        onClick={() => setRightClicked((prev) => !prev)}
         style={{
           position: 'absolute',
           right: 'clamp(2rem, 7.5vw, 8.5rem)',
-          top: '50%',
+          top: '48%',
           transform: 'translateY(-50%)',
           pointerEvents: 'auto',
           zIndex: 20,
           cursor: 'pointer',
         }}
       >
-        <div className={`card-shell ${rightOpen ? 'is-open' : ''}`}>
-          {/* A. OUTER BOX (FRONT PRIMARY CARD) */}
+        <div className={`card-shell ${isRightOpen ? 'is-open' : ''}`}>
+          {/* A. OUTER BOX (TOP PRIMARY CARD) */}
           <div
             className="outer-box"
             style={{
@@ -299,10 +321,12 @@ export function TeacherDilemmaSection() {
               border: isSolutionStage
                 ? '1px solid rgba(96, 165, 250, 0.45)'
                 : '1px solid rgba(244, 114, 182, 0.45)',
+              borderBottomLeftRadius: isRightOpen ? '0px' : '20px',
+              borderBottomRightRadius: isRightOpen ? '0px' : '20px',
               boxShadow: isSolutionStage
                 ? '0 15px 35px rgba(30, 58, 138, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
                 : '0 15px 35px rgba(131, 24, 67, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-              transition: 'background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease',
+              transition: 'background 0.5s ease, border-color 0.5s ease, border-radius 0.35s ease, box-shadow 0.5s ease',
             }}
           >
             <div className="icon-badge" style={{ background: isSolutionStage ? 'rgba(59, 130, 246, 0.25)' : 'rgba(236, 72, 153, 0.25)' }}>
@@ -319,125 +343,122 @@ export function TeacherDilemmaSection() {
               {isSolutionStage ? 'Automated Rubric & Feedback' : 'Late Nights Correcting Piles'}
             </span>
             <div className="reveal-hint">
-              <span>{rightOpen ? 'Click to close' : 'Hover to view details'}</span>
-              <ChevronDown size={13} style={{ transform: rightOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }} />
+              <span>{isRightOpen ? 'Click to collapse' : 'Hover to reveal details'}</span>
+              <ChevronDown size={13} style={{ transform: isRightOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.35s ease' }} />
             </div>
           </div>
 
-          {/* B. INNER BOX (SLIDES OUT SMOOTHLY FROM THE OUTER BOX) */}
+          {/* B. INNER DRAWER: SLIDES OUT SMOOTHLY FROM THE BOTTOM OF OUTER CARD */}
           <div
-            className="inner-box"
+            className="drawer-wrapper"
             style={{
-              background: 'rgba(15, 23, 42, 0.96)',
-              border: isSolutionStage
-                ? '1px solid rgba(96, 165, 250, 0.35)'
-                : '1px solid rgba(244, 114, 182, 0.35)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.5)',
+              maxHeight: isRightOpen ? '260px' : '0px',
+              opacity: isRightOpen ? 1 : 0,
+              transform: isRightOpen ? 'translateY(0)' : 'translateY(-12px)',
+              transition: 'max-height 0.60s cubic-bezier(0.16, 1, 0.3, 1), transform 0.60s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.40s ease',
             }}
           >
-            <h5
-              style={{
-                margin: '0 0 6px 0',
-                fontSize: '0.90rem',
-                fontWeight: 700,
-                color: isSolutionStage ? '#60A5FA' : '#F472B6',
-              }}
-            >
-              {isSolutionStage
-                ? 'Intelligent Rubric Analysis'
-                : 'Endless Manual Grading'}
-            </h5>
-            <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.45, color: '#CBD5E1' }}>
-              {isSolutionStage
-                ? 'Vedika instantly evaluates student assignments with rubrics, misconception detection, and actionable performance dashboards ready for the teacher.'
-                : 'Correcting 60+ assignments every week demands 12+ evening hours of manual red-inking, leaving no time for meaningful feedback.'}
-            </p>
             <div
-              className="stat-pill"
+              className="inner-drawer"
               style={{
-                background: isSolutionStage
-                  ? 'rgba(59, 130, 246, 0.15)'
-                  : 'rgba(236, 72, 153, 0.15)',
-                color: isSolutionStage ? '#93C5FD' : '#F9A8D4',
+                background: 'rgba(15, 23, 42, 0.96)',
+                border: isSolutionStage
+                  ? '1px solid rgba(96, 165, 250, 0.35)'
+                  : '1px solid rgba(244, 114, 182, 0.35)',
+                borderTop: 'none', // Seamless junction with outer box!
+                borderTopLeftRadius: '0px', // Straight junction corners!
+                borderTopRightRadius: '0px', // Straight junction corners!
+                borderBottomLeftRadius: '20px',
+                borderBottomRightRadius: '20px',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.8), 0 10px 20px rgba(0, 0, 0, 0.5)',
               }}
             >
-              {isSolutionStage ? <CheckCircle2 size={12} /> : <Clock size={12} />}
-              <span>
+              <h5
+                style={{
+                  margin: '0 0 6px 0',
+                  fontSize: '0.90rem',
+                  fontWeight: 700,
+                  color: isSolutionStage ? '#60A5FA' : '#F472B6',
+                }}
+              >
                 {isSolutionStage
-                  ? 'Instant rubrics • Deep performance insights'
-                  : '12+ hours weekly spent grading by hand'}
-              </span>
+                  ? 'Intelligent Rubric Analysis'
+                  : 'Endless Manual Grading'}
+              </h5>
+              <p style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.45, color: '#CBD5E1' }}>
+                {isSolutionStage
+                  ? 'Vedika instantly evaluates student assignments with rubrics, misconception detection, and actionable performance dashboards ready for the teacher.'
+                  : 'Correcting 60+ assignments every week demands 12+ evening hours of manual red-inking, leaving no time for meaningful feedback.'}
+              </p>
+              <div
+                className="stat-pill"
+                style={{
+                  background: isSolutionStage
+                    ? 'rgba(59, 130, 246, 0.15)'
+                    : 'rgba(236, 72, 153, 0.15)',
+                  color: isSolutionStage ? '#93C5FD' : '#F9A8D4',
+                }}
+              >
+                {isSolutionStage ? <CheckCircle2 size={12} /> : <Clock size={12} />}
+                <span>
+                  {isSolutionStage
+                    ? 'Instant rubrics • Deep performance insights'
+                    : '12+ hours weekly spent grading by hand'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* CARD DRAWER SLIDING CSS */}
+      {/* CARD DRAWER STYLES */}
       <style jsx>{`
         .card-dock {
-          width: 310px;
-          height: 195px;
+          width: 320px;
         }
 
         .card-shell {
           position: relative;
-          width: 310px;
-          height: 195px;
+          width: 320px;
+          display: flex;
+          flex-direction: column;
         }
 
-        /* OUTER BOX: The main solid visible card */
+        /* OUTER BOX: Top primary card */
         .outer-box {
           position: relative;
-          width: 310px;
-          height: 195px;
-          border-radius: 20px;
+          width: 320px;
+          height: 185px;
+          border-top-left-radius: 20px;
+          border-top-right-radius: 20px;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 20px;
           box-sizing: border-box;
-          z-index: 3;
+          z-index: 5;
           backdrop-filter: blur(16px);
-          transition: transform 0.52s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.4s ease;
-          transform: translateY(0);
         }
 
-        /* Hover or Open: Outer box smoothly glides up slightly */
-        .card-shell.is-open .outer-box,
-        .card-shell:hover .outer-box {
-          transform: translateY(-55px);
+        /* DRAWER WRAPPER: Handles the smooth sliding out from the outer box */
+        .drawer-wrapper {
+          width: 320px;
+          overflow: hidden;
+          z-index: 4;
         }
 
-        /* INNER BOX: Starts tucked completely behind the outer box */
-        .inner-box {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 310px;
-          min-height: 195px;
-          border-radius: 20px;
+        /* INNER DRAWER: Bottom revealed content with matching straight top corners */
+        .inner-drawer {
+          width: 320px;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 22px;
+          padding: 20px 22px 22px 22px;
           box-sizing: border-box;
-          z-index: 1;
-          backdrop-filter: blur(18px);
-          pointer-events: none;
-          opacity: 0;
-          transform: translateY(0);
-          transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        /* Hover or Open: Inner box slides smoothly DOWN from the outer box */
-        .card-shell.is-open .inner-box,
-        .card-shell:hover .inner-box {
-          transform: translateY(125px);
-          opacity: 1;
-          pointer-events: auto;
+          backdrop-filter: blur(20px);
         }
 
         .icon-badge {
@@ -461,7 +482,7 @@ export function TeacherDilemmaSection() {
 
         .box-sub {
           font-size: 0.74rem;
-          color: rgba(255, 255, 255, 0.82);
+          color: rgba(255, 255, 255, 0.85);
           letter-spacing: 0.04em;
         }
 
@@ -471,7 +492,7 @@ export function TeacherDilemmaSection() {
           align-items: center;
           gap: 4px;
           font-size: 0.68rem;
-          color: rgba(255, 255, 255, 0.6);
+          color: rgba(255, 255, 255, 0.65);
           letter-spacing: 0.03em;
         }
 
@@ -487,13 +508,15 @@ export function TeacherDilemmaSection() {
         }
 
         @media (max-width: 1100px) {
-          .card-dock {
-            width: 250px;
-          }
+          .card-dock,
           .card-shell,
           .outer-box,
-          .inner-box {
-            width: 250px;
+          .drawer-wrapper,
+          .inner-drawer {
+            width: 260px;
+          }
+          .outer-box {
+            height: 175px;
           }
           .card-dock.left-dock {
             left: 1rem !important;

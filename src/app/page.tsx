@@ -22,22 +22,47 @@ export default function HomePage() {
   const smoothProgressRef = useRef(0);
 
   // =========================================================================
-  // PAGE SCROLL ENGINE: Clear Step Thresholds + Anti-Skip Lock + Smooth Damping
+  // =========================================================================
+  // PAGE SCROLL ENGINE: Precision 1-Step-Per-Gesture Engine with Inertia Lock
   // =========================================================================
   useEffect(() => {
     let animId: number;
     let accumulatedDelta = 0;
     let deltaResetTimer: NodeJS.Timeout;
+    let wheelSilenceTimer: NodeJS.Timeout;
+    let transitionStartTime = 0;
 
-    // 1. Raw Scroll Tracker: calculates target normalized progress (0 = P1, 1 = P2, 2 = P3, 3 = P4, 4 = P5, 5 = P6)
+    const pageCount = 6; // Pages 0 to 5
+
+    // Navigate to a specific page safely
+    const goToPage = (pageIdx: number) => {
+      const pageHeight = window.innerHeight || 800;
+      const targetPage = Math.min(pageCount - 1, Math.max(0, pageIdx));
+      if (targetPage === currentPageRef.current && isLockedRef.current) return;
+
+      currentPageRef.current = targetPage;
+      targetProgressRef.current = targetPage;
+      isLockedRef.current = true;
+      transitionStartTime = Date.now();
+      accumulatedDelta = 0;
+
+      window.scrollTo({
+        top: targetPage * pageHeight,
+        behavior: 'smooth',
+      });
+    };
+
+    // 1. Raw Scroll Tracker: calculates normalized progress (0 = P1 ... 5 = P6)
     const handleScroll = () => {
       const pageHeight = window.innerHeight || 800;
       const currentScroll = window.scrollY || window.pageYOffset || 0;
-      const rawProgress = Math.min(5, Math.max(0, currentScroll / pageHeight));
+      const rawProgress = Math.min(pageCount - 1, Math.max(0, currentScroll / pageHeight));
       targetProgressRef.current = rawProgress;
 
-      // Update current page anchor based on closest scroll position
-      currentPageRef.current = Math.round(rawProgress);
+      // Only update current page anchor when NOT in an active programmatic transition
+      if (!isLockedRef.current) {
+        currentPageRef.current = Math.round(rawProgress);
+      }
     };
 
     // 2. Smooth 60fps Dampening Loop: glides scrollProgress like silk with momentum
@@ -45,7 +70,6 @@ export default function HomePage() {
       const target = targetProgressRef.current;
       const current = smoothProgressRef.current;
 
-      // Smooth exponential lerp (0.09) gives cinematic weight and liquid transitions
       const next = THREE.MathUtils.lerp(current, target, 0.09);
       if (Math.abs(next - target) < 0.0005) {
         smoothProgressRef.current = target;
@@ -57,60 +81,54 @@ export default function HomePage() {
       animId = requestAnimationFrame(animate);
     };
 
-    // 3. Wheel Threshold Controller: Prevents fast flick from skipping pages
+    // 3. Wheel Controller: Strictly 1 page transition per deliberate gesture
     const handleWheel = (e: WheelEvent) => {
+      // Prevent uncontrolled browser native scroll to guarantee exact 1-page stepping
+      e.preventDefault();
+
+      // If transition lock is active:
+      if (isLockedRef.current) {
+        // Any incoming trackpad inertia/momentum keeps the lock active
+        clearTimeout(wheelSilenceTimer);
+        wheelSilenceTimer = setTimeout(() => {
+          // Only unlock when wheel has been completely silent for 180ms AND at least 750ms have elapsed
+          if (Date.now() - transitionStartTime > 750) {
+            isLockedRef.current = false;
+            accumulatedDelta = 0;
+          }
+        }, 180);
+        return;
+      }
+
       accumulatedDelta += e.deltaY;
       clearTimeout(deltaResetTimer);
       deltaResetTimer = setTimeout(() => {
         accumulatedDelta = 0;
-      }, 200);
+      }, 150);
 
-      // If transition cooldown is active, prevent subsequent rapid wheel events from jumping
-      if (isLockedRef.current) return;
+      const threshold = 35; // Deliberate threshold for both trackpads and mouse wheels
 
-      const threshold = 35; // Deliberate scroll threshold
-      const pageHeight = window.innerHeight || 800;
+      if (accumulatedDelta >= threshold) {
+        goToPage(currentPageRef.current + 1);
+      } else if (accumulatedDelta <= -threshold) {
+        goToPage(currentPageRef.current - 1);
+      }
+    };
 
-      if (accumulatedDelta > threshold) {
-        // Scrolling DOWN
-        if (currentPageRef.current < 5) {
-          const nextPage = currentPageRef.current + 1;
-          currentPageRef.current = nextPage;
-          isLockedRef.current = true;
-          accumulatedDelta = 0;
-
-          window.scrollTo({
-            top: nextPage * pageHeight,
-            behavior: 'smooth',
-          });
-
-          // 700ms cooldown ensures fast scrolling cannot jump more than one page per gesture
-          setTimeout(() => {
-            isLockedRef.current = false;
-          }, 700);
-        }
-      } else if (accumulatedDelta < -threshold) {
-        // Scrolling UP
-        if (currentPageRef.current > 0) {
-          const prevPage = currentPageRef.current - 1;
-          currentPageRef.current = prevPage;
-          isLockedRef.current = true;
-          accumulatedDelta = 0;
-
-          window.scrollTo({
-            top: prevPage * pageHeight,
-            behavior: 'smooth',
-          });
-
-          setTimeout(() => {
-            isLockedRef.current = false;
-          }, 700);
-        }
+    // 4. Keyboard Arrow / Page Keys Navigation
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
+        e.preventDefault();
+        goToPage(currentPageRef.current + 1);
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
+        e.preventDefault();
+        goToPage(currentPageRef.current - 1);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
 
     handleScroll();
     animId = requestAnimationFrame(animate);
@@ -118,8 +136,10 @@ export default function HomePage() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('keydown', handleKeyDown);
       cancelAnimationFrame(animId);
       clearTimeout(deltaResetTimer);
+      clearTimeout(wheelSilenceTimer);
     };
   }, [setScrollProgress]);
 
@@ -372,7 +392,6 @@ export default function HomePage() {
 
       <style jsx global>{`
         html {
-          scroll-snap-type: y mandatory;
           scroll-behavior: smooth;
         }
         @media (max-width: 900px) {

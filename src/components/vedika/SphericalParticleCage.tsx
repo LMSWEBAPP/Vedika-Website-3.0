@@ -13,13 +13,15 @@ import {
 } from './LabIcons3D';
 
 // ============================================================================
-// CONFIGURATION: 5 SATELLITES SPREAD EVENLY & BALANCED AROUND VEDIKA
 // ============================================================================
-// Math: Top (+0.66) -- label ABOVE the sphere
-// Computer: Upper-Left (-0.72, +0.22) -- label on LEFT side
-// Biology: Lower-Left (-0.72, -0.34) -- label on LEFT side
-// Physics: Upper-Right (+0.72, +0.22) -- label on RIGHT side
-// Chemistry: Lower-Right (+0.72, -0.34) -- label on RIGHT side
+// CONFIGURATION: 5 SATELLITES FORMING A PERFECT 360-DEGREE CIRCLE
+// Radius R = 0.84, Spaced exactly 72 degrees apart
+// Math (Top 90°): [0, +0.84] -- elevated well above Vedika's head
+// Physics (Upper Right 18°): [+0.80, +0.26]
+// Chemistry (Lower Right -54°): [+0.49, -0.68]
+// Biology (Lower Left -126°): [-0.49, -0.68]
+// Computer (Upper Left 162°): [-0.80, +0.26]
+// ============================================================================
 export interface SatelliteConfig {
   id: string;
   name: string;
@@ -38,38 +40,18 @@ const SATELLITE_LABS: SatelliteConfig[] = [
     color1: '#D97706', // Rich amber gold
     color2: '#F59E0B',
     targetX: 0,
-    targetY: 0.66,
+    targetY: 0.84,
     rotYOffset: 0,
     labelPlacement: 'top',
-  },
-  {
-    id: 'computer',
-    name: 'Computer Lab',
-    color1: '#1D4ED8', // Rich sapphire sky blue
-    color2: '#2563EB',
-    targetX: -0.72,
-    targetY: 0.22,
-    rotYOffset: (2 * Math.PI) / 5,
-    labelPlacement: 'left',
-  },
-  {
-    id: 'biology',
-    name: 'Biology Lab',
-    color1: '#6D28D9', // Rich radiant violet
-    color2: '#7C3AED',
-    targetX: -0.72,
-    targetY: -0.34,
-    rotYOffset: (4 * Math.PI) / 5,
-    labelPlacement: 'left',
   },
   {
     id: 'physics',
     name: 'Physics Lab',
     color1: '#0891B2', // Rich electric teal / cyan
     color2: '#06B6D4',
-    targetX: 0.72,
-    targetY: 0.22,
-    rotYOffset: (6 * Math.PI) / 5,
+    targetX: 0.80,
+    targetY: 0.26,
+    rotYOffset: (2 * Math.PI) / 5,
     labelPlacement: 'right',
   },
   {
@@ -77,10 +59,30 @@ const SATELLITE_LABS: SatelliteConfig[] = [
     name: 'Chemistry Lab',
     color1: '#BE123C', // Rich cosmic ruby crimson
     color2: '#E11D48',
-    targetX: 0.72,
-    targetY: -0.34,
-    rotYOffset: (8 * Math.PI) / 5,
+    targetX: 0.49,
+    targetY: -0.68,
+    rotYOffset: (4 * Math.PI) / 5,
     labelPlacement: 'right',
+  },
+  {
+    id: 'biology',
+    name: 'Biology Lab',
+    color1: '#6D28D9', // Rich radiant violet
+    color2: '#7C3AED',
+    targetX: -0.49,
+    targetY: -0.68,
+    rotYOffset: (6 * Math.PI) / 5,
+    labelPlacement: 'left',
+  },
+  {
+    id: 'computer',
+    name: 'Computer Lab',
+    color1: '#1D4ED8', // Rich sapphire sky blue
+    color2: '#2563EB',
+    targetX: -0.80,
+    targetY: 0.26,
+    rotYOffset: (8 * Math.PI) / 5,
+    labelPlacement: 'left',
   },
 ];
 
