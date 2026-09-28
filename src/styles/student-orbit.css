@@ -1,9 +1,9 @@
 /* ==========================================================================
    VEDIKA 360-DEGREE CIRCULAR ORBIT SYSTEM
    - Centered 3D Vedika robot inside circular progress ring
-   - 9 icons neatly arranged on orbit with 26px gap from center progress ring
-   - Fluid flowing reveal animation (left-to-right & right-to-left)
-   - Premium glassmorphism with subtle neon glow for every color
+   - 9 icons neatly arranged on orbit with 30px gap from center progress ring
+   - True fluid flowing reveal animation (left-to-right & right-to-left)
+   - Real glassmorphism with frosted specular highlight and subtle neon glow
    - Symmetrical, completely non-overlapping positioning
    ========================================================================== */
 
@@ -29,8 +29,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 290px;
-  height: 290px;
+  width: 280px;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,8 +41,8 @@
 /* Ambient Radial Glow Behind Robot */
 .vedika-ambient-aura {
   position: absolute;
-  width: 320px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   pointer-events: none;
   transition: background 0.6s ease;
@@ -67,8 +67,8 @@
 /* 3D Vedika Canvas Container */
 .vedika-robot-canvas-box {
   position: absolute;
-  width: 190px;
-  height: 190px;
+  width: 180px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,42 +97,47 @@
   transition: z-index 0.3s ease;
 }
 
-/* 34px Circular Icon Badge Sitting on Orbit Perimeter */
+/* 36px Circular Icon Badge Sitting on Orbit Perimeter */
 .orbit-circle-icon-badge {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #0A0F1D;
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.55);
+  border: 1.5px solid rgba(var(--card-accent-rgb), 0.60);
   color: var(--card-accent);
   flex-shrink: 0;
-  z-index: 5;
+  z-index: 15;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 12px rgba(var(--card-accent-rgb), 0.32);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65), 0 0 14px rgba(var(--card-accent-rgb), 0.35);
+}
+
+/* Drawer Track Controls Fluid Flow Expansion */
+.orbit-drawer-track {
+  overflow: hidden;
+  transition: max-width 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s ease;
+  box-sizing: border-box;
 }
 
 /* Glassmorphic Text Drawer Card */
 .orbit-drawer-card {
   position: relative;
+  width: 215px;
   padding: 7px 12px 8px;
   border-radius: 13px;
-  background: rgba(12, 18, 32, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.30);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), 0 0 14px rgba(var(--card-accent-rgb), 0.20);
-  width: clamp(190px, 15.5vw, 225px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 16, 32, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1.5px solid rgba(var(--card-accent-rgb), 0.38);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18), 0 8px 28px rgba(0, 0, 0, 0.65), 0 0 16px rgba(var(--card-accent-rgb), 0.25);
   box-sizing: border-box;
   text-align: left;
   overflow: hidden;
-  transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.5s ease,
-              border-color 0.4s ease,
-              box-shadow 0.4s ease;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 /* Fluid Shimmer Sweep on Reveal */
@@ -142,7 +147,7 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--card-accent-rgb), 0.22) 50%,
+    rgba(var(--card-accent-rgb), 0.25) 50%,
     transparent 100%
   );
   opacity: 0;
@@ -168,13 +173,13 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--card-accent);
-  text-shadow: 0 0 8px rgba(var(--card-accent-rgb), 0.4);
+  text-shadow: 0 0 8px rgba(var(--card-accent-rgb), 0.45);
 }
 
 .drawer-step-num {
   font-size: 0.58rem;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
   font-family: monospace;
 }
 
@@ -207,55 +212,47 @@
    DIRECTION 1: RIGHT-SIDE CARDS (FLOWS FROM LEFT TO RIGHT OUTWARD)
    ========================================================================== */
 .orbital-node-anchor.dir-right {
-  transform: translate(-17px, -17px);
+  transform: translate(-18px, -18px);
   flex-direction: row;
 }
 
-.orbital-node-anchor.dir-right .orbit-drawer-card {
+.orbital-node-anchor.dir-right .orbit-drawer-track {
   margin-left: 10px;
-}
-
-/* Unrevealed: clipped to left edge, flowing from left to right on reveal */
-.orbital-node-anchor.dir-right.is-unrevealed .orbit-circle-icon-badge {
-  opacity: 0.28;
-}
-
-.orbital-node-anchor.dir-right.is-unrevealed .orbit-drawer-card {
+  max-width: 0;
   opacity: 0;
-  clip-path: inset(0 100% 0 0 round 13px);
-  transform: translateX(-16px);
-  pointer-events: none;
 }
 
-/* Revealed: fully flowed outward */
+/* Revealed: track smoothly unfolds from 0 to 225px to the right */
+.orbital-node-anchor.dir-right.is-revealed .orbit-drawer-track {
+  max-width: 225px;
+  opacity: 1;
+}
+
+.orbital-node-anchor.dir-right.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.35;
+}
+
 .orbital-node-anchor.dir-right.is-revealed .orbit-circle-icon-badge {
-  opacity: 0.9;
-  border-color: rgba(var(--card-accent-rgb), 0.7);
-}
-
-.orbital-node-anchor.dir-right.is-revealed .orbit-drawer-card {
-  opacity: 0.86;
-  clip-path: inset(0 0% 0 0 round 13px);
-  transform: translateX(0);
+  opacity: 0.95;
+  border-color: rgba(var(--card-accent-rgb), 0.85);
 }
 
 /* Active: brilliant neon bloom */
 .orbital-node-anchor.dir-right.is-active .orbit-circle-icon-badge {
   opacity: 1 !important;
-  transform: scale(1.16) !important;
+  transform: scale(1.18) !important;
   border-color: var(--card-accent) !important;
-  background: rgba(var(--card-accent-rgb), 0.32) !important;
-  box-shadow: 0 0 22px var(--card-accent), 0 0 8px #FFFFFF !important;
+  background: rgba(var(--card-accent-rgb), 0.35) !important;
+  box-shadow: 0 0 24px var(--card-accent), 0 0 8px #FFFFFF !important;
 }
 
 .orbital-node-anchor.dir-right.is-active .orbit-drawer-card {
-  opacity: 1 !important;
-  transform: translateX(4px) scale(1.03) !important;
+  transform: scale(1.03);
   border-color: var(--card-accent) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8),
-              0 0 30px rgba(var(--card-accent-rgb), 0.65),
-              0 0 10px rgba(var(--card-accent-rgb), 0.9),
-              inset 0 0 14px rgba(var(--card-accent-rgb), 0.18) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35),
+              0 10px 36px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(var(--card-accent-rgb), 0.70),
+              0 0 12px rgba(var(--card-accent-rgb), 0.90) !important;
   z-index: 25;
 }
 
@@ -267,55 +264,47 @@
    DIRECTION 2: LEFT-SIDE CARDS (FLOWS FROM RIGHT TO LEFT OUTWARD)
    ========================================================================== */
 .orbital-node-anchor.dir-left {
-  transform: translate(-17px, -17px);
+  transform: translate(-18px, -18px);
   flex-direction: row-reverse;
 }
 
-.orbital-node-anchor.dir-left .orbit-drawer-card {
+.orbital-node-anchor.dir-left .orbit-drawer-track {
   margin-right: 10px;
-}
-
-/* Unrevealed: clipped to right edge, flowing from right to left on reveal */
-.orbital-node-anchor.dir-left.is-unrevealed .orbit-circle-icon-badge {
-  opacity: 0.28;
-}
-
-.orbital-node-anchor.dir-left.is-unrevealed .orbit-drawer-card {
+  max-width: 0;
   opacity: 0;
-  clip-path: inset(0 0 0 100% round 13px);
-  transform: translateX(16px);
-  pointer-events: none;
 }
 
-/* Revealed: fully flowed outward */
+/* Revealed: track smoothly unfolds from 0 to 225px to the left */
+.orbital-node-anchor.dir-left.is-revealed .orbit-drawer-track {
+  max-width: 225px;
+  opacity: 1;
+}
+
+.orbital-node-anchor.dir-left.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.35;
+}
+
 .orbital-node-anchor.dir-left.is-revealed .orbit-circle-icon-badge {
-  opacity: 0.9;
-  border-color: rgba(var(--card-accent-rgb), 0.7);
-}
-
-.orbital-node-anchor.dir-left.is-revealed .orbit-drawer-card {
-  opacity: 0.86;
-  clip-path: inset(0 0 0 0% round 13px);
-  transform: translateX(0);
+  opacity: 0.95;
+  border-color: rgba(var(--card-accent-rgb), 0.85);
 }
 
 /* Active: brilliant neon bloom */
 .orbital-node-anchor.dir-left.is-active .orbit-circle-icon-badge {
   opacity: 1 !important;
-  transform: scale(1.16) !important;
+  transform: scale(1.18) !important;
   border-color: var(--card-accent) !important;
-  background: rgba(var(--card-accent-rgb), 0.32) !important;
-  box-shadow: 0 0 22px var(--card-accent), 0 0 8px #FFFFFF !important;
+  background: rgba(var(--card-accent-rgb), 0.35) !important;
+  box-shadow: 0 0 24px var(--card-accent), 0 0 8px #FFFFFF !important;
 }
 
 .orbital-node-anchor.dir-left.is-active .orbit-drawer-card {
-  opacity: 1 !important;
-  transform: translateX(-4px) scale(1.03) !important;
+  transform: scale(1.03);
   border-color: var(--card-accent) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8),
-              0 0 30px rgba(var(--card-accent-rgb), 0.65),
-              0 0 10px rgba(var(--card-accent-rgb), 0.9),
-              inset 0 0 14px rgba(var(--card-accent-rgb), 0.18) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35),
+              0 10px 36px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(var(--card-accent-rgb), 0.70),
+              0 0 12px rgba(var(--card-accent-rgb), 0.90) !important;
   z-index: 25;
 }
 
@@ -327,57 +316,48 @@
    DIRECTION 3: TOP-CENTER CARD (FLOWS UPWARD)
    ========================================================================== */
 .orbital-node-anchor.dir-top {
-  transform: translate(-17px, -17px);
+  transform: translate(-18px, -18px);
   flex-direction: column-reverse;
   align-items: center;
 }
 
-.orbital-node-anchor.dir-top .orbit-drawer-card {
+.orbital-node-anchor.dir-top .orbit-drawer-track {
   margin-bottom: 10px;
-  width: clamp(210px, 17vw, 240px);
-}
-
-/* Unrevealed: clipped to bottom edge, flowing upward on reveal */
-.orbital-node-anchor.dir-top.is-unrevealed .orbit-circle-icon-badge {
-  opacity: 0.28;
-}
-
-.orbital-node-anchor.dir-top.is-unrevealed .orbit-drawer-card {
+  max-height: 0;
   opacity: 0;
-  clip-path: inset(100% 0 0 0 round 13px);
-  transform: translateY(16px);
-  pointer-events: none;
 }
 
-/* Revealed: fully flowed upward */
+/* Revealed: track smoothly unfolds upward from 0 to 70px */
+.orbital-node-anchor.dir-top.is-revealed .orbit-drawer-track {
+  max-height: 70px;
+  opacity: 1;
+}
+
+.orbital-node-anchor.dir-top.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.35;
+}
+
 .orbital-node-anchor.dir-top.is-revealed .orbit-circle-icon-badge {
-  opacity: 0.9;
-  border-color: rgba(var(--card-accent-rgb), 0.7);
-}
-
-.orbital-node-anchor.dir-top.is-revealed .orbit-drawer-card {
-  opacity: 0.86;
-  clip-path: inset(0 0 0 0 round 13px);
-  transform: translateY(0);
+  opacity: 0.95;
+  border-color: rgba(var(--card-accent-rgb), 0.85);
 }
 
 /* Active: brilliant neon bloom */
 .orbital-node-anchor.dir-top.is-active .orbit-circle-icon-badge {
   opacity: 1 !important;
-  transform: scale(1.16) !important;
+  transform: scale(1.18) !important;
   border-color: var(--card-accent) !important;
-  background: rgba(var(--card-accent-rgb), 0.32) !important;
-  box-shadow: 0 0 22px var(--card-accent), 0 0 8px #FFFFFF !important;
+  background: rgba(var(--card-accent-rgb), 0.35) !important;
+  box-shadow: 0 0 24px var(--card-accent), 0 0 8px #FFFFFF !important;
 }
 
 .orbital-node-anchor.dir-top.is-active .orbit-drawer-card {
-  opacity: 1 !important;
-  transform: translateY(-4px) scale(1.03) !important;
+  transform: scale(1.03);
   border-color: var(--card-accent) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8),
-              0 0 30px rgba(var(--card-accent-rgb), 0.65),
-              0 0 10px rgba(var(--card-accent-rgb), 0.9),
-              inset 0 0 14px rgba(var(--card-accent-rgb), 0.18) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35),
+              0 10px 36px rgba(0, 0, 0, 0.8),
+              0 0 32px rgba(var(--card-accent-rgb), 0.70),
+              0 0 12px rgba(var(--card-accent-rgb), 0.90) !important;
   z-index: 25;
 }
 
@@ -388,12 +368,12 @@
 /* Hover Enhancement */
 .orbital-node-anchor:hover .orbit-circle-icon-badge {
   border-color: var(--card-accent);
-  box-shadow: 0 0 16px var(--card-accent);
+  box-shadow: 0 0 18px var(--card-accent);
 }
 
 .orbital-node-anchor:hover .orbit-drawer-card {
   border-color: var(--card-accent);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(var(--card-accent-rgb), 0.35);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 22px rgba(var(--card-accent-rgb), 0.4);
 }
 
 /* ==========================================================================
@@ -405,18 +385,18 @@
   }
 
   .vedika-center-pod-clean {
-    width: 260px;
-    height: 260px;
+    width: 250px;
+    height: 250px;
   }
 
   .vedika-robot-canvas-box {
-    width: 175px;
-    height: 175px;
+    width: 170px;
+    height: 170px;
   }
 
   .orbit-drawer-card {
+    width: 195px;
     padding: 6px 10px 7px;
-    width: clamp(175px, 14vw, 200px);
   }
 
   .drawer-title-text {
@@ -428,12 +408,12 @@
   }
 
   .orbit-circle-icon-badge {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
 
   .orbital-node-anchor {
-    transform: translate(-15px, -15px);
+    transform: translate(-16px, -16px);
   }
 }
 
@@ -449,7 +429,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbital-node-anchor .orbit-drawer-card {
+  .orbit-drawer-track {
     transition: none;
   }
   .orbit-circle-icon-badge {

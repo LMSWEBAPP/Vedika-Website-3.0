@@ -34,25 +34,25 @@ export default function OrbitFeatureNode({
   const getIcon = (id: string) => {
     switch (id) {
       case 'study-companion':
-        return <Clock size={15} strokeWidth={2.4} />;
+        return <Clock size={16} strokeWidth={2.4} />;
       case 'non-judgmental':
-        return <Heart size={15} strokeWidth={2.4} fill="currentColor" fillOpacity={0.35} />;
+        return <Heart size={16} strokeWidth={2.4} fill="currentColor" fillOpacity={0.35} />;
       case 'own-pace':
-        return <Compass size={15} strokeWidth={2.4} />;
+        return <Compass size={16} strokeWidth={2.4} />;
       case 'concept-clarity':
-        return <Lightbulb size={15} strokeWidth={2.4} />;
+        return <Lightbulb size={16} strokeWidth={2.4} />;
       case 'personalized-support':
-        return <Sliders size={15} strokeWidth={2.4} />;
+        return <Sliders size={16} strokeWidth={2.4} />;
       case 'build-confidence':
-        return <ShieldCheck size={15} strokeWidth={2.4} />;
+        return <ShieldCheck size={16} strokeWidth={2.4} />;
       case 'practice-exam':
-        return <CheckCircle2 size={15} strokeWidth={2.4} />;
+        return <CheckCircle2 size={16} strokeWidth={2.4} />;
       case 'interactive-learning':
-        return <Atom size={15} strokeWidth={2.4} />;
+        return <Atom size={16} strokeWidth={2.4} />;
       case 'unlimited-questions':
-        return <Sparkles size={15} strokeWidth={2.4} />;
+        return <Sparkles size={16} strokeWidth={2.4} />;
       default:
-        return <Sparkles size={15} strokeWidth={2.4} />;
+        return <Sparkles size={16} strokeWidth={2.4} />;
     }
   };
 
@@ -87,17 +87,17 @@ export default function OrbitFeatureNode({
         {getIcon(feature.id)}
       </div>
 
-      {/* 2. Text Content Drawer (Flows outward from the icon) */}
-      <div className="orbit-drawer-card">
-        <div className="drawer-header-row">
-          <span className="drawer-short-tag">{feature.shortLabel}</span>
-          <span className="drawer-step-num">0{feature.index}</span>
+      {/* 2. Text Content Drawer Track (Expands outward from the icon) */}
+      <div className="orbit-drawer-track">
+        <div className="orbit-drawer-card">
+          <div className="drawer-header-row">
+            <span className="drawer-short-tag">{feature.shortLabel}</span>
+            <span className="drawer-step-num">0{feature.index}</span>
+          </div>
+          <div className="drawer-title-text">{feature.title}</div>
+          <p className="drawer-desc-text">{feature.desc}</p>
+          <div className="drawer-shimmer-sweep" aria-hidden="true" />
         </div>
-        <div className="drawer-title-text">{feature.title}</div>
-        <p className="drawer-desc-text">{feature.desc}</p>
-
-        {/* Fluid Neon Sweep Wave on Reveal */}
-        <div className="drawer-shimmer-sweep" aria-hidden="true" />
       </div>
     </div>
   );

@@ -6,16 +6,16 @@ interface OrbitProgressRingProps {
   currentStep: number; // 1 to 9
   activeColor: string;
   activeRgb: string;
-  radius?: number; // default 100 (central progress ring)
+  radius?: number; // default 95 (central progress ring)
 }
 
 export default function OrbitProgressRing({
   currentStep,
   activeColor,
   activeRgb,
-  radius = 100,
+  radius = 95,
 }: OrbitProgressRingProps) {
-  const outerOrbitRadius = 126; // Radius where icons sit (creating visible 26px gap)
+  const outerOrbitRadius = 125; // Radius where icons sit (creating visible 30px gap)
   const size = (outerOrbitRadius + 18) * 2;
   const center = size / 2;
   const strokeWidth = 3;
@@ -25,8 +25,8 @@ export default function OrbitProgressRing({
   const progressRatio = Math.max(0.01, Math.min(1.0, currentStep / 9));
   const strokeDashoffset = circumference * (1 - progressRatio);
 
-  // Card 1 is at 322 deg. Start angle is 282 deg so step 1 lands at 322 deg.
-  const startAngleDeg = 282;
+  // Card 1 is at 325 deg. Start angle is 285 deg so step 1 lands at 325 deg.
+  const startAngleDeg = 285;
   const currentAngleDeg = startAngleDeg + progressRatio * 360;
   const currentAngleRad = (currentAngleDeg * Math.PI) / 180;
 
@@ -58,13 +58,13 @@ export default function OrbitProgressRing({
         </linearGradient>
       </defs>
 
-      {/* 1. Faint Outer Guide Track Circle where Icons Sit (26px gap outside progress ring) */}
+      {/* 1. Faint Outer Guide Track Circle where Icons Sit (30px gap outside progress ring) */}
       <circle
         cx={center}
         cy={center}
         r={outerOrbitRadius}
         fill="none"
-        stroke="rgba(255, 255, 255, 0.05)"
+        stroke="rgba(255, 255, 255, 0.06)"
         strokeWidth="1"
         strokeDasharray="3 5"
       />
@@ -75,7 +75,7 @@ export default function OrbitProgressRing({
         cy={center}
         r={radius}
         fill="none"
-        stroke="rgba(255, 255, 255, 0.09)"
+        stroke="rgba(255, 255, 255, 0.10)"
         strokeWidth={strokeWidth}
       />
 
@@ -91,7 +91,7 @@ export default function OrbitProgressRing({
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(${startAngleDeg} ${center} ${center})`}
-        opacity={0.38}
+        opacity={0.4}
         filter="url(#vedikaOrbitGlow)"
         style={{
           transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease',
