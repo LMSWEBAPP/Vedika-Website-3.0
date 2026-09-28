@@ -25,14 +25,14 @@
   width: 100%;
   flex: 1;
   min-height: 520px;
-  max-height: calc(100vh - 120px);
-  overflow: hidden !important;
+  max-height: calc(100vh - 80px);
+  overflow: visible !important;
   display: flex;
   align-items: center;
   justify-content: center;
   outline: none;
   box-sizing: border-box;
-  transform: translateY(-8px);
+  transform: translateY(35px);
 }
 
 /* ==========================================================================

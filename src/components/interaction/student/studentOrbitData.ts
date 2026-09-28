@@ -285,7 +285,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: -165,
     cardCss: {
       left: 'calc(50% - 105px)',
-      bottom: 'calc(50% + 193px)',
+      bottom: 'calc(50% + 188px)',
     },
   },
   2: {
