@@ -1014,9 +1014,9 @@
   top: 6px;
   margin: auto;
   box-sizing: border-box;
-  pointer-events: none; /* Only allow interaction on actual slides */
+  cursor: pointer;
   transition:
-    transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.65s ease,
     opacity 0.65s ease,
     filter 0.65s ease,
     z-index 0.1s ease;
@@ -1032,9 +1032,9 @@
 }
 
 .teacher-slide-card.active-center:hover,
-.teacher-slide-card.active-center:focus-within {
+.teacher-slide-card.active-center:focus-within,
+.teacher-slide-card.active-center.is-hovered {
   z-index: 50;
-  pointer-events: auto;
 }
 
 /* 2. Next Right Card */
@@ -1044,7 +1044,6 @@
   filter: blur(2.5px);
   z-index: 2;
   cursor: pointer;
-  pointer-events: auto;
 }
 
 .teacher-slide-card.next-right:hover {
@@ -1060,7 +1059,6 @@
   filter: blur(2.5px);
   z-index: 2;
   cursor: pointer;
-  pointer-events: auto;
 }
 
 .teacher-slide-card.prev-left:hover {
@@ -1084,19 +1082,14 @@
   width: 320px;
   height: 200px;
   box-sizing: border-box;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  transition: 0.5s;
 }
 
 /* ==========================================================================
    SLIDE 1: Traditional Friction (Top Outer Card)
-   - Default State:
-     Sits at transform: translateY(100px); z-index: 2; border-radius: 20px;
-   - On Hover State (CodePen exact smooth behavior):
-     Smoothly slides up to translateY(0px) in .7s;
-     border-radius: 20px 20px 0 0;
-     border-bottom: none;
+   - CodePen Exact:
+     position: relative; display: flex; justify-content: center; align-items: center;
+     z-index: 2; transition: .7s; transform: translateY(100px);
    ========================================================================== */
 .teacher-slide-card .slide.slide1 {
   position: relative;
@@ -1104,23 +1097,18 @@
   justify-content: center;
   align-items: center;
   z-index: 2;
+  transition: 0.7s;
   transform: translateY(100px);
   border-radius: 20px;
-  pointer-events: auto; /* Always interactive */
   background:
-    linear-gradient(150deg, rgba(32, 16, 24, 0.98) 0%, rgba(18, 9, 14, 0.99) 100%),
-    rgba(15, 23, 42, 0.95);
+    linear-gradient(150deg, #22121b 0%, #12090e 100%),
+    #0f172a;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1.5px solid rgba(248, 113, 113, 0.38);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.12),
     0 12px 30px rgba(0, 0, 0, 0.6);
-  transition:
-    transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
-    border-radius 0.45s ease,
-    border-color 0.45s ease,
-    box-shadow 0.6s ease;
 }
 
 /* Subtle seamless highlight at the bottom seam when opened on hover */
@@ -1134,12 +1122,13 @@
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(16, 185, 129, 0.3), transparent);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
 }
 
-/* On Hover: Slide 1 smoothly slides up to translateY(0px) */
+/* CodePen: .card:hover .slide.slide1 { transform: translateY(0px); } */
 .teacher-slide-card.active-center:hover .slide.slide1,
-.teacher-slide-card.active-center:focus-within .slide.slide1 {
+.teacher-slide-card.active-center:focus-within .slide.slide1,
+.teacher-slide-card.active-center.is-hovered .slide.slide1 {
   transform: translateY(0px);
   border-radius: 20px 20px 0 0;
   border-bottom: none;
@@ -1150,7 +1139,8 @@
 }
 
 .teacher-slide-card.active-center:hover .slide.slide1::after,
-.teacher-slide-card.active-center:focus-within .slide.slide1::after {
+.teacher-slide-card.active-center:focus-within .slide.slide1::after,
+.teacher-slide-card.active-center.is-hovered .slide.slide1::after {
   opacity: 1;
 }
 
@@ -1180,7 +1170,8 @@
 }
 
 .teacher-slide-card.active-center:hover .icon,
-.teacher-slide-card.active-center:focus-within .icon {
+.teacher-slide-card.active-center:focus-within .icon,
+.teacher-slide-card.active-center.is-hovered .icon {
   transform: scale(0.92);
 }
 
@@ -1208,16 +1199,10 @@
 
 /* ==========================================================================
    SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Sliding Downwards)
-   - Default State:
-     Sits at transform: translateY(-100px); z-index: 1; directly behind Slide 1.
-     border-radius: 20px; fully rounded, border-color: transparent, box-shadow: none.
-     Fully opaque (no opacity tricks) and cleanly tucked inside Slide 1 with NO sharp corners.
-   - On Hover State (CodePen exact smooth behavior):
-     Smoothly slides down to translateY(0) in .8s out from inside Slide 1;
-     border-radius: 0 0 20px 20px;
-     border-top: none;
-     border: 1.5px solid rgba(16, 185, 129, 0.6);
-     Outer card's bottom 2 corners and inner card's top 2 corners merge flush into 1 unified card.
+   - CodePen Exact:
+     position: relative; display: flex; justify-content: center; align-items: center;
+     padding: 20px; box-sizing: border-box; transition: .8s; transform: translateY(-100px);
+     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
    ========================================================================== */
 .teacher-slide-card .slide.slide2 {
   position: relative;
@@ -1226,56 +1211,51 @@
   align-items: center;
   box-sizing: border-box;
   z-index: 1;
+  transition: 0.8s;
   transform: translateY(-100px);
   border-radius: 20px;
-  pointer-events: none;
   background:
-    linear-gradient(160deg, rgba(6, 30, 22, 0.99) 0%, rgba(3, 16, 12, 0.99) 100%),
-    rgba(8, 20, 16, 0.96);
+    linear-gradient(160deg, #061e16 0%, #03100c 100%),
+    #081410;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1.5px solid transparent;
   border-top: none;
   box-shadow: none;
-  transition:
-    transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
-    border-radius 0.45s ease,
-    border-color 0.45s ease,
-    box-shadow 0.6s ease;
 }
 
 /* Glowing bottom accent line (matching CodePen ::after) */
 .teacher-slide-card .slide.slide2::after {
   content: "";
   position: absolute;
-  width: 44px;
+  width: 30px;
   height: 4px;
-  bottom: 12px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   background: #10B981;
   border-radius: 2px;
   box-shadow: 0 0 12px #10B981;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
 }
 
-/* On Hover: Slide 2 smoothly glides down out from the inside to translateY(0) */
+/* CodePen: .card:hover .slide.slide2 { transform: translateY(0); } */
 .teacher-slide-card.active-center:hover .slide.slide2,
-.teacher-slide-card.active-center:focus-within .slide.slide2 {
-  transform: translateY(0px);
+.teacher-slide-card.active-center:focus-within .slide.slide2,
+.teacher-slide-card.active-center.is-hovered .slide.slide2 {
+  transform: translateY(0);
   border-radius: 0 0 20px 20px;
   border-top: none;
-  border: 1.5px solid rgba(16, 185, 129, 0.6);
-  border-top: none;
-  pointer-events: auto; /* Interactive when unfolded */
+  border-color: rgba(16, 185, 129, 0.6);
   box-shadow:
-    0 24px 48px rgba(0, 0, 0, 0.85),
+    0 20px 40px rgba(0, 0, 0, 0.6),
     0 0 28px rgba(16, 185, 129, 0.25);
 }
 
 .teacher-slide-card.active-center:hover .slide.slide2::after,
-.teacher-slide-card.active-center:focus-within .slide.slide2::after {
+.teacher-slide-card.active-center:focus-within .slide.slide2::after,
+.teacher-slide-card.active-center.is-hovered .slide.slide2::after {
   opacity: 1;
 }
 

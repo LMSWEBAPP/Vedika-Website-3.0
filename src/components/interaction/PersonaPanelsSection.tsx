@@ -15,6 +15,7 @@ export default function PersonaPanelsSection() {
 
   // Carousel active index for teacher dilemmas
   const [activeTeacherIndex, setActiveTeacherIndex] = useState(0);
+  const [isCenterHovered, setIsCenterHovered] = useState(false);
 
   const getCardCoverflowClass = (idx: number) => {
     const diff = (idx - activeTeacherIndex + teacherDilemmas.length) % teacherDilemmas.length;
@@ -231,9 +232,15 @@ export default function PersonaPanelsSection() {
                 return (
                   <div
                     key={idx}
-                    className={`teacher-slide-card ${coverflowClass}`}
+                    className={`teacher-slide-card ${coverflowClass}${isCenter && isCenterHovered ? ' is-hovered' : ''}`}
                     onClick={() => {
                       if (!isCenter) setActiveTeacherIndex(idx);
+                    }}
+                    onMouseEnter={() => {
+                      if (isCenter) setIsCenterHovered(true);
+                    }}
+                    onMouseLeave={() => {
+                      if (isCenter) setIsCenterHovered(false);
                     }}
                     role="button"
                     tabIndex={0}
