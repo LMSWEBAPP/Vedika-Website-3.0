@@ -206,12 +206,14 @@ export default function PersonaPanelsSection() {
                   {/* SLIDE 1: Traditional Friction (Visible by default) */}
                   <div className="slide slide1">
                     <div className="content">
-                      <div className="card-badge-row">
-                        <span className="card-icon-pill dilemma">{item.icon}</span>
-                        <span className="dilemma-label">⚠️ Traditional Friction</span>
+                      <div className="card-top-content">
+                        <div className="card-badge-row">
+                          <span className="card-icon-pill dilemma">{item.icon}</span>
+                          <span className="dilemma-label">Traditional Friction</span>
+                        </div>
+                        <h3 className="card-headline dilemma">{item.dilemmaTitle}</h3>
+                        <p className="card-text dilemma">{item.dilemmaDesc}</p>
                       </div>
-                      <h3 className="card-headline dilemma">{item.dilemmaTitle}</h3>
-                      <p className="card-text dilemma">{item.dilemmaDesc}</p>
                       <div className="hover-trigger-indicator">
                         <span>Hover for AI Resolution</span>
                         <span className="trigger-arrow">➔</span>
@@ -222,12 +224,14 @@ export default function PersonaPanelsSection() {
                   {/* SLIDE 2: Vedika AI Resolution (Unfolds on hover) */}
                   <div className="slide slide2">
                     <div className="content">
-                      <div className="card-badge-row">
-                        <span className="card-icon-pill resolution">✨</span>
-                        <span className="rectification-label">✨ Vedika AI Resolution</span>
+                      <div className="card-top-content">
+                        <div className="card-badge-row">
+                          <span className="card-icon-pill resolution">✨</span>
+                          <span className="rectification-label">Vedika AI Resolution</span>
+                        </div>
+                        <h3 className="card-headline resolution">{item.rectTitle}</h3>
+                        <p className="card-text resolution">{item.rectDesc}</p>
                       </div>
-                      <h3 className="card-headline resolution">{item.rectTitle}</h3>
-                      <p className="card-text resolution">{item.rectDesc}</p>
                       <div className="resolution-impact-pill">{item.impact}</div>
                     </div>
                   </div>
