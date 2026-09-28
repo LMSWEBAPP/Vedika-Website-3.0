@@ -89,12 +89,7 @@ export default function PersonaPanelsSection() {
         {/* 1. STUDENT CONTENT PANEL (70% Left when active)                 */}
         {/* ============================================================== */}
         <section className="panel-section-slot student-content" aria-label="Student Learning Experience">
-          {/* 3-Panel Adaptive Ecosystem Heading */}
-          <div className="ecosystem-header-box">
-            <h2 className="ecosystem-main-title">
-              One Unified Platform. <span className="highlight-gradient">Three Intelligent Experiences.</span>
-            </h2>
-          </div>
+
 
           {/* Circular Orbit AI Learning Ecosystem */}
           <VedikaOrbitStage />
