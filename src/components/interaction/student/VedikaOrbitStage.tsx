@@ -80,9 +80,9 @@ function getPositions(feat: StudentOrbitFeature): {
 export default function VedikaOrbitStage() {
   // Active feature spotlight (1..9, starts on Feature 01)
   const [activeStep, setActiveStep] = useState<number>(1);
-  // Which feature card is currently expanded (starts NULL — completely collapsed at start!)
-  const [expandedStep, setExpandedStep] = useState<number | null>(null);
-  // Feature nodes that have been completed by the ring (starts empty!)
+  // Cards that have been revealed and STAY open on the screen!
+  const [revealedSteps, setRevealedSteps] = useState<Set<number>>(() => new Set());
+  // Feature nodes that have been touched and stay prominently illuminated!
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
   // Tracks if the sequential animation has permanently finished
   const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
@@ -92,7 +92,6 @@ export default function VedikaOrbitStage() {
 
   // SVG animated element refs
   const segmentRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
-  const auraRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
   const beadGroupRef = useRef<SVGGElement | null>(null);
   const beadHaloRef = useRef<SVGCircleElement | null>(null);
   const beadCoreRef = useRef<SVGCircleElement | null>(null);
@@ -122,57 +121,45 @@ export default function VedikaOrbitStage() {
       paused: true,
       onComplete: () => {
         setIsAnimationFinished(true);
-        // Ensure all 9 segments and auras remain permanently visible as a full spectrum
-        segmentRefs.current.forEach((el, idx) => {
+        // Ensure all 9 segments remain permanently visible as a full curved spectrum
+        segmentRefs.current.forEach((el) => {
           if (el) {
             el.style.strokeDashoffset = '0px';
             el.style.opacity = '1';
             el.style.visibility = 'visible';
           }
-          const aura = auraRefs.current[idx];
-          if (aura) {
-            aura.style.strokeDashoffset = '0px';
-            aura.style.opacity = '0.55';
-            aura.style.visibility = 'visible';
-          }
         });
-        // All 9 icons remain illuminated in their completed colors
+        // All 9 icons and all 9 cards stay permanently revealed
         setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+        setRevealedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
         setActiveStep(0);
-        setExpandedStep(null);
-        // Softly settle the energy bead into the ring
+        // Softly settle the energy bead into the completed ring
         if (beadGroupRef.current) {
           gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.6 });
         }
       },
     });
 
-    const C_EXPAND = ORBIT_TIMINGS.CARD_EXPAND / 1000;     // 0.5s
-    const C_READ = ORBIT_TIMINGS.CARD_READ / 1000;         // 2.2s
-    const C_COLLAPSE = ORBIT_TIMINGS.CARD_COLLAPSE / 1000; // 0.38s
-    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.2s
-    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.3s
+    const C_EXPAND = ORBIT_TIMINGS.CARD_EXPAND / 1000;     // 0.45s
+    const C_DISPLAY = 1.6;                                 // 1.6s display
+    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.1s
+    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.2s
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEP 0: First node (Feature 01: Pink, Non-Judgmental Space)
     // ──────────────────────────────────────────────────────────────────────────
     tl.call(() => {
       setActiveStep(1);
-      setExpandedStep(1);
-      // Touched node immediately remains illuminated
+      setRevealedSteps((prev) => new Set(prev).add(1));
       setCompletedSteps((prev) => new Set(prev).add(1));
     });
-    // Expansion & reading pause for first card
-    tl.to({}, { duration: C_EXPAND + C_READ });
-    // Collapse first card smoothly
-    tl.call(() => {
-      setExpandedStep(null);
-    });
-    tl.to({}, { duration: C_COLLAPSE });
+    // Card 1 expands and STAYS open!
+    tl.to({}, { duration: C_EXPAND + C_DISPLAY });
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
     // As the energy point travels, the ring segment paints dynamically behind it!
+    // Previous cards and points STAY visible!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
@@ -200,62 +187,42 @@ export default function VedikaOrbitStage() {
           ease: 'power2.inOut',
           onStart: () => {
             const pathEl = segmentRefs.current[i];
-            const auraEl = auraRefs.current[i];
             if (pathEl) {
               pathEl.style.visibility = 'visible';
               pathEl.style.opacity = '1';
             }
-            if (auraEl) {
-              auraEl.style.visibility = 'visible';
-              auraEl.style.opacity = '0.55';
-            }
           },
           onUpdate: () => {
-            // Update bead coordinates and color on this frame
             updateBead(beadState.angle, beadState.r, beadState.g, beadState.b);
-            // Synchronously paint the segment stroke with the moving point
+            // Synchronously paint the curved segment stroke with the moving point
             const p = (beadState.angle - seg.startAngleDeg) / seg.spanDeg;
             const progress = Math.max(0, Math.min(1, p));
             const currentOffset = seg.arcLength * (1 - progress);
             const pathEl = segmentRefs.current[i];
-            const auraEl = auraRefs.current[i];
             if (pathEl) {
               pathEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
             }
-            if (auraEl) {
-              auraEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
-            }
           },
           onComplete: () => {
-            // Lock completed segment at 100% drawn
             const pathEl = segmentRefs.current[i];
-            const auraEl = auraRefs.current[i];
             if (pathEl) {
               pathEl.style.strokeDashoffset = '0px';
-            }
-            if (auraEl) {
-              auraEl.style.strokeDashoffset = '0px';
             }
           },
         },
         travelLabel
       );
 
-      // Energy point arrives at next node! Node activates, card unfolds, node stays illuminated
+      // Energy point arrives at next node!
+      // Next node activates, its card unfolds, and PREVIOUS CARDS & POINTS STAY OPEN!
       tl.call(() => {
         setActiveStep(targetFeatureIndex);
-        setExpandedStep(targetFeatureIndex);
+        setRevealedSteps((prev) => new Set(prev).add(targetFeatureIndex));
         setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
       });
 
-      // Card reading duration
-      tl.to({}, { duration: C_EXPAND + C_READ });
-
-      // Collapse card smoothly before next segment starts drawing
-      tl.call(() => {
-        setExpandedStep(null);
-      });
-      tl.to({}, { duration: C_COLLAPSE });
+      // Card unfolds and displays while previous cards stay visible
+      tl.to({}, { duration: C_EXPAND + C_DISPLAY });
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -284,14 +251,9 @@ export default function VedikaOrbitStage() {
         ease: 'power2.inOut',
         onStart: () => {
           const pathEl = segmentRefs.current[8];
-          const auraEl = auraRefs.current[8];
           if (pathEl) {
             pathEl.style.visibility = 'visible';
             pathEl.style.opacity = '1';
-          }
-          if (auraEl) {
-            auraEl.style.visibility = 'visible';
-            auraEl.style.opacity = '0.55';
           }
         },
         onUpdate: () => {
@@ -300,22 +262,14 @@ export default function VedikaOrbitStage() {
           const progress = Math.max(0, Math.min(1, p));
           const currentOffset = finalSeg.arcLength * (1 - progress);
           const pathEl = segmentRefs.current[8];
-          const auraEl = auraRefs.current[8];
           if (pathEl) {
             pathEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
-          }
-          if (auraEl) {
-            auraEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
           }
         },
         onComplete: () => {
           const pathEl = segmentRefs.current[8];
-          const auraEl = auraRefs.current[8];
           if (pathEl) {
             pathEl.style.strokeDashoffset = '0px';
-          }
-          if (auraEl) {
-            auraEl.style.strokeDashoffset = '0px';
           }
         },
       },
@@ -331,15 +285,6 @@ export default function VedikaOrbitStage() {
 
     // Reset all 9 segments to empty initial state
     segmentRefs.current.forEach((el, idx) => {
-      const seg = ORBIT_SEGMENTS[idx];
-      if (el && seg) {
-        el.style.strokeDasharray = `${seg.arcLength}px ${seg.arcLength}px`;
-        el.style.strokeDashoffset = `${seg.arcLength}px`;
-        el.style.opacity = '0';
-        el.style.visibility = 'hidden';
-      }
-    });
-    auraRefs.current.forEach((el, idx) => {
       const seg = ORBIT_SEGMENTS[idx];
       if (el && seg) {
         el.style.strokeDasharray = `${seg.arcLength}px ${seg.arcLength}px`;
@@ -373,10 +318,9 @@ export default function VedikaOrbitStage() {
     };
   }, [buildTimeline, updateBead]);
 
-  // Click handler: user can inspect any feature card at leisure
+  // Click handler: user can inspect any feature card
   const handleCardClick = (stepIndex: number) => {
     if (!isAnimationFinished) {
-      // If user clicks an icon during autoplay, finish ring drawing and let user inspect
       timelineRef.current?.pause();
       setIsAnimationFinished(true);
       segmentRefs.current.forEach((el) => {
@@ -386,28 +330,19 @@ export default function VedikaOrbitStage() {
           el.style.visibility = 'visible';
         }
       });
-      auraRefs.current.forEach((el) => {
-        if (el) {
-          el.style.strokeDashoffset = '0px';
-          el.style.opacity = '0.55';
-          el.style.visibility = 'visible';
-        }
-      });
       setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+      setRevealedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
       if (beadGroupRef.current) {
         beadGroupRef.current.style.opacity = '0';
       }
     }
 
     setActiveStep(stepIndex);
-    // Toggle expand: if clicked again, collapses; if new, expands
-    setExpandedStep((prev) => (prev === stepIndex ? null : stepIndex));
   };
 
   const handleCardMouseEnter = (stepIndex: number) => {
     if (isAnimationFinished) {
       setActiveStep(stepIndex);
-      setExpandedStep(stepIndex);
     }
   };
 
@@ -424,7 +359,6 @@ export default function VedikaOrbitStage() {
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
             segmentRefs={segmentRefs}
-            auraRefs={auraRefs}
             beadGroupRef={beadGroupRef}
             beadHaloRef={beadHaloRef}
             beadCoreRef={beadCoreRef}
@@ -442,7 +376,7 @@ export default function VedikaOrbitStage() {
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const { iconCx, iconCy, cardCss } = getPositions(feat);
           const isCurrentActive = feat.index === activeStep;
-          const isCurrentlyExpanded = feat.index === expandedStep;
+          const isRevealed = revealedSteps.has(feat.index);
           const isAlreadyCompleted = completedSteps.has(feat.index);
 
           return (
@@ -450,7 +384,7 @@ export default function VedikaOrbitStage() {
               key={feat.id}
               feature={feat}
               isActive={isCurrentActive}
-              isExpanded={isCurrentlyExpanded}
+              isExpanded={isRevealed}
               isCompleted={isAlreadyCompleted}
               iconCx={iconCx}
               iconCy={iconCy}

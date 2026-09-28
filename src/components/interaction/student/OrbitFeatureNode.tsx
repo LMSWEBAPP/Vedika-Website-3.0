@@ -66,7 +66,9 @@ export default function OrbitFeatureNode({
     : 'is-unvisited';
 
   const slotStateClass = isExpanded
-    ? 'is-expanded is-active'
+    ? isActive
+      ? 'is-expanded is-active'
+      : 'is-expanded is-revealed'
     : 'is-collapsed';
 
   const cssVars = {
