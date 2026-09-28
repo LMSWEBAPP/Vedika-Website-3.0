@@ -91,10 +91,6 @@ export default function PersonaPanelsSection() {
         <section className="panel-section-slot student-content" aria-label="Student Learning Experience">
           {/* 3-Panel Adaptive Ecosystem Heading */}
           <div className="ecosystem-header-box">
-            <div className="ecosystem-badge-pill">
-              <span className="ecosystem-badge-dot" />
-              <span>3-Panel Adaptive Ecosystem</span>
-            </div>
             <h2 className="ecosystem-main-title">
               One Unified Platform. <span className="highlight-gradient">Three Intelligent Experiences.</span>
             </h2>
