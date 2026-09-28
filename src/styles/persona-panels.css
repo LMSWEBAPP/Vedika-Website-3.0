@@ -1008,14 +1008,15 @@
 .teacher-slide-card {
   position: absolute;
   width: 320px;
-  height: 200px; /* Base visible height */
+  height: 400px; /* Full unfolded bounding box */
   left: 0;
   right: 0;
   top: 6px;
   margin: auto;
   box-sizing: border-box;
+  pointer-events: none; /* Only allow interaction on actual slides */
   transition:
-    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.25, 0.1, 0.25, 1),
     opacity 0.65s ease,
     filter 0.65s ease,
     z-index 0.1s ease;
@@ -1033,6 +1034,7 @@
 .teacher-slide-card.active-center:hover,
 .teacher-slide-card.active-center:focus-within {
   z-index: 50;
+  pointer-events: auto;
 }
 
 /* 2. Next Right Card */
@@ -1042,6 +1044,7 @@
   filter: blur(2.5px);
   z-index: 2;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .teacher-slide-card.next-right:hover {
@@ -1057,6 +1060,7 @@
   filter: blur(2.5px);
   z-index: 2;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .teacher-slide-card.prev-left:hover {
@@ -1080,13 +1084,16 @@
   width: 320px;
   height: 200px;
   box-sizing: border-box;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ==========================================================================
    SLIDE 1: Traditional Friction (Top Outer Card)
    - Default State:
      Sits at transform: translateY(100px); z-index: 2; border-radius: 20px;
-   - On Hover State (CodePen exact behavior):
+   - On Hover State (CodePen exact smooth behavior):
      Smoothly slides up to translateY(0px) in .7s;
      border-radius: 20px 20px 0 0;
      border-bottom: none;
@@ -1099,6 +1106,7 @@
   z-index: 2;
   transform: translateY(100px);
   border-radius: 20px;
+  pointer-events: auto; /* Always interactive */
   background:
     linear-gradient(150deg, rgba(32, 16, 24, 0.98) 0%, rgba(18, 9, 14, 0.99) 100%),
     rgba(15, 23, 42, 0.95);
@@ -1109,10 +1117,10 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.12),
     0 12px 30px rgba(0, 0, 0, 0.6);
   transition:
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.35s ease,
-    border-color 0.4s ease,
-    box-shadow 0.5s ease;
+    transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-radius 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.6s ease;
 }
 
 /* Subtle seamless highlight at the bottom seam when opened on hover */
@@ -1126,7 +1134,7 @@
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(16, 185, 129, 0.3), transparent);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
 }
 
 /* On Hover: Slide 1 smoothly slides up to translateY(0px) */
@@ -1168,7 +1176,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 18px rgba(248, 113, 113, 0.25);
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .teacher-slide-card.active-center:hover .icon,
@@ -1204,7 +1212,7 @@
      Sits at transform: translateY(-100px); z-index: 1; directly behind Slide 1.
      border-radius: 20px; fully rounded, border-color: transparent, box-shadow: none.
      Fully opaque (no opacity tricks) and cleanly tucked inside Slide 1 with NO sharp corners.
-   - On Hover State (CodePen exact behavior):
+   - On Hover State (CodePen exact smooth behavior):
      Smoothly slides down to translateY(0) in .8s out from inside Slide 1;
      border-radius: 0 0 20px 20px;
      border-top: none;
@@ -1220,6 +1228,7 @@
   z-index: 1;
   transform: translateY(-100px);
   border-radius: 20px;
+  pointer-events: none;
   background:
     linear-gradient(160deg, rgba(6, 30, 22, 0.99) 0%, rgba(3, 16, 12, 0.99) 100%),
     rgba(8, 20, 16, 0.96);
@@ -1229,9 +1238,9 @@
   border-top: none;
   box-shadow: none;
   transition:
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.35s ease,
-    border-color 0.4s ease,
+    transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-radius 0.45s ease,
+    border-color 0.45s ease,
     box-shadow 0.6s ease;
 }
 
@@ -1248,7 +1257,7 @@
   border-radius: 2px;
   box-shadow: 0 0 12px #10B981;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
 }
 
 /* On Hover: Slide 2 smoothly glides down out from the inside to translateY(0) */
@@ -1259,6 +1268,7 @@
   border-top: none;
   border: 1.5px solid rgba(16, 185, 129, 0.6);
   border-top: none;
+  pointer-events: auto; /* Interactive when unfolded */
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.85),
     0 0 28px rgba(16, 185, 129, 0.25);
