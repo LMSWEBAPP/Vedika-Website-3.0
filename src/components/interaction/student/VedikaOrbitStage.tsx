@@ -4,7 +4,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import CentralVedika3D from '../CentralVedika3D';
 import OrbitProgressRing from './OrbitProgressRing';
 import OrbitFeatureNode from './OrbitFeatureNode';
-import { STUDENT_ORBIT_FEATURES, StudentOrbitFeature } from './studentOrbitData';
+import {
+  STUDENT_ORBIT_FEATURES,
+  StudentOrbitFeature,
+  CARD_COLUMN_X,
+  CARD_ROW_START_Y,
+  CARD_ROW_STEP_Y,
+} from './studentOrbitData';
 import '@/styles/student-orbit.css';
 
 export default function VedikaOrbitStage() {
@@ -15,7 +21,6 @@ export default function VedikaOrbitStage() {
 
   const activeFeature = STUDENT_ORBIT_FEATURES[activeStep - 1] || STUDENT_ORBIT_FEATURES[0];
 
-  // Advance sequence smoothly
   const advance = useCallback(() => {
     setRevealedCount((prevRevealed) => {
       if (prevRevealed < 9) {
@@ -23,14 +28,12 @@ export default function VedikaOrbitStage() {
         setActiveStep(next);
         return next;
       } else {
-        // Once all 9 are revealed, cycle active spotlight through the cards
         setActiveStep((prevActive) => (prevActive >= 9 ? 1 : prevActive + 1));
         return 9;
       }
     });
   }, []);
 
-  // Sequential Timer (smooth ~2.3s pacing)
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       if (!isHoveredRef.current) {
@@ -43,7 +46,6 @@ export default function VedikaOrbitStage() {
     };
   }, [revealedCount, activeStep, advance]);
 
-  // Handle direct click on any card
   const handleCardClick = (stepIndex: number) => {
     setActiveStep(stepIndex);
     if (stepIndex > revealedCount) {
@@ -58,25 +60,24 @@ export default function VedikaOrbitStage() {
       aria-label="Student Learning Ecosystem 360-Degree Circular Orbit"
     >
       {/* ============================================================== */}
-      {/* 1. CENTER VEDIKA BOT (CLEAN: ONLY BOT & PROGRESS RING)        */}
+      {/* 1. CENTER VEDIKA BOT (CLEAN: ONLY BOT & PROGRESS RING)         */}
       {/* ============================================================== */}
       <div className="vedika-center-pod-clean">
         {/* Soft Ambient Radial Aura */}
         <div
           className="vedika-ambient-aura"
           style={{
-            background: `radial-gradient(circle, ${activeFeature.color}25 0%, rgba(56, 189, 248, 0.04) 55%, transparent 75%)`,
+            background: `radial-gradient(circle, ${activeFeature.color}22 0%, rgba(56, 189, 248, 0.04) 55%, transparent 75%)`,
           }}
           aria-hidden="true"
         />
 
-        {/* Circular SVG Progress Ring (Passing Underneath Icons on Orbit) */}
+        {/* Circular SVG Progress Ring */}
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
             currentStep={activeStep}
             activeColor={activeFeature.color}
             activeRgb={activeFeature.rgb}
-            radius={130}
           />
         </div>
 
@@ -87,12 +88,16 @@ export default function VedikaOrbitStage() {
       </div>
 
       {/* ============================================================== */}
-      {/* 2. 9 ORBITAL NODES (ICONS ON CIRCLE, TEXT EXPANDING OUTWARD)  */}
+      {/* 2. 9 ORBITAL NODES — Icon on orbit, card in column lane        */}
       {/* ============================================================== */}
       <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const isRevealed = feat.index <= revealedCount;
           const isActive = feat.index === activeStep;
+
+          // Card column lane position (left edge for right cards, right edge for left cards)
+          // cardRow defines the vertical slot
+          const cardY = CARD_ROW_START_Y + feat.cardRow * CARD_ROW_STEP_Y;
 
           return (
             <OrbitFeatureNode
@@ -100,6 +105,8 @@ export default function VedikaOrbitStage() {
               feature={feat}
               isActive={isActive}
               isRevealed={isRevealed}
+              cardColumnX={CARD_COLUMN_X}
+              cardY={cardY}
               onClick={() => handleCardClick(feat.index)}
               onMouseEnter={() => {
                 isHoveredRef.current = true;

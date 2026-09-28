@@ -6,129 +6,165 @@ export interface StudentOrbitFeature {
   shortLabel: string;
   color: string;
   rgb: string;
-  angleDeg: number;
+  angleDeg: number; // angle on orbit ring (0 = right, 90 = bottom, 270 = top)
   direction: 'left' | 'right' | 'top';
-  // (dx, dy) relative to orbit center in pixels
-  dx: number;
-  dy: number;
+  // Icon badge center offset from stage center (placed on orbit ring R=130)
+  iconDx: number;
+  iconDy: number;
+  // Card slot: which vertical row in its column (0 = topmost)
+  cardRow: number;
 }
 
+// Radius where icon badges are centered (must match OrbitProgressRing outerOrbitRadius)
+export const ORBIT_ICON_RADIUS = 130;
+
+// Column layout constants (used in VedikaOrbitStage to compute card positions)
+export const CARD_COLUMN_X = 162;   // px from center to the near edge of card column
+export const CARD_ROW_START_Y = -148; // px from center for row 0 (topmost card)
+export const CARD_ROW_STEP_Y = 74;   // px between consecutive card rows
+
+function iconPos(angleDeg: number): { iconDx: number; iconDy: number } {
+  const rad = (angleDeg * Math.PI) / 180;
+  return {
+    iconDx: Math.round(ORBIT_ICON_RADIUS * Math.cos(rad)),
+    iconDy: Math.round(ORBIT_ICON_RADIUS * Math.sin(rad)),
+  };
+}
+
+/**
+ * 9 Student Capabilities arranged as:
+ *   - 1 card at top center  (direction: 'top', cardRow: 0)
+ *   - 4 cards on right side (direction: 'right', cardRow: 0–3)
+ *   - 4 cards on left side  (direction: 'left',  cardRow: 0–3)
+ *
+ * Icon angles (clock positions):
+ *   Top   = 270° (12 o'clock)
+ *   Right = 330°, 30°, 90°, 150° (~1, 2, 3, 5 o'clock)
+ *   Left  = 210°, 240°, 180°, 225° (~7, 8, 9, ~10 o'clock)
+ *
+ * Cards are in explicit row slots so there is ZERO overlap regardless of card width.
+ */
 export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
-  {
-    id: 'study-companion',
-    index: 1,
-    title: '24/7 Study Companion',
-    desc: 'Get help whenever you need it — day or night.',
-    shortLabel: 'Always available',
-    color: '#F59E0B',
-    rgb: '245, 158, 11',
-    angleDeg: 325,
-    direction: 'left',
-    dx: -72,
-    dy: -102,
-  },
+  // ── TOP CARD (1 card, flows upward) ──────────────────────────────────────
   {
     id: 'non-judgmental',
-    index: 2,
+    index: 1,
     title: 'Non-Judgmental Space',
     desc: 'Ask freely and make mistakes without fear.',
     shortLabel: 'Learn without fear',
     color: '#EC4899',
     rgb: '236, 72, 153',
-    angleDeg: 0,
+    angleDeg: 270,         // 12 o'clock
     direction: 'top',
-    dx: 0,
-    dy: -125,
+    ...iconPos(270),
+    cardRow: 0,
   },
+
+  // ── RIGHT COLUMN (4 cards, flow left→right) ───────────────────────────────
   {
     id: 'own-pace',
-    index: 3,
+    index: 2,
     title: 'Learn at Your Own Pace',
     desc: 'Take your time, revisit difficult topics comfortably.',
     shortLabel: 'Your pace',
     color: '#3B82F6',
     rgb: '59, 130, 246',
-    angleDeg: 35,
+    angleDeg: 330,         // ~11 o'clock on right side (upper-right)
     direction: 'right',
-    dx: 72,
-    dy: -102,
+    ...iconPos(330),
+    cardRow: 0,            // topmost right card
   },
   {
     id: 'concept-clarity',
-    index: 4,
+    index: 3,
     title: 'Concept Clarity',
     desc: 'Step-by-step simple explanations with examples.',
     shortLabel: 'Understand deeply',
     color: '#10B981',
     rgb: '16, 185, 129',
-    angleDeg: 75,
+    angleDeg: 30,          // ~1 o'clock (right, upper-mid)
     direction: 'right',
-    dx: 121,
-    dy: -32,
+    ...iconPos(30),
+    cardRow: 1,
   },
   {
     id: 'personalized-support',
-    index: 5,
+    index: 4,
     title: 'Personalized Support',
     desc: 'Adapts to your style and targets weak areas.',
     shortLabel: 'Made for you',
     color: '#F43F5E',
     rgb: '244, 63, 94',
-    angleDeg: 115,
+    angleDeg: 90,          // 3 o'clock (right)
     direction: 'right',
-    dx: 113,
-    dy: 53,
+    ...iconPos(90),
+    cardRow: 2,
   },
   {
     id: 'build-confidence',
-    index: 6,
+    index: 5,
     title: 'Build Confidence',
     desc: 'Turn doubts into lasting mastery and curiosity.',
     shortLabel: 'Confidence first',
     color: '#8B5CF6',
     rgb: '139, 92, 246',
-    angleDeg: 155,
+    angleDeg: 150,         // ~5 o'clock (right, lower)
     direction: 'right',
-    dx: 53,
-    dy: 128,
+    ...iconPos(150),
+    cardRow: 3,            // bottommost right card
   },
+
+  // ── LEFT COLUMN (4 cards, flow right→left) ────────────────────────────────
   {
     id: 'practice-exam',
-    index: 7,
+    index: 6,
     title: 'Practice & Exam Ready',
     desc: 'Instant quizzes, mock tests and instant feedback.',
     shortLabel: 'Exam ready',
     color: '#0284C7',
     rgb: '2, 132, 199',
-    angleDeg: 205,
+    angleDeg: 210,         // ~7 o'clock (left, lower)
     direction: 'left',
-    dx: -53,
-    dy: 128,
+    ...iconPos(210),
+    cardRow: 3,            // bottommost left card
   },
   {
     id: 'interactive-learning',
-    index: 8,
+    index: 7,
     title: 'Interactive Learning',
     desc: '3D visual simulations and active experiments.',
     shortLabel: 'Learn by doing',
     color: '#06B6D4',
     rgb: '6, 182, 212',
-    angleDeg: 245,
+    angleDeg: 240,         // ~8 o'clock (left, lower-mid)
     direction: 'left',
-    dx: -113,
-    dy: 53,
+    ...iconPos(240),
+    cardRow: 2,
   },
   {
     id: 'unlimited-questions',
-    index: 9,
+    index: 8,
     title: 'Ask Unlimited Questions',
     desc: 'Ask anything anytime, as often as needed.',
     shortLabel: 'Zero limits',
     color: '#A855F7',
     rgb: '168, 85, 247',
-    angleDeg: 285,
+    angleDeg: 180,         // 9 o'clock (left)
     direction: 'left',
-    dx: -121,
-    dy: -32,
+    ...iconPos(180),
+    cardRow: 1,
+  },
+  {
+    id: 'study-companion',
+    index: 9,
+    title: '24/7 Study Companion',
+    desc: 'Get help whenever you need it — day or night.',
+    shortLabel: 'Always available',
+    color: '#F59E0B',
+    rgb: '245, 158, 11',
+    angleDeg: 225,         // ~10–11 o'clock (left, upper)
+    direction: 'left',
+    ...iconPos(225),
+    cardRow: 0,            // topmost left card
   },
 ];
