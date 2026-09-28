@@ -10,12 +10,12 @@ export type PersonaRole = 'student' | 'teacher' | 'admin';
 export default function PersonaPanelsSection() {
   const [activeRole, setActiveRole] = useState<PersonaRole>('student');
 
-  // Carousel slide indexes for teacher & admin roles
-  const [teacherSlide, setTeacherSlide] = useState(0);
+  // Carousel slide index for admin role
   const [adminSlide, setAdminSlide] = useState(0);
 
   const teacherDilemmas = [
     {
+      icon: '💬',
       dilemmaTitle: 'Repetitive Doubts Drainage',
       dilemmaDesc: 'Answering the same fundamental question 40 times a day drains mental energy and leaves zero time for deep classroom discussions.',
       rectTitle: '24/7 Tier-1 Socratic Assistant',
@@ -23,6 +23,7 @@ export default function PersonaPanelsSection() {
       impact: '⏱️ 15+ Hours Saved Weekly',
     },
     {
+      icon: '📝',
       dilemmaTitle: 'Crushing Weekend Grading Load',
       dilemmaDesc: 'Spending 12–15 hours every weekend grading handwritten derivations, lab reports, and subjective assignments.',
       rectTitle: 'Instant Multi-Modal Rubric Grading',
@@ -30,6 +31,7 @@ export default function PersonaPanelsSection() {
       impact: '⚡ 5-Second Multi-Modal Grading',
     },
     {
+      icon: '📊',
       dilemmaTitle: 'Silent Student Struggles',
       dilemmaDesc: 'Quiet students fall behind silently in 50-student classrooms without the teacher realizing until mid-term exam failure.',
       rectTitle: 'Real-Time Class Comprehension Radar',
@@ -37,7 +39,8 @@ export default function PersonaPanelsSection() {
       impact: '🎯 100% Comprehension Visibility',
     },
     {
-      dilemmaTitle: 'Fragmented Lesson Prep & Worksheets',
+      icon: '⚡',
+      dilemmaTitle: 'Fragmented Lesson Prep',
       dilemmaDesc: 'Hunting for diagrams, slides, and differentiated quiz questions across disparate portals and outdated textbooks.',
       rectTitle: '1-Click Curriculum Lesson Generator',
       rectDesc: 'Generate rich interactive presentation slides, 3D lab simulations, and multi-tier difficulty worksheets aligned to your board.',
@@ -180,7 +183,7 @@ export default function PersonaPanelsSection() {
         </aside>
 
         {/* ============================================================== */}
-        {/* 4. TEACHER CONTENT (70% Right: Dilemmas vs Solutions Carousel)  */}
+        {/* 4. TEACHER CONTENT (70% Right: 4 Dilemma vs Resolution Cards)  */}
         {/* ============================================================== */}
         <section className="panel-section-slot teacher-content" aria-label="Teacher Dilemmas and Vedika Rectifications">
           <div className="content-header-bar">
@@ -191,74 +194,45 @@ export default function PersonaPanelsSection() {
               Eliminate Burnout. Reclaim the Joy of Teaching.
             </h1>
             <p className="content-subtitle">
-              Traditional teaching is weighed down by repetitive administrative drudgery, midnight grading, and fragmented resources. Vedika handles the routine friction so you can focus on inspiring your students.
+              Traditional teaching is weighed down by repetitive administrative drudgery, midnight grading, and fragmented resources. Hover over any traditional friction to reveal how Vedika resolves it.
             </p>
           </div>
 
-          {/* Zero-Scroll Dilemma Carousel */}
-          <div className="persona-carousel-wrapper">
-            <div className="persona-carousel-viewport">
-              <div
-                className="persona-carousel-track"
-                style={{ transform: `translateX(-${teacherSlide * 100}%)` }}
-              >
-                {teacherDilemmas.map((item, idx) => (
-                  <div key={idx} className="persona-carousel-slide">
-                    <div className="teacher-slide-container">
-                      <div className="comparison-duo-panel">
-                        <div className="dilemma-block">
-                          <span className="dilemma-label">⚠️ Traditional Friction</span>
-                          <h3 className="dilemma-title">{item.dilemmaTitle}</h3>
-                          <p className="dilemma-desc">{item.dilemmaDesc}</p>
-                        </div>
-
-                        <div className="comparison-arrow">➔</div>
-
-                        <div className="rectification-block">
-                          <span className="rectification-label">✨ Vedika AI Resolution</span>
-                          <h3 className="rectification-title">{item.rectTitle}</h3>
-                          <p className="rectification-desc">{item.rectDesc}</p>
-                          <span className="impact-pill">{item.impact}</span>
-                        </div>
+          {/* 4-at-a-time Hover Slide Dilemma Cards Container (CodePen Slide Effect) */}
+          <div className="teacher-dilemmas-stage">
+            <div className="teacher-cards-container">
+              {teacherDilemmas.map((item, idx) => (
+                <div key={idx} className="teacher-slide-card">
+                  {/* SLIDE 1: Traditional Friction (Visible by default) */}
+                  <div className="slide slide1">
+                    <div className="content">
+                      <div className="card-badge-row">
+                        <span className="card-icon-pill dilemma">{item.icon}</span>
+                        <span className="dilemma-label">⚠️ Traditional Friction</span>
+                      </div>
+                      <h3 className="card-headline dilemma">{item.dilemmaTitle}</h3>
+                      <p className="card-text dilemma">{item.dilemmaDesc}</p>
+                      <div className="hover-trigger-indicator">
+                        <span>Hover for AI Resolution</span>
+                        <span className="trigger-arrow">➔</span>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Carousel Controls */}
-            <div className="carousel-controls-bar">
-              <div className="carousel-dots-group">
-                {teacherDilemmas.map((_, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={`carousel-dot ${teacherSlide === idx ? 'active teacher' : ''}`}
-                    onClick={() => setTeacherSlide(idx)}
-                    aria-label={`Go to dilemma slide ${idx + 1}`}
-                  />
-                ))}
-              </div>
-
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  type="button"
-                  className="carousel-nav-btn"
-                  onClick={() => setTeacherSlide((prev) => Math.max(0, prev - 1))}
-                  disabled={teacherSlide === 0}
-                >
-                  ‹ Prev Dilemma
-                </button>
-                <button
-                  type="button"
-                  className="carousel-nav-btn"
-                  onClick={() => setTeacherSlide((prev) => Math.min(teacherDilemmas.length - 1, prev + 1))}
-                  disabled={teacherSlide === teacherDilemmas.length - 1}
-                >
-                  Next Dilemma ›
-                </button>
-              </div>
+                  {/* SLIDE 2: Vedika AI Resolution (Unfolds on hover) */}
+                  <div className="slide slide2">
+                    <div className="content">
+                      <div className="card-badge-row">
+                        <span className="card-icon-pill resolution">✨</span>
+                        <span className="rectification-label">✨ Vedika AI Resolution</span>
+                      </div>
+                      <h3 className="card-headline resolution">{item.rectTitle}</h3>
+                      <p className="card-text resolution">{item.rectDesc}</p>
+                      <div className="resolution-impact-pill">{item.impact}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
