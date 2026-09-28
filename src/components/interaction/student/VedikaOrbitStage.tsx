@@ -5,90 +5,37 @@ import gsap from 'gsap';
 import CentralVedika3D from '../CentralVedika3D';
 import OrbitProgressRing from './OrbitProgressRing';
 import OrbitFeatureNode from './OrbitFeatureNode';
+import { useInteraction } from '@/hooks/useInteraction';
 import {
   STUDENT_ORBIT_FEATURES,
   StudentOrbitFeature,
-  LAYOUT,
+  NODE_POSITIONS,
   ORBIT_SEGMENTS,
   PROGRESS_R,
   ORBIT_CENTER,
   BEAD_START_X,
   BEAD_START_Y,
-  ORBIT_TIMINGS,
 } from './studentOrbitData';
 import '@/styles/student-orbit.css';
 
-const {
-  ICON_SIDE_X,  // 130
-  ICON_TOP_Y,   // 120
-  BADGE_R,      // 18
-  CARD_GAP,     // 10
-  CARD_W,       // 215
-  CARD_H,       // 54
-  ROW_Y,        // [-120, -40, 40, 120]
-} = LAYOUT;
-
-// Distance from stage center to near edge of card (icon center + badge radius + gap)
-const ICON_TO_CARD_EDGE = ICON_SIDE_X + BADGE_R + CARD_GAP; // 130 + 18 + 10 = 158px
-
-// Top card bottom-anchor distance from stage center (icon center + badge radius + gap)
-const TOP_CARD_BOTTOM_ANCHOR = ICON_TOP_Y + BADGE_R + CARD_GAP; // 120 + 18 + 10 = 148px
-
-/**
- * Compute exact pixel-positions for icon badge and card slot.
- */
-function getPositions(feat: StudentOrbitFeature): {
-  iconCx: number;
-  iconCy: number;
-  cardCss: React.CSSProperties;
-} {
-  if (feat.direction === 'right') {
-    const iconCy = ROW_Y[feat.cardRow];
-    return {
-      iconCx: ICON_SIDE_X,
-      iconCy,
-      cardCss: {
-        left: `calc(50% + ${ICON_TO_CARD_EDGE}px)`,
-        top: `calc(50% + ${iconCy - Math.ceil(CARD_H / 2)}px)`,
-      },
-    };
-  }
-
-  if (feat.direction === 'left') {
-    const iconCy = ROW_Y[feat.cardRow];
-    return {
-      iconCx: -ICON_SIDE_X,
-      iconCy,
-      cardCss: {
-        right: `calc(50% + ${ICON_TO_CARD_EDGE}px)`,
-        top: `calc(50% + ${iconCy - Math.ceil(CARD_H / 2)}px)`,
-      },
-    };
-  }
-
-  // TOP card (Feature 01: Non-Judgmental Space)
-  return {
-    iconCx: 0,
-    iconCy: -ICON_TOP_Y,
-    cardCss: {
-      left: `calc(50% - ${Math.floor(CARD_W / 2)}px)`,
-      bottom: `calc(50% + ${TOP_CARD_BOTTOM_ANCHOR}px)`,
-    },
-  };
-}
-
 export default function VedikaOrbitStage() {
-  // Active feature spotlight (1..9, starts on Feature 01)
-  const [activeStep, setActiveStep] = useState<number>(1);
-  // Cards that have been revealed and STAY open on the screen!
+  const interactionContext = useInteraction();
+  const scrollProgress = interactionContext?.scrollProgress ?? 4.0;
+  // Page 5 is completely loaded when scrollProgress >= 3.48 (or true if standalone)
+  const isPage5Active = interactionContext ? scrollProgress >= 3.48 : true;
+
+  // Active feature spotlight (0 = none/settled, 1..9 = current step)
+  const [activeStep, setActiveStep] = useState<number>(0);
+  // Cards and icons that have been reached and stay revealed on screen!
   const [revealedSteps, setRevealedSteps] = useState<Set<number>>(() => new Set());
-  // Feature nodes that have been touched and stay prominently illuminated!
+  // Feature nodes that have been touched and stay prominently illuminated
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
   // Tracks if the sequential animation has permanently finished
   const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const hasStartedRef = useRef<boolean>(false);
 
   // SVG animated element refs
   const segmentRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
@@ -135,31 +82,34 @@ export default function VedikaOrbitStage() {
         setActiveStep(0);
         // Softly settle the energy bead into the completed ring
         if (beadGroupRef.current) {
-          gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.6 });
+          gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.5 });
         }
       },
     });
 
-    const C_EXPAND = ORBIT_TIMINGS.CARD_EXPAND / 1000;     // 0.45s
-    const C_DISPLAY = 1.6;                                 // 1.6s display
-    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.1s
-    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.2s
+    const S_TRAVEL = 0.95; // Smooth 0.95s travel for each equal 40-degree segment
+    const C_EXPAND = 0.35; // 0.35s card unfold
+    const C_READ = 1.30;   // 1.30s display
 
     // ──────────────────────────────────────────────────────────────────────────
-    // STEP 0: First node (Feature 01: Pink, Non-Judgmental Space)
+    // STEP 0: Reveal Node 1 ONLY (Pink, Non-Judgmental Space)
+    // Only 1st icon shows; 2..9 are completely hidden!
     // ──────────────────────────────────────────────────────────────────────────
     tl.call(() => {
       setActiveStep(1);
-      setRevealedSteps((prev) => new Set(prev).add(1));
-      setCompletedSteps((prev) => new Set(prev).add(1));
+      setRevealedSteps(new Set([1]));
+      setCompletedSteps(new Set([1]));
+      if (beadGroupRef.current) {
+        beadGroupRef.current.style.opacity = '1';
+      }
     });
     // Card 1 expands and STAYS open!
-    tl.to({}, { duration: C_EXPAND + C_DISPLAY });
+    tl.to({}, { duration: C_EXPAND + C_READ });
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
-    // As the energy point travels, the ring segment paints dynamically behind it!
-    // Previous cards and points STAY visible!
+    // As the energy point travels along each 40° arc, the ring paints dynamically.
+    // Arriving at node k reveals icon k and unfolds card k!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
@@ -184,7 +134,7 @@ export default function VedikaOrbitStage() {
           g: seg.toRgb[1],
           b: seg.toRgb[2],
           duration: S_TRAVEL,
-          ease: 'power2.inOut',
+          ease: 'power1.inOut',
           onStart: () => {
             const pathEl = segmentRefs.current[i];
             if (pathEl) {
@@ -194,7 +144,6 @@ export default function VedikaOrbitStage() {
           },
           onUpdate: () => {
             updateBead(beadState.angle, beadState.r, beadState.g, beadState.b);
-            // Synchronously paint the curved segment stroke with the moving point
             const p = (beadState.angle - seg.startAngleDeg) / seg.spanDeg;
             const progress = Math.max(0, Math.min(1, p));
             const currentOffset = seg.arcLength * (1 - progress);
@@ -213,8 +162,7 @@ export default function VedikaOrbitStage() {
         travelLabel
       );
 
-      // Energy point arrives at next node!
-      // Next node activates, its card unfolds, and PREVIOUS CARDS & POINTS STAY OPEN!
+      // Energy point arrives at next node! Icon k reveals and Card k unfolds!
       tl.call(() => {
         setActiveStep(targetFeatureIndex);
         setRevealedSteps((prev) => new Set(prev).add(targetFeatureIndex));
@@ -222,7 +170,7 @@ export default function VedikaOrbitStage() {
       });
 
       // Card unfolds and displays while previous cards stay visible
-      tl.to({}, { duration: C_EXPAND + C_DISPLAY });
+      tl.to({}, { duration: C_EXPAND + C_READ });
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -247,8 +195,8 @@ export default function VedikaOrbitStage() {
         r: finalSeg.toRgb[0],
         g: finalSeg.toRgb[1],
         b: finalSeg.toRgb[2],
-        duration: F_TRAVEL,
-        ease: 'power2.inOut',
+        duration: S_TRAVEL,
+        ease: 'power1.inOut',
         onStart: () => {
           const pathEl = segmentRefs.current[8];
           if (pathEl) {
@@ -279,10 +227,8 @@ export default function VedikaOrbitStage() {
     return tl;
   }, [updateBead]);
 
-  // Clean initialization & playback lifecycle (StrictMode safe)
+  // Clean initialization
   useEffect(() => {
-    let isDisposed = false;
-
     // Reset all 9 segments to empty initial state
     segmentRefs.current.forEach((el, idx) => {
       const seg = ORBIT_SEGMENTS[idx];
@@ -294,29 +240,40 @@ export default function VedikaOrbitStage() {
       }
     });
 
-    // Reset bead to starting position (Node 1 Pink)
+    // Reset bead to starting position (Node 1 Pink) but hidden until page 5 activates
     const firstSeg = ORBIT_SEGMENTS[0];
     updateBead(firstSeg.startAngleDeg, firstSeg.fromRgb[0], firstSeg.fromRgb[1], firstSeg.fromRgb[2]);
     if (beadGroupRef.current) {
-      beadGroupRef.current.style.opacity = '1';
+      beadGroupRef.current.style.opacity = '0';
     }
 
     const tl = buildTimeline();
     timelineRef.current = tl;
 
-    // Start playing after a 250ms initialization pause
-    const startTimer = setTimeout(() => {
-      if (!isDisposed) {
-        tl.play();
-      }
-    }, 250);
-
     return () => {
-      isDisposed = true;
-      clearTimeout(startTimer);
       tl.kill();
     };
   }, [buildTimeline, updateBead]);
+
+  // Gated trigger: Start only when Page 5 is completely loaded!
+  useEffect(() => {
+    if (!timelineRef.current) return;
+
+    if (isPage5Active && !hasStartedRef.current) {
+      hasStartedRef.current = true;
+      // Start smoothly after page transition settles
+      const startTimer = setTimeout(() => {
+        timelineRef.current?.play();
+      }, 350);
+      return () => clearTimeout(startTimer);
+    } else if (hasStartedRef.current && !isAnimationFinished) {
+      if (!isPage5Active) {
+        timelineRef.current.pause();
+      } else if (timelineRef.current.paused()) {
+        timelineRef.current.resume();
+      }
+    }
+  }, [isPage5Active, isAnimationFinished]);
 
   // Click handler: user can inspect any feature card
   const handleCardClick = (stepIndex: number) => {
@@ -374,7 +331,7 @@ export default function VedikaOrbitStage() {
       {/* ── 9 ORBITAL NODES (Pins & Cards) ──────────────────────────────── */}
       <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
-          const { iconCx, iconCy, cardCss } = getPositions(feat);
+          const pos = NODE_POSITIONS[feat.index];
           const isCurrentActive = feat.index === activeStep;
           const isRevealed = revealedSteps.has(feat.index);
           const isAlreadyCompleted = completedSteps.has(feat.index);
@@ -386,9 +343,9 @@ export default function VedikaOrbitStage() {
               isActive={isCurrentActive}
               isExpanded={isRevealed}
               isCompleted={isAlreadyCompleted}
-              iconCx={iconCx}
-              iconCy={iconCy}
-              cardCss={cardCss}
+              iconCx={pos.iconCx}
+              iconCy={pos.iconCy}
+              cardCss={pos.cardCss}
               onClick={() => handleCardClick(feat.index)}
               onMouseEnter={() => handleCardMouseEnter(feat.index)}
               onMouseLeave={() => {}}

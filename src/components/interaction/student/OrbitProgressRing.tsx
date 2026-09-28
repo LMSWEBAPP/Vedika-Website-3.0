@@ -36,7 +36,7 @@ export default function OrbitProgressRing({
       style={{ overflow: 'visible' }}
     >
       <defs>
-        {/* Clean, userSpaceOnUse glow filter: prevents any bounding-box clipping or straight-line edge artifacts */}
+        {/* Subtle, crisp filter: keeps the neon arc clean and vibrant without washed-out haze */}
         <filter
           id="vOrbitGlow"
           filterUnits="userSpaceOnUse"
@@ -45,10 +45,8 @@ export default function OrbitProgressRing({
           width={ORBIT_SIZE}
           height={ORBIT_SIZE}
         >
-          <feGaussianBlur stdDeviation="2.5" result="blur1" />
-          <feGaussianBlur stdDeviation="6" result="blur2" />
+          <feGaussianBlur stdDeviation="1.2" result="blur1" />
           <feMerge>
-            <feMergeNode in="blur2" />
             <feMergeNode in="blur1" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>

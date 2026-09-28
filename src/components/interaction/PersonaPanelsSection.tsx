@@ -89,16 +89,7 @@ export default function PersonaPanelsSection() {
         {/* 1. STUDENT CONTENT PANEL (70% Left when active)                 */}
         {/* ============================================================== */}
         <section className="panel-section-slot student-content" aria-label="Student Learning Experience">
-          <div className="student-header-box">
-            <div className="student-eyebrow">
-              STUDENT EXPERIENCE • INFINITE 1-ON-1 AI MENTORSHIP
-            </div>
-            <h1 className="student-main-title">
-              Learning Without Limits, <br />
-              at <span style={{ color: '#F43F5E' }}>Your</span>{' '}
-              <span style={{ color: '#06B6D4' }}>Own Pace</span>
-            </h1>
-          </div>
+
 
           {/* Circular Orbit AI Learning Ecosystem */}
           <VedikaOrbitStage />

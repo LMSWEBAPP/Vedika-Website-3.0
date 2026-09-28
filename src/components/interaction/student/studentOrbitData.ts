@@ -161,7 +161,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
 
 /**
  * Progress ring bead angle (degrees) for each active step.
- * Clockwise from top (270°), 40° per step.
+ * Clockwise from top (270°), exact 40° per step (360° / 9 = 40°).
  */
 export const BEAD_ANGLES: Record<number, number> = {
   1: 270,
@@ -175,8 +175,8 @@ export const BEAD_ANGLES: Record<number, number> = {
   9: 230,
 };
 
-/** Progress ring radius and canvas dimensions */
-export const PROGRESS_R = 95;
+/** Progress ring radius (100px) and canvas dimensions */
+export const PROGRESS_R = 100;
 export const ORBIT_SIZE = 300;
 export const ORBIT_CENTER = 150;
 
@@ -206,33 +206,16 @@ function parseRgbString(rgbStr: string): [number, number, number] {
 }
 
 /**
- * Pre-computes the 9 continuous arc segments on the progress ring (R=95).
- * Segment k connects feature k to feature (k+1)%9.
- * Segment 8 connects feature 8 (index 9) back to feature 0 (index 1), completing the full 360° circle.
+ * Pre-computes the 9 continuous arc segments on the progress ring (R=100).
+ * Every segment has an identical 40° span and identical arc length (69.81px).
+ * Node 1 is at 270° (top), progressing clockwise in exact 40° increments.
  */
 export function buildOrbitSegments(): OrbitSegmentData[] {
   const R = PROGRESS_R;
   const C = ORBIT_CENTER;
   const count = STUDENT_ORBIT_FEATURES.length; // 9
 
-  // Angular position of each feature node relative to center
-  const featureAngles = STUDENT_ORBIT_FEATURES.map((feat) => {
-    let cx = 0;
-    let cy = 0;
-    if (feat.direction === 'top') {
-      cx = 0;
-      cy = -LAYOUT.ICON_TOP_Y;
-    } else if (feat.direction === 'right') {
-      cx = LAYOUT.ICON_SIDE_X;
-      cy = LAYOUT.ROW_Y[feat.cardRow];
-    } else {
-      cx = -LAYOUT.ICON_SIDE_X;
-      cy = LAYOUT.ROW_Y[feat.cardRow];
-    }
-    let deg = Math.atan2(cy, cx) * (180 / Math.PI);
-    if (deg < 0) deg += 360;
-    return deg;
-  });
+  const featureAngles = [270, 310, 350, 30, 70, 110, 150, 190, 230];
 
   const segments: OrbitSegmentData[] = [];
 
@@ -243,6 +226,7 @@ export function buildOrbitSegments(): OrbitSegmentData[] {
     let span = a2 - a1;
     if (span <= 0) span += 360;
 
+    // Identical arc length for all segments: (40 / 360) * 2 * PI * 100 = 69.81px
     const arcLength = parseFloat(((span / 360) * 2 * Math.PI * R).toFixed(2));
 
     const rad1 = (a1 * Math.PI) / 180;
@@ -282,6 +266,91 @@ export function buildOrbitSegments(): OrbitSegmentData[] {
 }
 
 export const ORBIT_SEGMENTS: OrbitSegmentData[] = buildOrbitSegments();
+
+export interface NodePositionData {
+  iconCx: number;
+  iconCy: number;
+  cardCss: React.CSSProperties;
+}
+
+/**
+ * Precomputed 360-degree circular positions for all 9 orbital nodes and cards.
+ * Exact 40° intervals centered around Vedika with clean spacing.
+ */
+export const NODE_POSITIONS: Record<number, NodePositionData> = {
+  1: {
+    iconCx: 0,
+    iconCy: -100,
+    cardCss: {
+      left: 'calc(50% - 105px)',
+      bottom: 'calc(50% + 128px)',
+    },
+  },
+  2: {
+    iconCx: 64,
+    iconCy: -77,
+    cardCss: {
+      left: 'calc(50% + 92px)',
+      top: 'calc(50% - 100px)',
+    },
+  },
+  3: {
+    iconCx: 98,
+    iconCy: -17,
+    cardCss: {
+      left: 'calc(50% + 126px)',
+      top: 'calc(50% - 42px)',
+    },
+  },
+  4: {
+    iconCx: 87,
+    iconCy: 50,
+    cardCss: {
+      left: 'calc(50% + 115px)',
+      top: 'calc(50% + 28px)',
+    },
+  },
+  5: {
+    iconCx: 34,
+    iconCy: 94,
+    cardCss: {
+      left: 'calc(50% + 62px)',
+      top: 'calc(50% + 88px)',
+    },
+  },
+  6: {
+    iconCx: -34,
+    iconCy: 94,
+    cardCss: {
+      right: 'calc(50% + 62px)',
+      top: 'calc(50% + 88px)',
+    },
+  },
+  7: {
+    iconCx: -87,
+    iconCy: 50,
+    cardCss: {
+      right: 'calc(50% + 115px)',
+      top: 'calc(50% + 28px)',
+    },
+  },
+  8: {
+    iconCx: -98,
+    iconCy: -17,
+    cardCss: {
+      right: 'calc(50% + 126px)',
+      top: 'calc(50% - 42px)',
+    },
+  },
+  9: {
+    iconCx: -64,
+    iconCy: -77,
+    cardCss: {
+      right: 'calc(50% + 92px)',
+      top: 'calc(50% - 100px)',
+    },
+  },
+};
 
 /** Initial bead position (Node 1, top center, 270°) */
 export const BEAD_START_X = ORBIT_CENTER;

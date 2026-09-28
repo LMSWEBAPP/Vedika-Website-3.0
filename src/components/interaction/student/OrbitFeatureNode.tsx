@@ -59,11 +59,14 @@ export default function OrbitFeatureNode({
   onMouseEnter,
   onMouseLeave,
 }: OrbitFeatureNodeProps) {
+  const isRevealed = isActive || isCompleted || isExpanded;
   const iconStateClass = isActive
-    ? 'is-active'
+    ? 'is-active is-revealed'
     : isCompleted
-    ? 'is-completed'
-    : 'is-unvisited';
+    ? 'is-completed is-revealed'
+    : isRevealed
+    ? 'is-revealed'
+    : 'is-unrevealed';
 
   const slotStateClass = isExpanded
     ? isActive
