@@ -1,17 +1,19 @@
 /* ==========================================================================
-   VEDIKA CLEAN CIRCULAR ORBIT SYSTEM (STUDENT EXPERIENCE)
-   - Centered 3D Vedika bot encircled by sleek SVG progress ring
-   - 9 horizontal premium glassmorphic cards
-   - Icon on the left, text expanding to the right, glowing neon bloom
-   - No connector lines, no bottom controls dock
-   - Zero vertical scroll on all screens
+   VEDIKA 360-DEGREE CIRCULAR ORBIT SYSTEM
+   - Centered 3D Vedika robot inside circular progress ring
+   - 9 icon badges sitting directly on the 360° circular orbit
+   - Right cards expand text to the right
+   - Left cards expand text to the left
+   - Top card expands text upward
+   - Neon glow blooming on activation
+   - Zero lines, zero bottom dock clutter
    ========================================================================== */
 
 .vedika-orbit-stage-clean {
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 480px;
+  min-height: 520px;
   max-height: calc(100vh - 128px);
   overflow: hidden !important;
   display: flex;
@@ -29,8 +31,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 265px;
-  height: 265px;
+  width: 280px;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,14 +40,14 @@
   z-index: 5;
 }
 
-/* Ambient Radial Glow Behind Robot */
+/* Soft Ambient Radial Aura */
 .vedika-ambient-aura {
   position: absolute;
-  width: 320px;
-  height: 320px;
+  width: 330px;
+  height: 330px;
   border-radius: 50%;
   pointer-events: none;
-  transition: background 0.5s ease;
+  transition: background 0.6s ease;
   z-index: 1;
 }
 
@@ -67,8 +69,8 @@
 /* 3D Vedika Canvas Container */
 .vedika-robot-canvas-box {
   position: absolute;
-  width: 215px;
-  height: 215px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,149 +78,96 @@
 }
 
 /* ==========================================================================
-   2. 9 HORIZONTAL GLASSMORPHIC FEATURE CARDS
+   2. 9 ORBITAL NODES (ICONS ANCHORED ON CIRCLE, TEXT EXPANDING OUTWARD)
    ========================================================================== */
-.vedika-cards-constellation {
+.vedika-orbit-nodes-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 10;
+  z-index: 12;
 }
 
-.glass-orbit-card {
+.orbital-node-anchor {
   position: absolute;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 8px 13px 9px;
-  border-radius: 14px;
-  background: rgba(13, 19, 33, 0.78);
+  pointer-events: auto;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  z-index: 12;
+  transition: z-index 0.3s ease;
+}
+
+/* 34px Circular Icon Badge Sitting Directly On Orbit */
+.orbit-circle-icon-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0A0F1D;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  color: var(--card-accent);
+  flex-shrink: 0;
+  z-index: 5;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Glassmorphic Text Drawer Card */
+.orbit-drawer-card {
+  padding: 7px 11px 8px;
+  border-radius: 12px;
+  background: rgba(13, 19, 33, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.10);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
-  width: clamp(210px, 17vw, 245px);
-  color: #FFFFFF;
-  cursor: pointer;
-  pointer-events: auto;
-  outline: none;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease,
-              border-color 0.4s ease,
-              opacity 0.4s ease;
-  user-select: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+  width: clamp(185px, 15.5vw, 220px);
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
-}
-
-/* Unrevealed State (Waiting for its turn in sequential reveal) */
-.glass-orbit-card.is-unrevealed {
-  opacity: 0.12;
-  transform: scale(0.95);
-  pointer-events: none;
-}
-
-/* Revealed State (In the ecosystem, calm and elegant) */
-.glass-orbit-card.is-revealed {
-  opacity: 0.82;
-  transform: scale(1) translateY(0);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.glass-orbit-card.is-revealed:hover {
-  opacity: 1;
-  transform: translateY(-2px) scale(1.02);
-  border-color: var(--card-accent);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 16px rgba(var(--card-accent-rgb), 0.28);
-}
-
-/* Active State (Glowing Neon Bloom) */
-.glass-orbit-card.is-active {
-  opacity: 1 !important;
-  transform: translateY(-3px) scale(1.04) !important;
-  border-color: var(--card-accent) !important;
-  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.75),
-              0 0 24px rgba(var(--card-accent-rgb), 0.48),
-              inset 0 0 14px rgba(var(--card-accent-rgb), 0.15) !important;
-  z-index: 25;
-}
-
-/* Left: Icon Container (Appears first) */
-.card-icon-container {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(9, 14, 26, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.16);
-  color: var(--card-accent);
-  transition: all 0.35s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.glass-orbit-card.is-active .card-icon-container {
-  background: rgba(var(--card-accent-rgb), 0.20);
-  border-color: var(--card-accent);
-  box-shadow: 0 0 14px rgba(var(--card-accent-rgb), 0.55);
-}
-
-.card-icon-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Right: Text Container (Flows to the right of icon) */
-.card-text-container {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
   text-align: left;
 }
 
-.card-tag-row {
+/* Typography inside drawer */
+.drawer-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2px;
 }
 
-.card-short-label {
-  font-size: 0.62rem;
+.drawer-short-tag {
+  font-size: 0.60rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--card-accent);
 }
 
-.card-step-badge {
+.drawer-step-num {
   font-size: 0.58rem;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   font-family: monospace;
 }
 
-.glass-orbit-card.is-active .card-step-badge {
-  color: var(--card-accent);
-}
-
-.card-title-text {
-  font-size: 0.81rem;
+.drawer-title-text {
+  font-size: 0.80rem;
   font-weight: 700;
   color: #FFFFFF;
   margin: 0 0 2px 0;
-  line-height: 1.22;
+  line-height: 1.2;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.card-desc-text {
-  font-size: 0.65rem;
+.drawer-desc-text {
+  font-size: 0.64rem;
   line-height: 1.34;
   color: #94A3B8;
   margin: 0;
@@ -230,134 +179,240 @@
   transition: color 0.3s ease;
 }
 
-.glass-orbit-card.is-active .card-desc-text {
+/* ==========================================================================
+   DIRECTION 1: RIGHT-SIDE CARDS (EXPAND OUTWARD TO THE RIGHT)
+   ========================================================================== */
+.orbital-node-anchor.dir-right {
+  transform: translate(-17px, -17px);
+  flex-direction: row;
+}
+
+.orbital-node-anchor.dir-right .orbit-drawer-card {
+  margin-left: 8px;
+  transform-origin: left center;
+}
+
+.orbital-node-anchor.dir-right.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.28;
+}
+
+.orbital-node-anchor.dir-right.is-unrevealed .orbit-drawer-card {
+  opacity: 0;
+  transform: scaleX(0.7) translateX(-12px);
+  pointer-events: none;
+}
+
+.orbital-node-anchor.dir-right.is-revealed .orbit-circle-icon-badge {
+  opacity: 0.88;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.orbital-node-anchor.dir-right.is-revealed .orbit-drawer-card {
+  opacity: 0.82;
+  transform: scaleX(1) translateX(0);
+}
+
+.orbital-node-anchor.dir-right.is-active .orbit-circle-icon-badge {
+  opacity: 1 !important;
+  transform: scale(1.15) !important;
+  border-color: var(--card-accent) !important;
+  background: rgba(var(--card-accent-rgb), 0.28) !important;
+  box-shadow: 0 0 18px var(--card-accent) !important;
+}
+
+.orbital-node-anchor.dir-right.is-active .orbit-drawer-card {
+  opacity: 1 !important;
+  transform: scale(1.04) translateX(3px) !important;
+  border-color: var(--card-accent) !important;
+  box-shadow: 0 0 28px rgba(var(--card-accent-rgb), 0.48),
+              0 10px 32px rgba(0, 0, 0, 0.8),
+              inset 0 0 12px rgba(var(--card-accent-rgb), 0.14) !important;
+  z-index: 25;
+}
+
+.orbital-node-anchor.dir-right.is-active .drawer-desc-text {
   color: #F1F5F9;
 }
 
 /* ==========================================================================
-   3. SYMMETRICAL 9 CARD POSITIONS
+   DIRECTION 2: LEFT-SIDE CARDS (EXPAND OUTWARD TO THE LEFT)
    ========================================================================== */
-/* Card 2: Top-Center */
-.glass-orbit-card.orbit-pos-top-center {
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(230px, 18vw, 260px);
-}
-.glass-orbit-card.orbit-pos-top-center.is-active {
-  transform: translateX(-50%) translateY(-3px) scale(1.04) !important;
+.orbital-node-anchor.dir-left {
+  transform: translate(-17px, -17px);
+  flex-direction: row-reverse;
 }
 
-/* LEFT COLUMN (4 Cards) */
-.glass-orbit-card.orbit-pos-top-left {
-  top: 12px;
-  left: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left .orbit-drawer-card {
+  margin-right: 8px;
+  transform-origin: right center;
 }
 
-.glass-orbit-card.orbit-pos-upper-left {
-  top: 29%;
-  left: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.28;
 }
 
-.glass-orbit-card.orbit-pos-lower-left {
-  top: 57%;
-  left: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-unrevealed .orbit-drawer-card {
+  opacity: 0;
+  transform: scaleX(0.7) translateX(12px);
+  pointer-events: none;
 }
 
-.glass-orbit-card.orbit-pos-bottom-left {
-  bottom: 18px;
-  left: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-revealed .orbit-circle-icon-badge {
+  opacity: 0.88;
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
-/* RIGHT COLUMN (4 Cards) */
-.glass-orbit-card.orbit-pos-top-right {
-  top: 12px;
-  right: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-revealed .orbit-drawer-card {
+  opacity: 0.82;
+  transform: scaleX(1) translateX(0);
 }
 
-.glass-orbit-card.orbit-pos-upper-right {
-  top: 29%;
-  right: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-active .orbit-circle-icon-badge {
+  opacity: 1 !important;
+  transform: scale(1.15) !important;
+  border-color: var(--card-accent) !important;
+  background: rgba(var(--card-accent-rgb), 0.28) !important;
+  box-shadow: 0 0 18px var(--card-accent) !important;
 }
 
-.glass-orbit-card.orbit-pos-lower-right {
-  top: 57%;
-  right: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-active .orbit-drawer-card {
+  opacity: 1 !important;
+  transform: scale(1.04) translateX(-3px) !important;
+  border-color: var(--card-accent) !important;
+  box-shadow: 0 0 28px rgba(var(--card-accent-rgb), 0.48),
+              0 10px 32px rgba(0, 0, 0, 0.8),
+              inset 0 0 12px rgba(var(--card-accent-rgb), 0.14) !important;
+  z-index: 25;
 }
 
-.glass-orbit-card.orbit-pos-bottom-right {
-  bottom: 18px;
-  right: clamp(14px, 2.4vw, 32px);
+.orbital-node-anchor.dir-left.is-active .drawer-desc-text {
+  color: #F1F5F9;
 }
 
 /* ==========================================================================
-   4. RESPONSIVE DESIGN (14-INCH SCREENS & LAPTOPS)
+   DIRECTION 3: TOP-CENTER CARD (EXPANDS UPWARD)
+   ========================================================================== */
+.orbital-node-anchor.dir-top {
+  transform: translate(-17px, -17px);
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.orbital-node-anchor.dir-top .orbit-drawer-card {
+  margin-bottom: 8px;
+  width: clamp(210px, 17vw, 240px);
+  transform-origin: center bottom;
+}
+
+.orbital-node-anchor.dir-top.is-unrevealed .orbit-circle-icon-badge {
+  opacity: 0.28;
+}
+
+.orbital-node-anchor.dir-top.is-unrevealed .orbit-drawer-card {
+  opacity: 0;
+  transform: scaleY(0.7) translateY(12px);
+  pointer-events: none;
+}
+
+.orbital-node-anchor.dir-top.is-revealed .orbit-circle-icon-badge {
+  opacity: 0.88;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.orbital-node-anchor.dir-top.is-revealed .orbit-drawer-card {
+  opacity: 0.82;
+  transform: scaleY(1) translateY(0);
+}
+
+.orbital-node-anchor.dir-top.is-active .orbit-circle-icon-badge {
+  opacity: 1 !important;
+  transform: scale(1.15) !important;
+  border-color: var(--card-accent) !important;
+  background: rgba(var(--card-accent-rgb), 0.28) !important;
+  box-shadow: 0 0 18px var(--card-accent) !important;
+}
+
+.orbital-node-anchor.dir-top.is-active .orbit-drawer-card {
+  opacity: 1 !important;
+  transform: scale(1.04) translateY(-3px) !important;
+  border-color: var(--card-accent) !important;
+  box-shadow: 0 0 28px rgba(var(--card-accent-rgb), 0.48),
+              0 10px 32px rgba(0, 0, 0, 0.8),
+              inset 0 0 12px rgba(var(--card-accent-rgb), 0.14) !important;
+  z-index: 25;
+}
+
+.orbital-node-anchor.dir-top.is-active .drawer-desc-text {
+  color: #F1F5F9;
+}
+
+/* Hover Enhancement */
+.orbital-node-anchor:hover .orbit-circle-icon-badge {
+  border-color: var(--card-accent);
+  box-shadow: 0 0 12px var(--card-accent);
+}
+
+.orbital-node-anchor:hover .orbit-drawer-card {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   3. RESPONSIVE DESIGN (14-INCH SCREENS & LAPTOPS)
    ========================================================================== */
 @media (max-height: 820px) {
   .vedika-orbit-stage-clean {
-    min-height: 440px;
+    min-height: 460px;
   }
 
   .vedika-center-pod-clean {
-    width: 235px;
-    height: 235px;
+    width: 250px;
+    height: 250px;
   }
 
   .vedika-robot-canvas-box {
-    width: 190px;
-    height: 190px;
+    width: 180px;
+    height: 180px;
   }
 
-  .glass-orbit-card {
-    padding: 7px 11px 8px;
-    width: clamp(195px, 16vw, 225px);
+  .orbit-drawer-card {
+    padding: 6px 9px 7px;
+    width: clamp(170px, 14vw, 195px);
   }
 
-  .card-icon-container {
-    width: 32px;
-    height: 32px;
+  .drawer-title-text {
+    font-size: 0.76rem;
   }
 
-  .card-title-text {
-    font-size: 0.77rem;
+  .drawer-desc-text {
+    font-size: 0.60rem;
   }
 
-  .card-desc-text {
-    font-size: 0.62rem;
+  .orbit-circle-icon-badge {
+    width: 30px;
+    height: 30px;
   }
 
-  .glass-orbit-card.orbit-pos-top-left {
-    top: 8px;
-  }
-  .glass-orbit-card.orbit-pos-top-right {
-    top: 8px;
-  }
-  .glass-orbit-card.orbit-pos-bottom-left {
-    bottom: 12px;
-  }
-  .glass-orbit-card.orbit-pos-bottom-right {
-    bottom: 12px;
+  .orbital-node-anchor {
+    transform: translate(-15px, -15px);
   }
 }
 
 @media (max-height: 720px) {
-  .glass-orbit-card {
-    width: clamp(180px, 15vw, 205px);
-    padding: 6px 9px 6px;
-  }
-
-  .card-desc-text {
+  .drawer-desc-text {
     display: none;
   }
 
-  .glass-orbit-card.is-active .card-desc-text {
+  .orbital-node-anchor.is-active .drawer-desc-text {
     display: -webkit-box;
     -webkit-line-clamp: 2;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .glass-orbit-card {
+  .orbital-node-anchor .orbit-drawer-card {
+    transition: none;
+  }
+  .orbit-circle-icon-badge {
     transition: none;
   }
   .vedika-ambient-aura {

@@ -8,17 +8,14 @@ import { STUDENT_ORBIT_FEATURES, StudentOrbitFeature } from './studentOrbitData'
 import '@/styles/student-orbit.css';
 
 export default function VedikaOrbitStage() {
-  // Number of cards revealed so far (starts at 1 and increases to 9)
   const [revealedCount, setRevealedCount] = useState<number>(1);
-  // Currently highlighted active card index (1 to 9)
   const [activeStep, setActiveStep] = useState<number>(1);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
   const isHoveredRef = useRef<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeFeature = STUDENT_ORBIT_FEATURES[activeStep - 1] || STUDENT_ORBIT_FEATURES[0];
 
-  // Advance sequence
+  // Advance sequence smoothly
   const advance = useCallback(() => {
     setRevealedCount((prevRevealed) => {
       if (prevRevealed < 9) {
@@ -26,35 +23,29 @@ export default function VedikaOrbitStage() {
         setActiveStep(next);
         return next;
       } else {
-        // All 9 revealed: smoothly cycle active card
+        // Once all 9 are revealed, cycle active spotlight through the cards
         setActiveStep((prevActive) => (prevActive >= 9 ? 1 : prevActive + 1));
         return 9;
       }
     });
   }, []);
 
-  // Sequential Storytelling Timer (smooth ~2.2s pacing)
+  // Sequential Timer (smooth ~2.3s pacing)
   useEffect(() => {
-    if (isPaused) {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      return;
-    }
-
     timerRef.current = setTimeout(() => {
       if (!isHoveredRef.current) {
         advance();
       }
-    }, 2200);
+    }, 2300);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [revealedCount, activeStep, isPaused, advance]);
+  }, [revealedCount, activeStep, advance]);
 
   // Handle direct click on any card
   const handleCardClick = (stepIndex: number) => {
     setActiveStep(stepIndex);
-    // Ensure card is marked revealed if clicked
     if (stepIndex > revealedCount) {
       setRevealedCount(stepIndex);
     }
@@ -64,28 +55,28 @@ export default function VedikaOrbitStage() {
     <div
       className="vedika-orbit-stage-clean"
       role="region"
-      aria-label="Student Learning Ecosystem"
+      aria-label="Student Learning Ecosystem 360-Degree Circular Orbit"
     >
       {/* ============================================================== */}
-      {/* 1. CENTRAL VEDIKA BOT (CLEAN: ONLY BOT & PROGRESS RING)        */}
+      {/* 1. CENTER VEDIKA BOT (CLEAN: ONLY BOT & PROGRESS RING)        */}
       {/* ============================================================== */}
       <div className="vedika-center-pod-clean">
-        {/* Ambient Subtle Radial Aura behind bot */}
+        {/* Soft Ambient Radial Aura */}
         <div
           className="vedika-ambient-aura"
           style={{
-            background: `radial-gradient(circle, ${activeFeature.color}25 0%, rgba(56, 189, 248, 0.05) 55%, transparent 75%)`,
+            background: `radial-gradient(circle, ${activeFeature.color}25 0%, rgba(56, 189, 248, 0.04) 55%, transparent 75%)`,
           }}
           aria-hidden="true"
         />
 
-        {/* Circular SVG Progress Ring Encircling Bot */}
+        {/* Circular SVG Progress Ring (Passing Underneath Icons on Orbit) */}
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
             currentStep={activeStep}
             activeColor={activeFeature.color}
             activeRgb={activeFeature.rgb}
-            size={265}
+            radius={130}
           />
         </div>
 
@@ -96,9 +87,9 @@ export default function VedikaOrbitStage() {
       </div>
 
       {/* ============================================================== */}
-      {/* 2. 9 HORIZONTAL GLASSMORPHIC FEATURE CARDS                      */}
+      {/* 2. 9 ORBITAL NODES (ICONS ON CIRCLE, TEXT EXPANDING OUTWARD)  */}
       {/* ============================================================== */}
-      <div className="vedika-cards-constellation">
+      <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const isRevealed = feat.index <= revealedCount;
           const isActive = feat.index === activeStep;

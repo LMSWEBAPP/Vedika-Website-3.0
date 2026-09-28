@@ -6,26 +6,26 @@ interface OrbitProgressRingProps {
   currentStep: number; // 1 to 9
   activeColor: string;
   activeRgb: string;
-  size?: number; // default 260
+  radius?: number; // default 130
 }
 
 export default function OrbitProgressRing({
   currentStep,
   activeColor,
   activeRgb,
-  size = 260,
+  radius = 130,
 }: OrbitProgressRingProps) {
+  const size = (radius + 20) * 2;
   const center = size / 2;
-  const strokeWidth = 3.5;
-  const radius = center - strokeWidth * 2 - 2;
+  const strokeWidth = 3;
   const circumference = 2 * Math.PI * radius;
 
   // Fraction 1/9 to 9/9
   const progressRatio = Math.max(0.01, Math.min(1.0, currentStep / 9));
   const strokeDashoffset = circumference * (1 - progressRatio);
 
-  // Starting angle: Top-Left at 225 deg (aligned with Card 1: 24/7 Study Companion)
-  const startAngleDeg = 225;
+  // Card 1 is at 320 deg. Start angle is 280 deg so step 1 lands at 320 deg.
+  const startAngleDeg = 280;
   const currentAngleDeg = startAngleDeg + progressRatio * 360;
   const currentAngleRad = (currentAngleDeg * Math.PI) / 180;
 
@@ -38,11 +38,10 @@ export default function OrbitProgressRing({
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      aria-label={`Learning ecosystem progress: ${currentStep} of 9 complete`}
+      aria-hidden="true"
     >
       <defs>
-        {/* Soft Neon Glow Filter */}
-        <filter id="vedikaRingGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <filter id="vedikaOrbitGlow" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="3.5" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
@@ -51,41 +50,22 @@ export default function OrbitProgressRing({
           </feMerge>
         </filter>
 
-        <linearGradient id="vedikaRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.9" />
-          <stop offset="50%" stopColor={activeColor} stopOpacity="1" />
-          <stop offset="100%" stopColor="#C084FC" stopOpacity="0.95" />
+        <linearGradient id="orbitArcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.85" />
+          <stop offset="60%" stopColor={activeColor} stopOpacity="1" />
+          <stop offset="100%" stopColor="#C084FC" stopOpacity="0.9" />
         </linearGradient>
       </defs>
 
-      {/* 1. Subtle Dark Base Track */}
+      {/* 1. Subtle Dark Base Track Passing Under All Icons */}
       <circle
         cx={center}
         cy={center}
         r={radius}
         fill="none"
-        stroke="rgba(255, 255, 255, 0.08)"
+        stroke="rgba(255, 255, 255, 0.10)"
         strokeWidth={strokeWidth}
       />
-
-      {/* Subtle Step Pips along track */}
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
-        const tickAngleRad = ((startAngleDeg + (i + 1) * 40) * Math.PI) / 180;
-        const tx = center + radius * Math.cos(tickAngleRad);
-        const ty = center + radius * Math.sin(tickAngleRad);
-        const isPassed = i + 1 <= currentStep;
-        return (
-          <circle
-            key={`tick-${i}`}
-            cx={tx}
-            cy={ty}
-            r={isPassed ? 2.5 : 1.5}
-            fill={isPassed ? activeColor : 'rgba(255, 255, 255, 0.22)'}
-            opacity={isPassed ? 0.95 : 0.4}
-            style={{ transition: 'all 0.35s ease' }}
-          />
-        );
-      })}
 
       {/* 2. Soft Outer Glow Aura of Active Arc */}
       <circle
@@ -94,37 +74,37 @@ export default function OrbitProgressRing({
         r={radius}
         fill="none"
         stroke={activeColor}
-        strokeWidth={strokeWidth + 3.5}
+        strokeWidth={strokeWidth + 3}
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(${startAngleDeg} ${center} ${center})`}
         opacity={0.35}
-        filter="url(#vedikaRingGlow)"
+        filter="url(#vedikaOrbitGlow)"
         style={{
           transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease',
         }}
       />
 
-      {/* 3. Bright Active Neon Progress Stroke */}
+      {/* 3. Bright Active Neon Stroke */}
       <circle
         cx={center}
         cy={center}
         r={radius}
         fill="none"
-        stroke="url(#vedikaRingGrad)"
+        stroke="url(#orbitArcGradient)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeDashoffset={strokeDashoffset}
         transform={`rotate(${startAngleDeg} ${center} ${center})`}
-        filter="url(#vedikaRingGlow)"
+        filter="url(#vedikaOrbitGlow)"
         style={{
           transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       />
 
-      {/* 4. Glowing Leading Energy Point (Pulse Bead) */}
+      {/* 4. Glowing Energy Bead At Leading Edge */}
       <g
         className="leading-energy-bead"
         style={{ transition: 'all 0.65s cubic-bezier(0.16, 1, 0.3, 1)' }}
@@ -132,21 +112,21 @@ export default function OrbitProgressRing({
         <circle
           cx={beadX}
           cy={beadY}
-          r="7"
+          r="6.5"
           fill={activeColor}
-          opacity={0.45}
-          filter="url(#vedikaRingGlow)"
+          opacity={0.5}
+          filter="url(#vedikaOrbitGlow)"
         />
         <circle
           cx={beadX}
           cy={beadY}
-          r="4.2"
+          r="3.8"
           fill={activeColor}
         />
         <circle
           cx={beadX}
           cy={beadY}
-          r="2.2"
+          r="2.0"
           fill="#FFFFFF"
         />
       </g>
