@@ -16,6 +16,14 @@ export default function PersonaPanelsSection() {
   // Carousel active index for teacher dilemmas
   const [activeTeacherIndex, setActiveTeacherIndex] = useState(0);
 
+  const getCardCoverflowClass = (idx: number) => {
+    const diff = (idx - activeTeacherIndex + teacherDilemmas.length) % teacherDilemmas.length;
+    if (diff === 0) return 'active-center';
+    if (diff === 1) return 'next-right';
+    if (diff === teacherDilemmas.length - 1) return 'prev-left';
+    return 'far-back';
+  };
+
   const teacherDilemmas = [
     {
       icon: '💬',
@@ -239,62 +247,57 @@ export default function PersonaPanelsSection() {
             </div>
           </div>
 
-          {/* Centered Carousel with Active Center Card & Blurred Sliding Track */}
+          {/* Centered CoverFlow Carousel */}
           <div className="teacher-dilemmas-stage">
-            <div className="teacher-carousel-viewport">
-              <div
-                className="teacher-carousel-track"
-                style={{
-                  transform: `translateX(calc(50% - 150px - ${activeTeacherIndex * 328}px))`,
-                }}
-              >
-                {teacherDilemmas.map((item, idx) => {
-                  const isActive = idx === activeTeacherIndex;
-                  return (
-                    <div
-                      key={idx}
-                      className={`teacher-slide-card ${isActive ? 'active' : 'inactive'}`}
-                      onClick={() => {
-                        if (!isActive) setActiveTeacherIndex(idx);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={item.dilemmaTitle}
-                    >
-                      {/* SLIDE 1: Traditional Friction (Icon + Heading only, centered as in CodePen) */}
-                      <div className="slide slide1">
-                        <div className="content">
-                          <div className="icon">
-                            <span className="friction-icon">{item.icon}</span>
-                          </div>
-                          <span className="friction-tag">Traditional Friction</span>
-                          <h3 className="friction-title">{item.dilemmaTitle}</h3>
-                        </div>
-                      </div>
+            <div className="teacher-coverflow-deck">
+              {teacherDilemmas.map((item, idx) => {
+                const coverflowClass = getCardCoverflowClass(idx);
+                const isCenter = coverflowClass === 'active-center';
 
-                      {/* SLIDE 2: Vedika AI Resolution (Smooth unfolding on hover reveals happy tiny Vedika bot + resolution) */}
-                      <div className="slide slide2">
-                        <div className="content">
-                          <div className="bot-and-badge-row">
-                            <img
-                              src="/assets/vedika-bot.png"
-                              alt="Happy Vedika AI Bot"
-                              className="tiny-vedika-avatar"
-                            />
-                            <div className="resolution-badge-pill">
-                              <span>✨ Vedika AI Resolution</span>
-                            </div>
-                          </div>
-
-                          <h3 className="resolution-title">{item.rectTitle}</h3>
-                          <p className="resolution-desc">{item.rectDesc}</p>
-                          <div className="resolution-impact-badge">{item.impact}</div>
+                return (
+                  <div
+                    key={idx}
+                    className={`teacher-slide-card ${coverflowClass}`}
+                    onClick={() => {
+                      if (!isCenter) setActiveTeacherIndex(idx);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={item.dilemmaTitle}
+                  >
+                    {/* SLIDE 1: Traditional Friction (Icon + Heading only, centered as in CodePen) */}
+                    <div className="slide slide1">
+                      <div className="content">
+                        <div className="icon">
+                          <span className="friction-icon">{item.icon}</span>
                         </div>
+                        <span className="friction-tag">Traditional Friction</span>
+                        <h3 className="friction-title">{item.dilemmaTitle}</h3>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+
+                    {/* SLIDE 2: Vedika AI Resolution (Smooth unfolding from inside on hover, with tiny happy Vedika bot) */}
+                    <div className="slide slide2">
+                      <div className="content">
+                        <div className="bot-and-badge-row">
+                          <img
+                            src="/assets/vedika-bot.png"
+                            alt="Happy Vedika AI Bot"
+                            className="tiny-vedika-avatar"
+                          />
+                          <div className="resolution-badge-pill">
+                            <span>✨ Vedika AI Resolution</span>
+                          </div>
+                        </div>
+
+                        <h3 className="resolution-title">{item.rectTitle}</h3>
+                        <p className="resolution-desc">{item.rectDesc}</p>
+                        <div className="resolution-impact-badge">{item.impact}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
