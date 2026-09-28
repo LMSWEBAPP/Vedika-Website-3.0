@@ -3,125 +3,116 @@
 import React from 'react';
 
 interface OrbitProgressRingProps {
-  currentStep: number; // 1 to 9
-  activeColor: string;
-  activeRgb: string;
+  currentStep: number;    // 1–9
+  activeColor: string;    // hex color of active feature
+  beadAngleDeg: number;   // where the energy bead sits on the ring
 }
 
 export default function OrbitProgressRing({
   currentStep,
   activeColor,
+  beadAngleDeg,
 }: OrbitProgressRingProps) {
-  // Inner progress ring radius (wraps tightly around Vedika bot)
-  const progressRadius = 95;
-  // Outer guide circle where icon badges sit (30px gap from progress ring)
-  const iconOrbitRadius = 130;
+  // Inner progress ring radius (wraps around the Vedika bot)
+  const PROGRESS_R = 95;
+  // Outer guide circle radius (decorative dashed, near where icons sit)
+  const GUIDE_R = 130;
 
-  const size = (iconOrbitRadius + 20) * 2; // 300px total SVG canvas
-  const center = size / 2;
-  const strokeWidth = 3;
-  const circumference = 2 * Math.PI * progressRadius;
+  const SIZE = (GUIDE_R + 20) * 2; // 300px SVG canvas
+  const C = SIZE / 2;               // center = 150
+  const SW = 3;
+  const circ = 2 * Math.PI * PROGRESS_R;
 
-  // Progress: 1/9 to 9/9
-  const progressRatio = Math.max(0.01, Math.min(1.0, currentStep / 9));
-  const strokeDashoffset = circumference * (1 - progressRatio);
+  // Progress ratio: 1/9 → 9/9
+  const ratio = Math.max(0.01, Math.min(1.0, currentStep / 9));
+  const dashOffset = circ * (1 - ratio);
 
-  // Start at top (270°) and sweep clockwise
-  const startAngleDeg = 270;
-  const currentAngleDeg = startAngleDeg + progressRatio * 360;
-  const currentAngleRad = (currentAngleDeg * Math.PI) / 180;
-
-  const beadX = center + progressRadius * Math.cos(currentAngleRad);
-  const beadY = center + progressRadius * Math.sin(currentAngleRad);
+  // Bead position on progress ring
+  const beadRad = (beadAngleDeg * Math.PI) / 180;
+  const beadX = C + PROGRESS_R * Math.cos(beadRad);
+  const beadY = C + PROGRESS_R * Math.sin(beadRad);
 
   return (
     <svg
       className="vedika-central-progress-svg"
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
+      width={SIZE}
+      height={SIZE}
+      viewBox={`0 0 ${SIZE} ${SIZE}`}
       aria-hidden="true"
       style={{ overflow: 'visible' }}
     >
       <defs>
-        <filter id="vedikaOrbitGlow" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
+        <filter id="vOrbitGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4" result="blr" />
           <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="blur" />
+            <feMergeNode in="blr" />
+            <feMergeNode in="blr" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        <linearGradient id="orbitArcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.85" />
-          <stop offset="60%" stopColor={activeColor} stopOpacity="1" />
+
+        <linearGradient id="vOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stopColor="#38BDF8" stopOpacity="0.85" />
+          <stop offset="60%"  stopColor={activeColor} stopOpacity="1" />
           <stop offset="100%" stopColor="#C084FC" stopOpacity="0.95" />
         </linearGradient>
       </defs>
 
-      {/* 1. Outer guide circle — where icon badges sit */}
+      {/* Outer guide circle — decorative dashed ring near icon positions */}
       <circle
-        cx={center}
-        cy={center}
-        r={iconOrbitRadius}
+        cx={C} cy={C} r={GUIDE_R}
         fill="none"
-        stroke="rgba(255, 255, 255, 0.07)"
+        stroke="rgba(255,255,255,0.07)"
         strokeWidth="1"
-        strokeDasharray="3 6"
+        strokeDasharray="3 7"
       />
 
-      {/* 2. Inner progress track (background) */}
+      {/* Progress track background (full circle) */}
       <circle
-        cx={center}
-        cy={center}
-        r={progressRadius}
+        cx={C} cy={C} r={PROGRESS_R}
         fill="none"
-        stroke="rgba(255, 255, 255, 0.08)"
-        strokeWidth={strokeWidth}
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth={SW}
       />
 
-      {/* 3. Soft glow aura behind active arc */}
+      {/* Glow aura behind active arc */}
       <circle
-        cx={center}
-        cy={center}
-        r={progressRadius}
+        cx={C} cy={C} r={PROGRESS_R}
         fill="none"
         stroke={activeColor}
-        strokeWidth={strokeWidth + 4}
+        strokeWidth={SW + 5}
         strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={strokeDashoffset}
-        transform={`rotate(${startAngleDeg} ${center} ${center})`}
-        opacity={0.35}
-        filter="url(#vedikaOrbitGlow)"
+        strokeDasharray={circ}
+        strokeDashoffset={dashOffset}
+        transform={`rotate(270 ${C} ${C})`}
+        opacity={0.28}
+        filter="url(#vOrbitGlow)"
         style={{
-          transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease',
+          transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16,1,0.3,1), stroke 0.4s ease',
         }}
       />
 
-      {/* 4. Bright active neon progress stroke */}
+      {/* Active neon arc */}
       <circle
-        cx={center}
-        cy={center}
-        r={progressRadius}
+        cx={C} cy={C} r={PROGRESS_R}
         fill="none"
-        stroke="url(#orbitArcGradient)"
-        strokeWidth={strokeWidth}
+        stroke="url(#vOrbitGrad)"
+        strokeWidth={SW}
         strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={strokeDashoffset}
-        transform={`rotate(${startAngleDeg} ${center} ${center})`}
-        filter="url(#vedikaOrbitGlow)"
+        strokeDasharray={circ}
+        strokeDashoffset={dashOffset}
+        transform={`rotate(270 ${C} ${C})`}
+        filter="url(#vOrbitGlow)"
         style={{
-          transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'stroke-dashoffset 0.65s cubic-bezier(0.16,1,0.3,1)',
         }}
       />
 
-      {/* 5. Glowing energy bead at leading edge of progress */}
-      <g style={{ transition: 'all 0.65s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-        <circle cx={beadX} cy={beadY} r="7" fill={activeColor} opacity={0.45} filter="url(#vedikaOrbitGlow)" />
-        <circle cx={beadX} cy={beadY} r="4" fill={activeColor} />
-        <circle cx={beadX} cy={beadY} r="2" fill="#FFFFFF" />
+      {/* Energy bead at the leading edge of the arc */}
+      <g style={{ transition: 'cx 0.65s cubic-bezier(0.16,1,0.3,1), cy 0.65s cubic-bezier(0.16,1,0.3,1)' }}>
+        <circle cx={beadX} cy={beadY} r="7.5" fill={activeColor} opacity={0.38} filter="url(#vOrbitGlow)" />
+        <circle cx={beadX} cy={beadY} r="4.5" fill={activeColor} />
+        <circle cx={beadX} cy={beadY} r="2.2" fill="#FFFFFF" />
       </g>
     </svg>
   );
