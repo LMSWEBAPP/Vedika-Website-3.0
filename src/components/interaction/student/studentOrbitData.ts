@@ -174,3 +174,125 @@ export const BEAD_ANGLES: Record<number, number> = {
   8: 190,
   9: 230,
 };
+
+/** Progress ring radius and canvas dimensions */
+export const PROGRESS_R = 95;
+export const ORBIT_SIZE = 300;
+export const ORBIT_CENTER = 150;
+
+export interface OrbitSegmentData {
+  segmentIndex: number;
+  fromFeatureIndex: number; // 1-based (1..9)
+  toFeatureIndex: number;   // 1-based (1..9)
+  startAngleDeg: number;
+  endAngleDeg: number;
+  spanDeg: number;
+  arcLength: number;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  pathD: string;
+  fromColor: string;
+  toColor: string;
+  fromRgb: [number, number, number];
+  toRgb: [number, number, number];
+  gradientId: string;
+}
+
+function parseRgbString(rgbStr: string): [number, number, number] {
+  const parts = rgbStr.split(',').map((s) => parseInt(s.trim(), 10));
+  return [parts[0] || 0, parts[1] || 0, parts[2] || 0];
+}
+
+/**
+ * Pre-computes the 9 continuous arc segments on the progress ring (R=95).
+ * Segment k connects feature k to feature (k+1)%9.
+ * Segment 8 connects feature 8 (index 9) back to feature 0 (index 1), completing the full 360° circle.
+ */
+export function buildOrbitSegments(): OrbitSegmentData[] {
+  const R = PROGRESS_R;
+  const C = ORBIT_CENTER;
+  const count = STUDENT_ORBIT_FEATURES.length; // 9
+
+  // Angular position of each feature node relative to center
+  const featureAngles = STUDENT_ORBIT_FEATURES.map((feat) => {
+    let cx = 0;
+    let cy = 0;
+    if (feat.direction === 'top') {
+      cx = 0;
+      cy = -LAYOUT.ICON_TOP_Y;
+    } else if (feat.direction === 'right') {
+      cx = LAYOUT.ICON_SIDE_X;
+      cy = LAYOUT.ROW_Y[feat.cardRow];
+    } else {
+      cx = -LAYOUT.ICON_SIDE_X;
+      cy = LAYOUT.ROW_Y[feat.cardRow];
+    }
+    let deg = Math.atan2(cy, cx) * (180 / Math.PI);
+    if (deg < 0) deg += 360;
+    return deg;
+  });
+
+  const segments: OrbitSegmentData[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const nextI = (i + 1) % count;
+    const a1 = featureAngles[i];
+    let a2 = featureAngles[nextI];
+    let span = a2 - a1;
+    if (span <= 0) span += 360;
+
+    const arcLength = parseFloat(((span / 360) * 2 * Math.PI * R).toFixed(2));
+
+    const rad1 = (a1 * Math.PI) / 180;
+    const rad2 = (a2 * Math.PI) / 180;
+
+    const startX = parseFloat((C + R * Math.cos(rad1)).toFixed(2));
+    const startY = parseFloat((C + R * Math.sin(rad1)).toFixed(2));
+    const endX = parseFloat((C + R * Math.cos(rad2)).toFixed(2));
+    const endY = parseFloat((C + R * Math.sin(rad2)).toFixed(2));
+
+    const pathD = `M ${startX} ${startY} A ${R} ${R} 0 0 1 ${endX} ${endY}`;
+    const featFrom = STUDENT_ORBIT_FEATURES[i];
+    const featTo = STUDENT_ORBIT_FEATURES[nextI];
+
+    segments.push({
+      segmentIndex: i,
+      fromFeatureIndex: featFrom.index,
+      toFeatureIndex: featTo.index,
+      startAngleDeg: a1,
+      endAngleDeg: a2,
+      spanDeg: span,
+      arcLength,
+      startX,
+      startY,
+      endX,
+      endY,
+      pathD,
+      fromColor: featFrom.color,
+      toColor: featTo.color,
+      fromRgb: parseRgbString(featFrom.rgb),
+      toRgb: parseRgbString(featTo.rgb),
+      gradientId: `orbitSegGrad_${i}`,
+    });
+  }
+
+  return segments;
+}
+
+export const ORBIT_SEGMENTS: OrbitSegmentData[] = buildOrbitSegments();
+
+/** Initial bead position (Node 1, top center, 270°) */
+export const BEAD_START_X = ORBIT_CENTER;
+export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 150 - 95 = 55
+
+/** Recommended cinematic timeline timings (in ms) */
+export const ORBIT_TIMINGS = {
+  CARD_EXPAND: 500,
+  CARD_READ: 2400,
+  CARD_COLLAPSE: 400,
+  SEGMENT_TRAVEL: 1100,
+  FINAL_CLOSING_TRAVEL: 1200,
+} as const;
+

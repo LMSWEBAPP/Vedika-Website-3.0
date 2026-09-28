@@ -52,13 +52,7 @@
 }
 
 .vedika-ambient-aura {
-  position: absolute;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  pointer-events: none;
-  transition: background 0.7s ease;
-  z-index: 1;
+  display: none !important;
 }
 
 .vedika-ring-wrap {
@@ -125,23 +119,31 @@
 }
 
 /* ── Icon states ─────────────────────────────────────────────────────────── */
+.orbit-icon-pin.is-unvisited .orbit-circle-icon-badge,
 .orbit-icon-pin.is-unrevealed .orbit-circle-icon-badge {
-  opacity: 0.25;
+  opacity: 0.35;
+  border-color: rgba(var(--card-accent-rgb), 0.30);
+  background: #080e20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.60);
+  transform: scale(0.95);
 }
 
-.orbit-icon-pin.is-revealed .orbit-circle-icon-badge {
-  opacity: 0.85;
-  border-color: rgba(var(--card-accent-rgb), 0.75);
+.orbit-icon-pin.is-completed .orbit-circle-icon-badge {
+  opacity: 0.92;
+  transform: scale(1);
+  border-color: rgba(var(--card-accent-rgb), 0.85);
+  background: rgba(var(--card-accent-rgb), 0.14);
+  color: var(--card-accent);
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.65),
-    0 0 16px rgba(var(--card-accent-rgb), 0.38);
+    0 0 18px rgba(var(--card-accent-rgb), 0.42);
 }
 
 .orbit-icon-pin.is-active .orbit-circle-icon-badge {
   opacity: 1 !important;
-  transform: scale(1.25) !important;
+  transform: scale(1.22) !important;
   border-color: var(--card-accent) !important;
-  background: rgba(var(--card-accent-rgb), 0.18) !important;
+  background: rgba(var(--card-accent-rgb), 0.22) !important;
   box-shadow:
     0 0 28px var(--card-accent),
     0 0 10px #FFFFFF !important;
@@ -150,13 +152,12 @@
 .orbit-icon-pin:hover .orbit-circle-icon-badge {
   opacity: 1;
   border-color: var(--card-accent);
-  box-shadow: 0 0 22px var(--card-accent);
-  transform: scale(1.12);
+  box-shadow: 0 0 24px var(--card-accent);
+  transform: scale(1.15);
 }
 
 /* ==========================================================================
    5. CARD SLOT (.orbit-card-slot)
-   Absolutely positioned by VedikaOrbitStage via inline style.
    ========================================================================== */
 .orbit-card-slot {
   pointer-events: auto;
@@ -166,9 +167,8 @@
 
 /* ==========================================================================
    6. GLASSMORPHIC CARD (.orbit-drawer-card)
-   Animation uses max-width (left/right cards) or max-height (top card).
-   The CSS anchor (left / right / bottom on the slot) ensures the card always
-   grows FROM the icon OUTWARD.
+   Cards start collapsed (max-width / max-height = 0) and smoothly expand
+   outward from their respective icon.
    ========================================================================== */
 .orbit-drawer-card {
   position: relative;
@@ -181,7 +181,7 @@
   /* Premium glassmorphism */
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%),
-    rgba(7, 12, 28, 0.88);
+    rgba(7, 12, 28, 0.90);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1.5px solid rgba(var(--card-accent-rgb), 0.32);
@@ -190,17 +190,19 @@
     0 8px 28px rgba(0, 0, 0, 0.68),
     0 0 14px rgba(var(--card-accent-rgb), 0.20);
 
-  /* Start hidden — max-width and opacity animate to reveal */
+  /* Start collapsed & hidden */
   max-width: 0;
   opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
 
   transition:
-    max-width  0.72s cubic-bezier(0.16, 1, 0.3, 1),
-    max-height 0.72s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity    0.52s ease,
+    max-width  0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    max-height 0.52s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity    0.38s ease,
+    transform  0.48s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.38s ease,
-    box-shadow   0.38s ease,
-    transform    0.38s ease;
+    box-shadow   0.38s ease;
 }
 
 /* Shimmer sweep on active */
@@ -210,7 +212,7 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--card-accent-rgb), 0.20) 50%,
+    rgba(var(--card-accent-rgb), 0.22) 50%,
     transparent 100%
   );
   opacity: 0;
@@ -218,94 +220,74 @@
   transition: opacity 0.45s ease;
 }
 
-.orbit-card-slot.is-active .drawer-shimmer-sweep {
+.orbit-card-slot.is-active .drawer-shimmer-sweep,
+.orbit-card-slot.is-expanded .drawer-shimmer-sweep {
   opacity: 1;
 }
 
 /* ==========================================================================
-   7. DIRECTION: RIGHT  (card left-anchored → grows from icon rightward)
+   7. DIRECTION: RIGHT (card left-anchored → grows from icon rightward)
    ========================================================================== */
-/* Slot positioned: left: calc(50% + 158px), top: calc(50% + Y)  ← set by JS */
-
-/* Revealed/active: expand max-width to reveal card from left edge rightward */
-.orbit-card-slot.dir-right.is-revealed .orbit-drawer-card,
-.orbit-card-slot.dir-right.is-active   .orbit-drawer-card {
-  max-width: 225px;
-  opacity: 1;
+.orbit-card-slot.dir-right .orbit-drawer-card {
+  transform-origin: left center;
 }
 
-.orbit-card-slot.dir-right.is-active .orbit-drawer-card {
-  border-color: var(--card-accent) !important;
+.orbit-card-slot.dir-right.is-expanded .orbit-drawer-card {
+  max-width: 225px;
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+  border-color: var(--card-accent);
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.30),
     0 10px 36px rgba(0, 0, 0, 0.82),
     0 0 32px rgba(var(--card-accent-rgb), 0.62),
-    0 0 10px rgba(var(--card-accent-rgb), 0.88) !important;
+    0 0 10px rgba(var(--card-accent-rgb), 0.88);
 }
 
 /* ==========================================================================
-   8. DIRECTION: LEFT  (card right-anchored → grows from icon leftward)
+   8. DIRECTION: LEFT (card right-anchored → grows from icon leftward)
    ========================================================================== */
-/* Slot positioned: right: calc(50% + 158px), top: calc(50% + Y)  ← set by JS
-   CSS `right` anchors the right edge. As max-width grows, left edge moves
-   leftward — so the card unfolds outward away from the icon. ✓            */
-
 .orbit-card-slot.dir-left .orbit-drawer-card {
-  max-width: 0;
+  transform-origin: right center;
 }
 
-.orbit-card-slot.dir-left.is-revealed .orbit-drawer-card,
-.orbit-card-slot.dir-left.is-active   .orbit-drawer-card {
+.orbit-card-slot.dir-left.is-expanded .orbit-drawer-card {
   max-width: 225px;
   opacity: 1;
-}
-
-.orbit-card-slot.dir-left.is-active .orbit-drawer-card {
-  border-color: var(--card-accent) !important;
+  transform: scale(1);
+  pointer-events: auto;
+  border-color: var(--card-accent);
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.30),
     0 10px 36px rgba(0, 0, 0, 0.82),
     0 0 32px rgba(var(--card-accent-rgb), 0.62),
-    0 0 10px rgba(var(--card-accent-rgb), 0.88) !important;
+    0 0 10px rgba(var(--card-accent-rgb), 0.88);
 }
 
 /* ==========================================================================
-   9. DIRECTION: TOP  (card bottom-anchored → grows from icon upward)
+   9. DIRECTION: TOP (card bottom-anchored → grows from icon upward)
    ========================================================================== */
-/* Slot positioned: left: calc(50% - 107px), bottom: calc(50% + 156px) ← JS
-   CSS `bottom` anchors the bottom edge. As max-height grows, top edge moves
-   upward — so the card unfolds upward away from the icon. ✓               */
-
 .orbit-card-slot.dir-top .orbit-drawer-card {
-  max-width: 225px;  /* full width always for top card */
+  max-width: 225px;
   max-height: 0;
+  transform-origin: center bottom;
 }
 
-.orbit-card-slot.dir-top.is-revealed .orbit-drawer-card,
-.orbit-card-slot.dir-top.is-active   .orbit-drawer-card {
-  max-height: 80px;
+.orbit-card-slot.dir-top.is-expanded .orbit-drawer-card {
+  max-height: 85px;
   opacity: 1;
-}
-
-.orbit-card-slot.dir-top.is-active .orbit-drawer-card {
-  border-color: var(--card-accent) !important;
+  transform: scale(1);
+  pointer-events: auto;
+  border-color: var(--card-accent);
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.30),
     0 10px 36px rgba(0, 0, 0, 0.82),
     0 0 32px rgba(var(--card-accent-rgb), 0.62),
-    0 0 10px rgba(var(--card-accent-rgb), 0.88) !important;
+    0 0 10px rgba(var(--card-accent-rgb), 0.88);
 }
 
-/* ==========================================================================
-   10. ACTIVE STATE: neon bloom on card for all directions
-   ========================================================================== */
-.orbit-card-slot.is-active .drawer-desc-text {
-  color: #F1F5F9;
-}
-
-/* ==========================================================================
-   11. HOVER
-   ========================================================================== */
+/* Active & hover accent borders */
 .orbit-card-slot:hover .orbit-drawer-card {
   border-color: rgba(var(--card-accent-rgb), 0.70);
   box-shadow:
@@ -315,7 +297,7 @@
 }
 
 /* ==========================================================================
-   12. TYPOGRAPHY
+   10. TYPOGRAPHY & SMOOTH CONTENT REVEAL
    ========================================================================== */
 .drawer-header-row {
   display: flex;
@@ -367,23 +349,74 @@
   transition: color 0.3s ease;
 }
 
-/* ==========================================================================
-   RING: CONTINUOUS FLOWING ANIMATION
-   stroke-dashoffset sweeps from CIRCₒ0 over one full loop duration.
-   `infinite` ensures it never resets — no backward jump on loop.
-   The transform `rotate(270)` starts the sweep at 12 o'clock.
-   ========================================================================== */
-@keyframes orbitRingFill {
-  from { stroke-dashoffset: 596.9; } /* 2π × 95 = 596.903 */
-  to   { stroke-dashoffset: 0; }
+.orbit-card-slot.is-expanded .drawer-desc-text {
+  color: #F1F5F9;
 }
 
-.orbit-ring-arc,
-.orbit-ring-aura {
-  animation-name: orbitRingFill;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  /* animation-duration is set via inline style from OrbitProgressRing */
+/* Content fade-in: text elements reveal smoothly after card expands
+   Subtle stagger:
+     0ms: card expands
+     120ms: eyebrow / short tag
+     180ms: title
+     260ms: description
+*/
+.orbit-card-slot.is-expanded .drawer-header-row {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease 0.12s, transform 0.28s ease 0.12s;
+}
+
+.orbit-card-slot.is-expanded .drawer-title-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease 0.18s, transform 0.28s ease 0.18s;
+}
+
+.orbit-card-slot.is-expanded .drawer-desc-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease 0.26s, transform 0.28s ease 0.26s;
+}
+
+/* When card is collapsed: all text fades out cleanly */
+.orbit-card-slot:not(.is-expanded) .drawer-header-row,
+.orbit-card-slot:not(.is-expanded) .drawer-title-text,
+.orbit-card-slot:not(.is-expanded) .drawer-desc-text {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.orbit-card-slot.dir-right:not(.is-expanded) .drawer-header-row,
+.orbit-card-slot.dir-right:not(.is-expanded) .drawer-title-text,
+.orbit-card-slot.dir-right:not(.is-expanded) .drawer-desc-text {
+  transform: translateX(-6px);
+}
+
+.orbit-card-slot.dir-left:not(.is-expanded) .drawer-header-row,
+.orbit-card-slot.dir-left:not(.is-expanded) .drawer-title-text,
+.orbit-card-slot.dir-left:not(.is-expanded) .drawer-desc-text {
+  transform: translateX(6px);
+}
+
+.orbit-card-slot.dir-top:not(.is-expanded) .drawer-header-row,
+.orbit-card-slot.dir-top:not(.is-expanded) .drawer-title-text,
+.orbit-card-slot.dir-top:not(.is-expanded) .drawer-desc-text {
+  transform: translateY(6px);
+}
+
+/* ==========================================================================
+   11. PROGRESS RING ELEMENTS & ENERGY BEAD
+   ========================================================================== */
+.orbit-segment-arc,
+.orbit-segment-aura {
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.orbit-energy-bead {
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* ==========================================================================
@@ -414,12 +447,9 @@
     padding: 6px 10px 7px;
   }
 
-  .orbit-card-slot.dir-right.is-revealed .orbit-drawer-card,
-  .orbit-card-slot.dir-right.is-active   .orbit-drawer-card,
-  .orbit-card-slot.dir-left.is-revealed  .orbit-drawer-card,
-  .orbit-card-slot.dir-left.is-active    .orbit-drawer-card,
-  .orbit-card-slot.dir-top.is-revealed   .orbit-drawer-card,
-  .orbit-card-slot.dir-top.is-active     .orbit-drawer-card {
+  .orbit-card-slot.dir-right.is-expanded .orbit-drawer-card,
+  .orbit-card-slot.dir-left.is-expanded  .orbit-drawer-card,
+  .orbit-card-slot.dir-top.is-expanded   .orbit-drawer-card {
     max-width: 200px;
   }
 

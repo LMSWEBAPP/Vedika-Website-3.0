@@ -12,7 +12,8 @@ const BADGE_R = 18; // 36px badge / 2
 interface OrbitFeatureNodeProps {
   feature: StudentOrbitFeature;
   isActive: boolean;
-  isRevealed: boolean;
+  isExpanded: boolean;
+  isCompleted: boolean;
   /**
    * Icon badge center offset (px) from stage center (50%, 50%).
    * iconCx > 0 = right, iconCy < 0 = up.
@@ -49,7 +50,8 @@ function getIcon(id: string) {
 export default function OrbitFeatureNode({
   feature,
   isActive,
-  isRevealed,
+  isExpanded,
+  isCompleted,
   iconCx,
   iconCy,
   cardCss,
@@ -57,7 +59,15 @@ export default function OrbitFeatureNode({
   onMouseEnter,
   onMouseLeave,
 }: OrbitFeatureNodeProps) {
-  const stateClass = isActive ? 'is-active' : isRevealed ? 'is-revealed' : 'is-unrevealed';
+  const iconStateClass = isActive
+    ? 'is-active'
+    : isCompleted
+    ? 'is-completed'
+    : 'is-unvisited';
+
+  const slotStateClass = isExpanded
+    ? 'is-expanded is-active'
+    : 'is-collapsed';
 
   const cssVars = {
     '--card-accent': feature.color,
@@ -82,7 +92,7 @@ export default function OrbitFeatureNode({
     <>
       {/* ── 1. ICON BADGE on the orbit ring ────────────────────────────── */}
       <div
-        className={`orbit-icon-pin dir-${feature.direction} ${stateClass}`}
+        className={`orbit-icon-pin dir-${feature.direction} ${iconStateClass}`}
         style={iconStyle}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
@@ -96,6 +106,7 @@ export default function OrbitFeatureNode({
           }
         }}
         aria-label={`${feature.title}: ${feature.shortLabel}`}
+        aria-expanded={isExpanded}
         title={`0${feature.index} • ${feature.title}`}
       >
         <div className="orbit-circle-icon-badge">
@@ -105,14 +116,13 @@ export default function OrbitFeatureNode({
 
       {/* ── 2. GLASSMORPHIC CARD aligned with icon ─────────────────────── */}
       <div
-        className={`orbit-card-slot dir-${feature.direction} ${stateClass}`}
+        className={`orbit-card-slot dir-${feature.direction} ${slotStateClass}`}
         style={slotStyle}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        role="button"
-        tabIndex={-1}
-        aria-hidden={!isRevealed}
+        role="region"
+        aria-label={`${feature.title} details`}
       >
         <div className="orbit-drawer-card">
           <div className="drawer-header-row">

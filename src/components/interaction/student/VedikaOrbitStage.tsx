@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import gsap from 'gsap';
 import CentralVedika3D from '../CentralVedika3D';
 import OrbitProgressRing from './OrbitProgressRing';
 import OrbitFeatureNode from './OrbitFeatureNode';
@@ -8,8 +9,12 @@ import {
   STUDENT_ORBIT_FEATURES,
   StudentOrbitFeature,
   LAYOUT,
-  BEAD_ANGLES,
-  STEP_MS,
+  ORBIT_SEGMENTS,
+  PROGRESS_R,
+  ORBIT_CENTER,
+  BEAD_START_X,
+  BEAD_START_Y,
+  ORBIT_TIMINGS,
 } from './studentOrbitData';
 import '@/styles/student-orbit.css';
 
@@ -31,15 +36,6 @@ const TOP_CARD_BOTTOM_ANCHOR = ICON_TOP_Y + BADGE_R + CARD_GAP; // 120 + 18 + 10
 
 /**
  * Compute exact pixel-positions for icon badge and card slot.
- *
- * Alignment guarantee:
- *   For left/right cards: iconCy === cardCenterY === ROW_Y[cardRow].
- *   Icon and card are always at the same vertical position.
- *
- * Animation direction (via CSS anchor):
- *   dir-right → slot left-anchored  → max-width grows RIGHTWARD from icon ✓
- *   dir-left  → slot right-anchored → max-width grows LEFTWARD  from icon ✓
- *   dir-top   → slot bottom-anchored → max-height grows UPWARD   from icon ✓
  */
 function getPositions(feat: StudentOrbitFeature): {
   iconCx: number;
@@ -64,106 +60,413 @@ function getPositions(feat: StudentOrbitFeature): {
       iconCx: -ICON_SIDE_X,
       iconCy,
       cardCss: {
-        // right-anchor: card right edge is fixed at icon left edge − gap
-        // growing max-width expands the card leftward (away from icon) ✓
         right: `calc(50% + ${ICON_TO_CARD_EDGE}px)`,
         top: `calc(50% + ${iconCy - Math.ceil(CARD_H / 2)}px)`,
       },
     };
   }
 
-  // TOP card
+  // TOP card (Feature 01: Non-Judgmental Space)
   return {
     iconCx: 0,
     iconCy: -ICON_TOP_Y,
     cardCss: {
       left: `calc(50% - ${Math.floor(CARD_W / 2)}px)`,
-      // bottom-anchor: card bottom edge is fixed just above icon top edge
-      // growing max-height expands the card upward (away from icon) ✓
       bottom: `calc(50% + ${TOP_CARD_BOTTOM_ANCHOR}px)`,
     },
   };
 }
 
 export default function VedikaOrbitStage() {
-  // All 9 cards are visible from the start — only the active spotlight cycles.
-  // This creates a single smooth loop (not a reveal loop then a cycling loop).
+  // Active feature spotlight (1..9, starts on Feature 01)
   const [activeStep, setActiveStep] = useState<number>(1);
-  const isHoveredRef = useRef<boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Which feature card is currently expanded (starts NULL — completely collapsed at start!)
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
+  // Feature nodes that have been completed by the ring (starts empty!)
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
+  // Tracks if the sequential animation has permanently finished
+  const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
 
-  const activeFeature = STUDENT_ORBIT_FEATURES[activeStep - 1] ?? STUDENT_ORBIT_FEATURES[0];
+  const stageRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const hasStartedRef = useRef<boolean>(false);
 
-  // Advance active spotlight one step forward, wrapping 9 → 1
-  const advance = useCallback(() => {
-    setActiveStep((a) => (a >= 9 ? 1 : a + 1));
+  // SVG animated element refs
+  const segmentRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
+  const auraRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
+  const beadGroupRef = useRef<SVGGElement | null>(null);
+  const beadHaloRef = useRef<SVGCircleElement | null>(null);
+  const beadCoreRef = useRef<SVGCircleElement | null>(null);
+
+  // Helper to update bead position and color dynamically on GSAP frames
+  const updateBead = useCallback((angleDeg: number, r: number, g: number, b: number) => {
+    const rad = (angleDeg * Math.PI) / 180;
+    const bx = ORBIT_CENTER + PROGRESS_R * Math.cos(rad);
+    const by = ORBIT_CENTER + PROGRESS_R * Math.sin(rad);
+
+    if (beadGroupRef.current) {
+      beadGroupRef.current.setAttribute('transform', `translate(${bx.toFixed(2)}, ${by.toFixed(2)})`);
+    }
+
+    const rgbColor = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+    if (beadCoreRef.current) {
+      beadCoreRef.current.setAttribute('fill', rgbColor);
+    }
+    if (beadHaloRef.current) {
+      beadHaloRef.current.setAttribute('fill', rgbColor);
+    }
   }, []);
 
-  useEffect(() => {
-    timerRef.current = setTimeout(() => {
-      if (!isHoveredRef.current) advance();
-    }, STEP_MS);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [activeStep, advance]);
+  // Construct master GSAP timeline
+  const buildTimeline = useCallback(() => {
+    const tl = gsap.timeline({
+      paused: true,
+      onComplete: () => {
+        setIsAnimationFinished(true);
+        // Ensure all 9 segments and auras remain permanently visible as a full spectrum
+        segmentRefs.current.forEach((el, idx) => {
+          if (el) {
+            el.style.strokeDashoffset = '0';
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+          }
+          const aura = auraRefs.current[idx];
+          if (aura) {
+            aura.style.strokeDashoffset = '0';
+            aura.style.opacity = '0.25';
+            aura.style.visibility = 'visible';
+          }
+        });
+        // All 9 icons remain illuminated in their completed colors
+        setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+        setActiveStep(0);
+        setExpandedStep(null);
+        // Softly settle the energy bead into the ring
+        if (beadGroupRef.current) {
+          gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.6 });
+        }
+      },
+    });
 
-  const handleCardClick = (index: number) => {
-    setActiveStep(index);
+    const C_EXPAND = ORBIT_TIMINGS.CARD_EXPAND / 1000;     // 0.5s
+    const C_READ = ORBIT_TIMINGS.CARD_READ / 1000;         // 2.4s
+    const C_COLLAPSE = ORBIT_TIMINGS.CARD_COLLAPSE / 1000; // 0.4s
+    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.1s
+    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.2s
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // STEP 0: First node (Feature 01: Pink, Non-Judgmental Space)
+    // ──────────────────────────────────────────────────────────────────────────
+    tl.call(() => {
+      setActiveStep(1);
+      setExpandedStep(1);
+    });
+    // Expansion & reading pause for first card
+    tl.to({}, { duration: C_EXPAND + C_READ });
+    // Collapse first card smoothly
+    tl.call(() => {
+      setExpandedStep(null);
+      setCompletedSteps((prev) => new Set(prev).add(1));
+    });
+    tl.to({}, { duration: C_COLLAPSE });
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
+    // ──────────────────────────────────────────────────────────────────────────
+    for (let i = 0; i < 8; i++) {
+      const seg = ORBIT_SEGMENTS[i];
+      const targetFeatureIndex = i + 2; // 1-based index of arriving node (2..9)
+      const travelLabel = `seg-travel-${i}`;
+
+      const beadState = {
+        angle: seg.startAngleDeg,
+        r: seg.fromRgb[0],
+        g: seg.fromRgb[1],
+        b: seg.fromRgb[2],
+      };
+
+      tl.addLabel(travelLabel);
+
+      // 1. Reveal this segment path & aura as drawing begins
+      tl.call(() => {
+        const pathEl = segmentRefs.current[i];
+        const auraEl = auraRefs.current[i];
+        if (pathEl) {
+          pathEl.style.visibility = 'visible';
+          pathEl.style.opacity = '1';
+        }
+        if (auraEl) {
+          auraEl.style.visibility = 'visible';
+          auraEl.style.opacity = '0.25';
+        }
+      }, [], travelLabel);
+
+      // 2. Draw segment stroke from 100% to 0% (using pathLength=100)
+      tl.to(
+        segmentRefs.current[i],
+        {
+          strokeDashoffset: 0,
+          duration: S_TRAVEL,
+          ease: 'power2.inOut',
+        },
+        travelLabel
+      );
+
+      tl.to(
+        auraRefs.current[i],
+        {
+          strokeDashoffset: 0,
+          duration: S_TRAVEL,
+          ease: 'power2.inOut',
+        },
+        travelLabel
+      );
+
+      // 3. Move energy head along the circular path in exact lockstep
+      tl.to(
+        beadState,
+        {
+          angle: seg.startAngleDeg + seg.spanDeg,
+          r: seg.toRgb[0],
+          g: seg.toRgb[1],
+          b: seg.toRgb[2],
+          duration: S_TRAVEL,
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            updateBead(beadState.angle, beadState.r, beadState.g, beadState.b);
+          },
+        },
+        travelLabel
+      );
+
+      // 4. Energy head arrives at next node! Icon activates, card emerges
+      tl.call(() => {
+        setActiveStep(targetFeatureIndex);
+        setExpandedStep(targetFeatureIndex);
+      });
+
+      // 5. Card expansion and reading duration
+      tl.to({}, { duration: C_EXPAND + C_READ });
+
+      // 6. Collapse card smoothly before next segment starts drawing
+      tl.call(() => {
+        setExpandedStep(null);
+        setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
+      });
+      tl.to({}, { duration: C_COLLAPSE });
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // STEP 8: Final Closing Segment (Node 9 back to Node 1, completing 360°)
+    // ──────────────────────────────────────────────────────────────────────────
+    const finalSeg = ORBIT_SEGMENTS[8];
+    const finalLabel = 'seg-travel-final';
+
+    const finalBeadState = {
+      angle: finalSeg.startAngleDeg,
+      r: finalSeg.fromRgb[0],
+      g: finalSeg.fromRgb[1],
+      b: finalSeg.fromRgb[2],
+    };
+
+    tl.addLabel(finalLabel);
+
+    tl.call(() => {
+      const pathEl = segmentRefs.current[8];
+      const auraEl = auraRefs.current[8];
+      if (pathEl) {
+        pathEl.style.visibility = 'visible';
+        pathEl.style.opacity = '1';
+      }
+      if (auraEl) {
+        auraEl.style.visibility = 'visible';
+        auraEl.style.opacity = '0.25';
+      }
+    }, [], finalLabel);
+
+    tl.to(
+      segmentRefs.current[8],
+      {
+        strokeDashoffset: 0,
+        duration: F_TRAVEL,
+        ease: 'power2.inOut',
+      },
+      finalLabel
+    );
+
+    tl.to(
+      auraRefs.current[8],
+      {
+        strokeDashoffset: 0,
+        duration: F_TRAVEL,
+        ease: 'power2.inOut',
+      },
+      finalLabel
+    );
+
+    tl.to(
+      finalBeadState,
+      {
+        angle: finalSeg.startAngleDeg + finalSeg.spanDeg,
+        r: finalSeg.toRgb[0],
+        g: finalSeg.toRgb[1],
+        b: finalSeg.toRgb[2],
+        duration: F_TRAVEL,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          updateBead(finalBeadState.angle, finalBeadState.r, finalBeadState.g, finalBeadState.b);
+        },
+      },
+      finalLabel
+    );
+
+    return tl;
+  }, [updateBead]);
+
+  // Clean initialization & viewport trigger
+  useEffect(() => {
+    // Explicitly guarantee all 9 segments start completely hidden and empty (0% progress)
+    segmentRefs.current.forEach((el) => {
+      if (el) {
+        el.style.strokeDashoffset = '100';
+        el.style.opacity = '0';
+        el.style.visibility = 'hidden';
+      }
+    });
+    auraRefs.current.forEach((el) => {
+      if (el) {
+        el.style.strokeDashoffset = '100';
+        el.style.opacity = '0';
+        el.style.visibility = 'hidden';
+      }
+    });
+
+    const tl = buildTimeline();
+    timelineRef.current = tl;
+
+    const targetEl = stageRef.current;
+    if (!targetEl) return;
+
+    // Check if stage is already in the viewport on page load/refresh
+    const rect = targetEl.getBoundingClientRect();
+    const isVisibleNow = rect.top < window.innerHeight && rect.bottom > 0;
+
+    if (isVisibleNow && !hasStartedRef.current) {
+      hasStartedRef.current = true;
+      const startTimer = setTimeout(() => {
+        tl.play();
+      }, 350);
+      return () => {
+        clearTimeout(startTimer);
+        tl.kill();
+      };
+    }
+
+    // Otherwise, trigger once scrolled into view
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStartedRef.current) {
+            hasStartedRef.current = true;
+            tl.play();
+          }
+        });
+      },
+      { threshold: 0.20 }
+    );
+
+    observer.observe(targetEl);
+
+    return () => {
+      observer.disconnect();
+      tl.kill();
+    };
+  }, [buildTimeline]);
+
+  // Click handler: user can inspect any feature card at leisure
+  const handleCardClick = (stepIndex: number) => {
+    if (!isAnimationFinished) {
+      // If user clicks an icon during autoplay, finish ring drawing and let user inspect
+      timelineRef.current?.pause();
+      setIsAnimationFinished(true);
+      segmentRefs.current.forEach((el, idx) => {
+        if (el) {
+          el.style.strokeDashoffset = '0';
+          el.style.opacity = '1';
+          el.style.visibility = 'visible';
+        }
+        const aura = auraRefs.current[idx];
+        if (aura) {
+          aura.style.strokeDashoffset = '0';
+          aura.style.opacity = '0.25';
+          aura.style.visibility = 'visible';
+        }
+      });
+      setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+      if (beadGroupRef.current) {
+        beadGroupRef.current.style.opacity = '0';
+      }
+    }
+
+    setActiveStep(stepIndex);
+    // Toggle expand: if clicked again, collapses; if new, expands
+    setExpandedStep((prev) => (prev === stepIndex ? null : stepIndex));
+  };
+
+  const handleCardMouseEnter = (stepIndex: number) => {
+    if (isAnimationFinished) {
+      setActiveStep(stepIndex);
+      setExpandedStep(stepIndex);
+    }
   };
 
   return (
     <div
+      ref={stageRef}
       className="vedika-orbit-stage-clean"
       role="region"
       aria-label="Student Learning Ecosystem 360-Degree Circular Orbit"
     >
-      {/* ── CENTER: 3D BOT + PROGRESS RING ─────────────────────────────── */}
+      {/* ── CENTER: 3D BOT + PROGRESSIVE MULTICOLOR RING ───────────────── */}
       <div className="vedika-center-pod-clean">
-        {/* Ambient aura that breathes with the active feature color */}
-        <div
-          className="vedika-ambient-aura"
-          style={{
-            background: `radial-gradient(circle, ${activeFeature.color}1E 0%, rgba(56,189,248,0.04) 55%, transparent 75%)`,
-          }}
-          aria-hidden="true"
-        />
-
-        {/* SVG progress ring — continuously sweeping arc + energy bead */}
+        {/* SVG Progress Ring with 9 individual multicolor arc segments + energy bead */}
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
-            activeColor={activeFeature.color}
-            beadAngleDeg={BEAD_ANGLES[activeStep] ?? 270}
+            segmentRefs={segmentRefs}
+            auraRefs={auraRefs}
+            beadGroupRef={beadGroupRef}
+            beadHaloRef={beadHaloRef}
+            beadCoreRef={beadCoreRef}
           />
         </div>
 
-        {/* Central 3D Vedika Robot */}
+        {/* Central 3D Vedika Robot Canvas */}
         <div className="vedika-robot-canvas-box">
           <CentralVedika3D />
         </div>
       </div>
 
-      {/* ── 9 ORBITAL NODES (all always visible, active spotlight cycles) ─ */}
+      {/* ── 9 ORBITAL NODES (Pins & Cards) ──────────────────────────────── */}
       <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const { iconCx, iconCy, cardCss } = getPositions(feat);
+          const isCurrentActive = feat.index === activeStep;
+          const isCurrentlyExpanded = feat.index === expandedStep;
+          const isAlreadyCompleted = completedSteps.has(feat.index);
+
           return (
             <OrbitFeatureNode
               key={feat.id}
               feature={feat}
-              isActive={feat.index === activeStep}
-              isRevealed={true}         // all cards always revealed (single loop)
+              isActive={isCurrentActive}
+              isExpanded={isCurrentlyExpanded}
+              isCompleted={isAlreadyCompleted}
               iconCx={iconCx}
               iconCy={iconCy}
               cardCss={cardCss}
               onClick={() => handleCardClick(feat.index)}
-              onMouseEnter={() => {
-                isHoveredRef.current = true;
-                setActiveStep(feat.index);
-              }}
-              onMouseLeave={() => {
-                isHoveredRef.current = false;
-              }}
+              onMouseEnter={() => handleCardMouseEnter(feat.index)}
+              onMouseLeave={() => {}}
             />
           );
         })}
