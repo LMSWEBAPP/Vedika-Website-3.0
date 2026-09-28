@@ -3,13 +3,15 @@
    ─────────────────────────────────────────────────────────────────────────
    Architecture:
      • .vedika-orbit-stage-clean    — full stage container
-     • .vedika-center-pod-clean     — center Vedika bot + progress ring
+     • .vedika-center-pod-clean     — center Vedika bot + progress ring (spacious R=135)
      • .orbit-unified-bar           — SINGLE unified bar containing icon + expanding point
+                                      - Zero transform reflow glitch: anchored with fixed width
+                                      - Smooth clip-path expansion unrolls directly from the icon
                                       - Right side (1, 2, 3, 4, 5): icon on left, text align-left
                                       - Left side (6, 7, 8, 9): icon on right, text align-right
                                       - Icon side is fully curved (23px) to match circular icon
                                       - Text side has normal crisp card corners (8px)
-                                      - Equalized 5-tier vertical spacing
+                                      - Spacious 5-tier vertical spacing
    ========================================================================== */
 
 /* ==========================================================================
@@ -19,7 +21,7 @@
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 520px;
+  min-height: 540px;
   max-height: calc(100vh - 80px);
   overflow: visible !important;
   display: flex;
@@ -32,14 +34,14 @@
 }
 
 /* ==========================================================================
-   2. CENTER: VEDIKA BOT + PROGRESS RING
+   2. CENTER: VEDIKA BOT + PROGRESS RING (Spacious R=135, D=270)
    ========================================================================== */
 .vedika-center-pod-clean {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 360px;
-  height: 360px;
+  width: 380px;
+  height: 380px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,11 +80,11 @@
   overflow: visible;
 }
 
-/* Central 3D Bot Canvas Container: perfectly centered in the ring */
+/* Central 3D Bot Canvas Container: perfectly centered in the 270px ring */
 .vedika-robot-canvas-box {
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,9 +103,13 @@
 
 /* ==========================================================================
    4. UNIFIED SINGLE BAR (.orbit-unified-bar)
+   Anchored in fixed position with constant width to guarantee zero transform
+   shift or jumping. Uses smooth clip-path to unroll from the stationary icon.
    ========================================================================== */
 .orbit-unified-bar {
   position: absolute;
+  width: 220px;
+  height: 46px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -125,10 +131,7 @@
     0 6px 20px rgba(0, 0, 0, 0.85);
 
   transition:
-    width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.30s ease,
+    clip-path 0.40s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.25s ease,
     background 0.25s ease,
     box-shadow 0.25s ease,
@@ -141,18 +144,6 @@
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-}
-
-.orbit-unified-bar.dir-right.is-hidden {
-  transform: translate(-19px, -50%) scale(0.3) !important;
-}
-
-.orbit-unified-bar.dir-left.is-hidden {
-  transform: translate(calc(-100% + 19px), -50%) scale(0.3) !important;
-}
-
-.orbit-unified-bar.dir-top.is-hidden {
-  transform: translate(-50%, -50%) scale(0.3) !important;
 }
 
 /* Revealed: visible on stage */
@@ -183,72 +174,58 @@
 }
 
 /* ==========================================================================
-   5. DIRECTION SPECIFIC ANCHORS & ASYMMETRIC BORDER RADII
-   - Icon side: 23px curve (exact semicircle curve of the 46px tall bar)
-   - Text side: 8px normal card corners
+   5. DIRECTION SPECIFIC FIXED ANCHORS & PURE CLIP-PATH EXPANSION
+   Zero transform jumps: icon stays 100% stationary at (0, 0)
    ========================================================================== */
 
 /* ── RIGHT DIRECTION (Nodes 2, 3, 4, 5) ──
-   Icon on LEFT, extends to the RIGHT of the ring.
-   Left side = 23px curve (icon curve).
-   Right side = 8px (normal box).
+   Icon on LEFT at (-19px to +19px). Left side curved (23px), right normal (8px).
+   Unrolls smoothly to the RIGHT without moving the icon.
 */
 .orbit-unified-bar.dir-right {
   transform: translate(-19px, -50%);
+  border-radius: 23px 8px 8px 23px;
 }
 
 .orbit-unified-bar.dir-right.is-compact {
-  width: 38px;
-  height: 38px;
-  border-radius: 19px;
+  clip-path: inset(0 calc(100% - 38px) 0 0 round 23px);
 }
 
 .orbit-unified-bar.dir-right.is-expanded {
-  width: 215px;
-  height: 46px;
-  border-radius: 23px 8px 8px 23px;
+  clip-path: inset(0 0 0 0 round 23px 8px 8px 23px);
 }
 
 /* ── LEFT DIRECTION (Nodes 6, 7, 8, 9) ──
-   Icon on RIGHT, extends to the LEFT of the ring.
-   Right side = 23px curve (icon curve).
-   Left side = 8px (normal box).
+   Icon on RIGHT at (-19px to +19px). Right side curved (23px), left normal (8px).
+   Unrolls smoothly to the LEFT without moving the icon. ZERO REFLECTION GLITCH.
 */
 .orbit-unified-bar.dir-left {
-  transform: translate(calc(-100% + 19px), -50%);
-}
-
-.orbit-unified-bar.dir-left.is-compact {
-  width: 38px;
-  height: 38px;
-  border-radius: 19px;
-}
-
-.orbit-unified-bar.dir-left.is-expanded {
-  width: 215px;
-  height: 46px;
+  transform: translate(-201px, -50%); /* -220px + 19px = -201px, so right edge is at +19px */
   border-radius: 8px 23px 23px 8px;
 }
 
+.orbit-unified-bar.dir-left.is-compact {
+  clip-path: inset(0 0 0 calc(100% - 38px) round 23px);
+}
+
+.orbit-unified-bar.dir-left.is-expanded {
+  clip-path: inset(0 0 0 0 round 8px 23px 23px 8px);
+}
+
 /* ── TOP DIRECTION (Node 1) ──
-   Icon on LEFT, centered horizontally.
-   Left side = 23px curve (icon curve).
-   Right side = 8px (normal box).
+   Icon on LEFT, centered horizontally above robot.
 */
 .orbit-unified-bar.dir-top {
   transform: translate(-50%, -50%);
+  border-radius: 23px 8px 8px 23px;
 }
 
 .orbit-unified-bar.dir-top.is-compact {
-  width: 38px;
-  height: 38px;
-  border-radius: 19px;
+  clip-path: inset(0 calc(50% - 19px) 0 calc(50% - 19px) round 19px);
 }
 
 .orbit-unified-bar.dir-top.is-expanded {
-  width: 215px;
-  height: 46px;
-  border-radius: 23px 8px 8px 23px;
+  clip-path: inset(0 0 0 0 round 23px 8px 8px 23px);
 }
 
 /* ==========================================================================
@@ -287,41 +264,41 @@
   justify-content: center;
 }
 
-/* Padding & directional alignment */
+/* Directional alignment & padding */
 .orbit-unified-bar.align-left .bar-content-box {
-  padding: 0 12px 0 2px;
+  padding: 0 14px 0 4px;
   text-align: left;
+  align-items: flex-start;
 }
 
 .orbit-unified-bar.align-right .bar-content-box {
-  padding: 0 2px 0 12px;
+  padding: 0 4px 0 14px;
   text-align: right;
+  align-items: flex-end;
 }
 
-/* Compact: content hidden */
+/* Content opacity transition */
 .orbit-unified-bar.is-compact .bar-content-box {
-  max-width: 0;
   opacity: 0;
   pointer-events: none;
-  transition: max-width 0.30s ease, opacity 0.18s ease;
+  transition: opacity 0.18s ease;
 }
 
-/* Expanded: content reveals smoothly inside the expanding bar */
 .orbit-unified-bar.is-expanded .bar-content-box {
-  max-width: 175px;
   opacity: 1;
   pointer-events: auto;
-  transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease 0.08s;
+  transition: opacity 0.28s ease 0.08s;
 }
 
 /* ==========================================================================
-   7. TYPOGRAPHY (NO step numbers, crisp alignment)
+   7. TYPOGRAPHY (NO numbers, crisp alignment)
    ========================================================================== */
 .drawer-header-row {
   display: flex;
   align-items: center;
   margin-bottom: 2px;
   line-height: 1;
+  width: 100%;
 }
 
 .orbit-unified-bar.align-left .drawer-header-row {
@@ -352,6 +329,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
 .orbit-unified-bar.align-left .drawer-title-text {
@@ -373,6 +351,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
+  width: 100%;
 }
 
 .orbit-unified-bar.align-left .drawer-desc-text {
@@ -430,20 +409,22 @@
   }
 
   .vedika-center-pod-clean {
-    width: 270px;
-    height: 270px;
+    width: 320px;
+    height: 320px;
   }
 
   .vedika-robot-canvas-box {
-    width: 175px;
-    height: 175px;
+    width: 190px;
+    height: 190px;
   }
 
-  .orbit-unified-bar.dir-right.is-expanded,
-  .orbit-unified-bar.dir-left.is-expanded,
-  .orbit-unified-bar.dir-top.is-expanded {
-    width: 195px;
+  .orbit-unified-bar {
+    width: 200px;
     height: 44px;
+  }
+
+  .orbit-unified-bar.dir-left {
+    transform: translate(-181px, -50%);
   }
 
   .drawer-title-text {

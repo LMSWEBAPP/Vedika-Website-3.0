@@ -14,12 +14,12 @@ export interface StudentOrbitFeature {
 export const STEP_MS = 2500;
 
 /**
- * 9 student capabilities in 5 perfectly spaced vertical tiers:
- *   Level 1: Node 1 (Top Center, Y = -160)
- *   Level 2: Node 2 (Right, Y = -80) & Node 9 (Left, Y = -80) [ΔY = 80px]
- *   Level 3: Node 3 (Right, Y = 0)   & Node 8 (Left, Y = 0)   [ΔY = 80px]
- *   Level 4: Node 4 (Right, Y = +80) & Node 7 (Left, Y = +80) [ΔY = 80px]
- *   Level 5: Node 5 (Right, Y = +155)& Node 6 (Left, Y = +155)[ΔY = 75px]
+ * 9 student capabilities in 5 perfectly spaced spacious vertical tiers:
+ *   Level 1: Node 1 (Top Center, Y = -190)
+ *   Level 2: Node 2 (Right, Y = -95) & Node 9 (Left, Y = -95)  [ΔY = 95px]
+ *   Level 3: Node 3 (Right, Y = 0)   & Node 8 (Left, Y = 0)    [ΔY = 95px]
+ *   Level 4: Node 4 (Right, Y = +95) & Node 7 (Left, Y = +95)  [ΔY = 95px]
+ *   Level 5: Node 5 (Right, Y = +185)& Node 6 (Left, Y = +185) [ΔY = 90px]
  */
 export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
   // ── LEVEL 1: TOP ──────────────────────────────────────────────────────────
@@ -128,11 +128,11 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
   },
 ];
 
-/** Progress ring radius (120px) and orbital canvas dimensions */
-export const PROGRESS_R = 120;
-export const ICON_R = 165;
-export const ORBIT_SIZE = 360;
-export const ORBIT_CENTER = 180;
+/** Progress ring radius (135px, diameter 270px) and spacious canvas dimensions */
+export const PROGRESS_R = 135;
+export const ICON_R = 195;
+export const ORBIT_SIZE = 380;
+export const ORBIT_CENTER = 190;
 
 /**
  * Progress ring bead angle (degrees) for each active step.
@@ -176,8 +176,7 @@ function parseRgbString(rgbStr: string): [number, number, number] {
 }
 
 /**
- * Pre-computes the 9 continuous arc segments on the progress ring (R=120).
- * Matches the exact radial coordinates of the 5 evenly spaced levels.
+ * Pre-computes the 9 continuous arc segments on the spacious progress ring (R=135).
  */
 export function buildOrbitSegments(): OrbitSegmentData[] {
   const R = PROGRESS_R;
@@ -242,61 +241,61 @@ export interface NodePositionData {
 }
 
 /**
- * 5 Perfectly Equalized Vertical Levels:
- *   Level 1: Y = -160 (Node 1)
- *   Level 2: Y = -80  (Nodes 2 & 9)   [gap = 80px]
- *   Level 3: Y = 0    (Nodes 3 & 8)   [gap = 80px]
- *   Level 4: Y = +80  (Nodes 4 & 7)   [gap = 80px]
- *   Level 5: Y = +155 (Nodes 5 & 6)   [gap = 75px]
+ * 5 Spacious, perfectly equalized vertical tiers:
+ *   Level 1: Y = -190 (Node 1)
+ *   Level 2: Y = -95  (Nodes 2 & 9)   [gap = 95px]
+ *   Level 3: Y = 0    (Nodes 3 & 8)   [gap = 95px]
+ *   Level 4: Y = +95  (Nodes 4 & 7)   [gap = 95px]
+ *   Level 5: Y = +185 (Nodes 5 & 6)   [gap = 90px]
  */
 export const NODE_POSITIONS: Record<number, NodePositionData> = {
   1: {
     iconCx: 0,
-    iconCy: -160,
+    iconCy: -190,
     cardCss: {},
   },
   2: {
-    iconCx: 144,
-    iconCy: -80,
+    iconCx: 175,
+    iconCy: -95,
     cardCss: {},
   },
   3: {
-    iconCx: 165,
+    iconCx: 205,
     iconCy: 0,
     cardCss: {},
   },
   4: {
-    iconCx: 144,
-    iconCy: 80,
+    iconCx: 175,
+    iconCy: 95,
     cardCss: {},
   },
   5: {
-    iconCx: 68,
-    iconCy: 155,
+    iconCx: 85,
+    iconCy: 185,
     cardCss: {},
   },
   6: {
-    iconCx: -68,
-    iconCy: 155,
+    iconCx: -85,
+    iconCy: 185,
     cardCss: {},
   },
   7: {
-    iconCx: -144,
-    iconCy: 80,
+    iconCx: -175,
+    iconCy: 95,
     cardCss: {},
   },
   8: {
-    iconCx: -165,
+    iconCx: -205,
     iconCy: 0,
     cardCss: {},
   },
   9: {
-    iconCx: -144,
-    iconCy: -80,
+    iconCx: -175,
+    iconCy: -95,
     cardCss: {},
   },
 };
 
-/** Initial bead position (Node 1, top center, 270°, on R=120) */
+/** Initial bead position (Node 1, top center, 270°, on R=135) */
 export const BEAD_START_X = ORBIT_CENTER;
-export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 180 - 120 = 60
+export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 190 - 135 = 55

@@ -49,7 +49,7 @@ function VedikaRobotModel() {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.06, 0]} scale={[0.56, 0.56, 0.56]}>
+    <group ref={groupRef} position={[0, -0.06, 0]} scale={[0.65, 0.65, 0.65]}>
       <primitive object={clonedScene} />
     </group>
   );
@@ -59,7 +59,7 @@ export default function CentralVedika3D() {
   return (
     <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
       <Canvas
-        camera={{ position: [0, 0, 2.25], fov: 40 }}
+        camera={{ position: [0, 0, 2.3], fov: 40 }}
         gl={{ powerPreference: 'high-performance', alpha: true, antialias: true }}
         dpr={[1, 1.5]}
         style={{ pointerEvents: 'none', width: '100%', height: '100%' }}
