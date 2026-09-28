@@ -4,7 +4,6 @@ import React from 'react';
 import {
   ORBIT_SEGMENTS,
   ORBIT_SIZE,
-  ORBIT_CENTER,
   PROGRESS_R,
   BEAD_START_X,
   BEAD_START_Y,
@@ -36,24 +35,25 @@ export default function OrbitProgressRing({
       style={{ overflow: 'visible' }}
     >
       <defs>
-        {/* Subtle, crisp filter: keeps the neon arc clean and vibrant without washed-out haze */}
+        {/* Vibrant multi-pass neon glow filter for the loading ring and energy bead */}
         <filter
-          id="vOrbitGlow"
+          id="vOrbitNeonGlow"
           filterUnits="userSpaceOnUse"
-          x="0"
-          y="0"
-          width={ORBIT_SIZE}
-          height={ORBIT_SIZE}
+          x="-40"
+          y="-40"
+          width={ORBIT_SIZE + 80}
+          height={ORBIT_SIZE + 80}
         >
-          <feGaussianBlur stdDeviation="1.2" result="blur1" />
+          <feGaussianBlur stdDeviation="5.0" result="wideGlow" />
+          <feGaussianBlur stdDeviation="2.2" result="tightGlow" />
           <feMerge>
-            <feMergeNode in="blur1" />
+            <feMergeNode in="wideGlow" />
+            <feMergeNode in="tightGlow" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
 
-        {/* Individual linear gradients for each of the 9 segments.
-            Using userSpaceOnUse ensures the colors transition smoothly along the curved path. */}
+        {/* Individual linear gradients for each of the 9 segments */}
         {ORBIT_SEGMENTS.map((seg) => (
           <linearGradient
             key={seg.gradientId}
@@ -70,11 +70,7 @@ export default function OrbitProgressRing({
         ))}
       </defs>
 
-      {/* Zero background circles: removed all background track/guide circles to eliminate any visual clutter */}
-
-
-
-      {/* ── 9 Progressive Arc Segments: true mathematical circular arcs with no straight edges ── */}
+      {/* ── 9 Progressive Arc Segments with vibrant neon glow ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
           key={`arc-${seg.gradientId}`}
@@ -84,7 +80,7 @@ export default function OrbitProgressRing({
           d={seg.pathD}
           fill="none"
           stroke={`url(#${seg.gradientId})`}
-          strokeWidth={3.6}
+          strokeWidth={4.0}
           strokeLinecap="round"
           strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
           strokeDashoffset={seg.arcLength}
@@ -94,39 +90,37 @@ export default function OrbitProgressRing({
             opacity: 0,
             visibility: 'hidden',
           }}
-          filter="url(#vOrbitGlow)"
+          filter="url(#vOrbitNeonGlow)"
           className="orbit-segment-arc"
         />
       ))}
 
-      {/* ── Moving Energy Bead Particle (glowing pen / pulse leading the line) ──
-          Positioned exactly on the circular path (R=95), starts at Feature 01 (150, 55).
-      */}
+      {/* ── Moving Energy Bead Particle with radiant outer aura ── */}
       <g
         ref={beadGroupRef}
         transform={`translate(${BEAD_START_X}, ${BEAD_START_Y})`}
         className="orbit-energy-bead"
       >
-        {/* Soft outer glow halo */}
+        {/* Diffuse glowing halo */}
         <circle
           ref={beadHaloRef}
-          r="9"
+          r="12"
           cx="0"
           cy="0"
           fill={initialColor}
-          opacity={0.6}
-          filter="url(#vOrbitGlow)"
+          opacity={0.85}
+          filter="url(#vOrbitNeonGlow)"
         />
         {/* Vibrant core bead */}
         <circle
           ref={beadCoreRef}
-          r="4.8"
+          r="5.2"
           cx="0"
           cy="0"
           fill={initialColor}
         />
-        {/* Bright white focal spark */}
-        <circle r="2.4" cx="0" cy="0" fill="#FFFFFF" />
+        {/* Bright white energetic center spark */}
+        <circle r="2.6" cx="0" cy="0" fill="#FFFFFF" />
       </g>
     </svg>
   );

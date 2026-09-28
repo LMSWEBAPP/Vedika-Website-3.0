@@ -7,53 +7,22 @@ export interface StudentOrbitFeature {
   color: string;
   rgb: string;
   direction: 'left' | 'right' | 'top';
-  /**
-   * Vertical row slot index within its column (0 = topmost).
-   * For 'top' direction always 0.
-   */
   cardRow: number;
 }
 
-/**
- * Single source-of-truth layout constants.
- * All position calculations in VedikaOrbitStage derive from here.
- */
-export const LAYOUT = {
-  /** Horizontal distance from stage center to icon badge center (left & right sides) */
-  ICON_SIDE_X: 130,
-  /** Vertical distance from stage center to top icon badge center (upward) */
-  ICON_TOP_Y: 120,
-  /** Icon badge radius = badge size (36px) / 2 */
-  BADGE_R: 18,
-  /** Gap in px between icon edge and card edge */
-  CARD_GAP: 10,
-  /** Card width in px */
-  CARD_W: 215,
-  /** Approximate card height in px (used for vertical centering) */
-  CARD_H: 54,
-  /**
-   * Y offsets from stage center for each row (0–3), 80px apart.
-   * Perfectly symmetric: [-120, -40, +40, +120].
-   * Robot at Y=0 is the exact center of the full icon grid.
-   */
-  ROW_Y: [-120, -40, 40, 120] as readonly number[],
-} as const;
-
-/** Auto-advance interval in ms — also drives ring animation duration */
+/** Auto-advance interval in ms */
 export const STEP_MS = 2500;
 
 /**
- * 9 student capabilities.
- *
- * Reveal sequence (clockwise from top):
- *   1. Top center
- *   2–5. Right column, rows 0→3 (top to bottom)
- *   6–9. Left column, rows 3→0 (bottom to top)
- *
- * This creates a smooth clockwise reveal starting from 12 o'clock.
+ * 9 student capabilities in 5 perfectly spaced vertical tiers:
+ *   Level 1: Node 1 (Top Center, Y = -160)
+ *   Level 2: Node 2 (Right, Y = -80) & Node 9 (Left, Y = -80) [ΔY = 80px]
+ *   Level 3: Node 3 (Right, Y = 0)   & Node 8 (Left, Y = 0)   [ΔY = 80px]
+ *   Level 4: Node 4 (Right, Y = +80) & Node 7 (Left, Y = +80) [ΔY = 80px]
+ *   Level 5: Node 5 (Right, Y = +155)& Node 6 (Left, Y = +155)[ΔY = 75px]
  */
 export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
-  // ── TOP ──────────────────────────────────────────────────────────────────
+  // ── LEVEL 1: TOP ──────────────────────────────────────────────────────────
   {
     id: 'non-judgmental',
     index: 1,
@@ -66,7 +35,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     cardRow: 0,
   },
 
-  // ── RIGHT COLUMN (rows 0 → 3, top → bottom) ──────────────────────────────
+  // ── RIGHT SIDE (Levels 2 → 5) ─────────────────────────────────────────────
   {
     id: 'own-pace',
     index: 2,
@@ -76,7 +45,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#3B82F6',
     rgb: '59, 130, 246',
     direction: 'right',
-    cardRow: 0,
+    cardRow: 1,
   },
   {
     id: 'concept-clarity',
@@ -87,7 +56,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#10B981',
     rgb: '16, 185, 129',
     direction: 'right',
-    cardRow: 1,
+    cardRow: 2,
   },
   {
     id: 'personalized-support',
@@ -98,7 +67,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#F43F5E',
     rgb: '244, 63, 94',
     direction: 'right',
-    cardRow: 2,
+    cardRow: 3,
   },
   {
     id: 'build-confidence',
@@ -109,10 +78,10 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#8B5CF6',
     rgb: '139, 92, 246',
     direction: 'right',
-    cardRow: 3,
+    cardRow: 4,
   },
 
-  // ── LEFT COLUMN (rows 3 → 0, bottom → top) ───────────────────────────────
+  // ── LEFT SIDE (Levels 5 → 2) ──────────────────────────────────────────────
   {
     id: 'practice-exam',
     index: 6,
@@ -122,7 +91,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#0284C7',
     rgb: '2, 132, 199',
     direction: 'left',
-    cardRow: 3,
+    cardRow: 4,
   },
   {
     id: 'interactive-learning',
@@ -133,7 +102,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#06B6D4',
     rgb: '6, 182, 212',
     direction: 'left',
-    cardRow: 2,
+    cardRow: 3,
   },
   {
     id: 'unlimited-questions',
@@ -144,7 +113,7 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#A855F7',
     rgb: '168, 85, 247',
     direction: 'left',
-    cardRow: 1,
+    cardRow: 2,
   },
   {
     id: 'study-companion',
@@ -155,36 +124,36 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     color: '#F59E0B',
     rgb: '245, 158, 11',
     direction: 'left',
-    cardRow: 0,
+    cardRow: 1,
   },
 ];
 
-/**
- * Progress ring bead angle (degrees) for each active step.
- * Clockwise from top (270°), exact 40° per step (360° / 9 = 40°).
- */
-export const BEAD_ANGLES: Record<number, number> = {
-  1: 270,
-  2: 310,
-  3: 350,
-  4: 30,
-  5: 70,
-  6: 110,
-  7: 150,
-  8: 190,
-  9: 230,
-};
-
-/** Progress ring radius (120px) and orbital icon radius (165px) — clean 25px gap between ring and icons */
+/** Progress ring radius (120px) and orbital canvas dimensions */
 export const PROGRESS_R = 120;
 export const ICON_R = 165;
 export const ORBIT_SIZE = 360;
 export const ORBIT_CENTER = 180;
 
+/**
+ * Progress ring bead angle (degrees) for each active step.
+ * Aligned with the exact radial direction of each orbital node.
+ */
+export const BEAD_ANGLES: Record<number, number> = {
+  1: 270,
+  2: 331,
+  3: 360,
+  4: 29,
+  5: 66,
+  6: 114,
+  7: 151,
+  8: 180,
+  9: 209,
+};
+
 export interface OrbitSegmentData {
   segmentIndex: number;
-  fromFeatureIndex: number; // 1-based (1..9)
-  toFeatureIndex: number;   // 1-based (1..9)
+  fromFeatureIndex: number;
+  toFeatureIndex: number;
   startAngleDeg: number;
   endAngleDeg: number;
   spanDeg: number;
@@ -208,15 +177,14 @@ function parseRgbString(rgbStr: string): [number, number, number] {
 
 /**
  * Pre-computes the 9 continuous arc segments on the progress ring (R=120).
- * Every segment has an identical 40° span and identical arc length (83.78px).
- * Node 1 is at 270° (top), progressing clockwise in exact 40° increments.
+ * Matches the exact radial coordinates of the 5 evenly spaced levels.
  */
 export function buildOrbitSegments(): OrbitSegmentData[] {
   const R = PROGRESS_R;
   const C = ORBIT_CENTER;
   const count = STUDENT_ORBIT_FEATURES.length; // 9
 
-  const featureAngles = [270, 310, 350, 30, 70, 110, 150, 190, 230];
+  const featureAngles = [270, 331, 360, 29, 66, 114, 151, 180, 209];
 
   const segments: OrbitSegmentData[] = [];
 
@@ -227,7 +195,6 @@ export function buildOrbitSegments(): OrbitSegmentData[] {
     let span = a2 - a1;
     if (span <= 0) span += 360;
 
-    // Identical arc length for all segments: (40 / 360) * 2 * PI * 120 = 83.78px
     const arcLength = parseFloat(((span / 360) * 2 * Math.PI * R).toFixed(2));
 
     const rad1 = (a1 * Math.PI) / 180;
@@ -275,95 +242,61 @@ export interface NodePositionData {
 }
 
 /**
- * Precomputed 360-degree circular positions for all 9 orbital nodes and cards.
- * Ring R=120px, Icons at R=165px (clean 25px gap so ring never overlaps icons).
- * Generous card spacing with zero overlap between consecutive nodes.
+ * 5 Perfectly Equalized Vertical Levels:
+ *   Level 1: Y = -160 (Node 1)
+ *   Level 2: Y = -80  (Nodes 2 & 9)   [gap = 80px]
+ *   Level 3: Y = 0    (Nodes 3 & 8)   [gap = 80px]
+ *   Level 4: Y = +80  (Nodes 4 & 7)   [gap = 80px]
+ *   Level 5: Y = +155 (Nodes 5 & 6)   [gap = 75px]
  */
 export const NODE_POSITIONS: Record<number, NodePositionData> = {
   1: {
     iconCx: 0,
-    iconCy: -165,
-    cardCss: {
-      left: 'calc(50% - 105px)',
-      bottom: 'calc(50% + 188px)',
-    },
+    iconCy: -160,
+    cardCss: {},
   },
   2: {
-    iconCx: 106,
-    iconCy: -126,
-    cardCss: {
-      left: 'calc(50% + 134px)',
-      top: 'calc(50% - 150px)',
-    },
+    iconCx: 144,
+    iconCy: -80,
+    cardCss: {},
   },
   3: {
-    iconCx: 162,
-    iconCy: -29,
-    cardCss: {
-      left: 'calc(50% + 190px)',
-      top: 'calc(50% - 55px)',
-    },
+    iconCx: 165,
+    iconCy: 0,
+    cardCss: {},
   },
   4: {
-    iconCx: 143,
-    iconCy: 83,
-    cardCss: {
-      left: 'calc(50% + 171px)',
-      top: 'calc(50% + 40px)',
-    },
+    iconCx: 144,
+    iconCy: 80,
+    cardCss: {},
   },
   5: {
-    iconCx: 56,
+    iconCx: 68,
     iconCy: 155,
-    cardCss: {
-      left: 'calc(50% + 84px)',
-      top: 'calc(50% + 155px)',
-    },
+    cardCss: {},
   },
   6: {
-    iconCx: -56,
+    iconCx: -68,
     iconCy: 155,
-    cardCss: {
-      right: 'calc(50% + 84px)',
-      top: 'calc(50% + 155px)',
-    },
+    cardCss: {},
   },
   7: {
-    iconCx: -143,
-    iconCy: 83,
-    cardCss: {
-      right: 'calc(50% + 171px)',
-      top: 'calc(50% + 40px)',
-    },
+    iconCx: -144,
+    iconCy: 80,
+    cardCss: {},
   },
   8: {
-    iconCx: -162,
-    iconCy: -29,
-    cardCss: {
-      right: 'calc(50% + 190px)',
-      top: 'calc(50% - 55px)',
-    },
+    iconCx: -165,
+    iconCy: 0,
+    cardCss: {},
   },
   9: {
-    iconCx: -106,
-    iconCy: -126,
-    cardCss: {
-      right: 'calc(50% + 134px)',
-      top: 'calc(50% - 150px)',
-    },
+    iconCx: -144,
+    iconCy: -80,
+    cardCss: {},
   },
 };
 
 /** Initial bead position (Node 1, top center, 270°, on R=120) */
 export const BEAD_START_X = ORBIT_CENTER;
 export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 180 - 120 = 60
-
-/** Recommended cinematic timeline timings (in ms) */
-export const ORBIT_TIMINGS = {
-  CARD_EXPAND: 500,
-  CARD_READ: 2400,
-  CARD_COLLAPSE: 400,
-  SEGMENT_TRAVEL: 1100,
-  FINAL_CLOSING_TRAVEL: 1200,
-} as const;
-

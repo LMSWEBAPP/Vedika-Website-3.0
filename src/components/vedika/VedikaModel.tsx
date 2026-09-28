@@ -169,6 +169,30 @@ export function VedikaModel() {
 
     const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, lerpFactor);
     groupRef.current.scale.set(s, s, s);
+
+    // Smooth material opacity dissolution when transitioning from Page 4 to Page 5
+    if (scrollProgress > 3.15) {
+      const fadeProgress = Math.max(0, Math.min(1, (scrollProgress - 3.15) / 0.45));
+      const opacity = Math.max(0, 1 - fadeProgress * fadeProgress * (3 - 2 * fadeProgress));
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mat = (child as THREE.Mesh).material as THREE.MeshStandardMaterial;
+          if (mat) {
+            mat.transparent = true;
+            mat.opacity = opacity;
+          }
+        }
+      });
+    } else {
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mat = (child as THREE.Mesh).material as THREE.MeshStandardMaterial;
+          if (mat && mat.opacity !== 1) {
+            mat.opacity = 1;
+          }
+        }
+      });
+    }
   });
 
   return (

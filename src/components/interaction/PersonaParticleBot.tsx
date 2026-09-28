@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 // Global coordinate cache for instant 0ms revisits
 const TARGET_CACHE = new Map<string, { targetWidth: number; targetHeight: number; targets: any[] }>();
@@ -14,6 +14,20 @@ interface PersonaParticleBotProps {
   particleStep?: number;
 }
 
+interface Particle {
+  pindex: number;
+  relX: number;
+  relY: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  baseR: number;
+  baseG: number;
+  baseB: number;
+}
+
 export default function PersonaParticleBot({
   src = '/assets/human-student.png',
   width = 280,
@@ -25,6 +39,31 @@ export default function PersonaParticleBot({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [, setIsLoaded] = useState(false);
 
+  // Mouse coordinate refs in canvas pixels
+  const mousePosRef = useRef<{ x: number; y: number; active: boolean }>({
+    x: -9999,
+    y: -9999,
+    active: false,
+  });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    mousePosRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      active: true,
+    };
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    mousePosRef.current = {
+      x: -9999,
+      y: -9999,
+      active: false,
+    };
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -34,7 +73,7 @@ export default function PersonaParticleBot({
     if (!ctx) return;
 
     let animId: number;
-    let particles: any[] = [];
+    let particles: Particle[] = [];
     let isInitialized = false;
 
     let targetWidth = width;
@@ -62,10 +101,9 @@ export default function PersonaParticleBot({
 
     function sampleFromImage(sourceImg: HTMLImageElement) {
       updateCanvasSize();
-      // Step of 2.05px with 1.05px radius creates distinct, beautifully separated starlight particles
       const step = particleStep || 2.05;
       const imageSrc = sourceImg?.currentSrc || sourceImg?.src || src;
-      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v10_particles`;
+      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v11_particles`;
 
       if (TARGET_CACHE.has(cacheKey)) {
         const cached = TARGET_CACHE.get(cacheKey)!;
@@ -119,19 +157,15 @@ export default function PersonaParticleBot({
           const b = data[idx + 2];
           const a = data[idx + 3];
 
-          // Discard alpha transparent pixels
           if (a < 35) continue;
 
           const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
           const maxC = Math.max(r, g, b);
           const minC = Math.min(r, g, b);
 
-          // Discard pure black background or edge artifacts
           if (luminance < 10 && maxC < 14) continue;
-          // Discard pure solid white background padding
           if (luminance > 248 && maxC - minC < 8 && a > 240) continue;
 
-          // Pure, saturated, prominent color tuning
           const avg = (r + g + b) / 3;
           const satFactor = 1.40;
           let cr = avg + (r - avg) * satFactor;
@@ -147,7 +181,6 @@ export default function PersonaParticleBot({
           let baseG = Math.min(255, Math.max(0, Math.round(cg)));
           let baseB = Math.min(255, Math.max(0, Math.round(cb)));
 
-          // Lift dark shadow areas so hair and clothing silhouettes are visibly clear
           const lum = 0.299 * baseR + 0.587 * baseG + 0.114 * baseB;
           if (lum < 48) {
             const lift = 48 - lum;
@@ -156,9 +189,7 @@ export default function PersonaParticleBot({
             baseB = Math.min(255, Math.round(baseB + lift * 0.92));
           }
 
-          // 1.05px radius circular particle (diameter 2.1px) with 2.05px step gives genuine particle dispersion
           const pRadius = 1.05;
-
           const relX = x * scaleX;
           const relY = y * scaleY;
 
@@ -181,13 +212,22 @@ export default function PersonaParticleBot({
       const targets = sampleFromImage(img);
       if (!targets || targets.length === 0) return;
 
-      const newParticles: any[] = [];
+      const robotX = (canvasWidth - targetWidth) / 2;
+      const robotY = (canvasHeight - targetHeight) / 2;
+
+      const newParticles: Particle[] = [];
       for (let i = 0; i < targets.length; i++) {
         const t = targets[i];
+        const startX = robotX + t.relX;
+        const startY = robotY + t.relY;
         newParticles.push({
           pindex: i,
           relX: t.relX,
           relY: t.relY,
+          x: startX,
+          y: startY,
+          vx: 0,
+          vy: 0,
           radius: t.radius,
           baseR: t.baseR,
           baseG: t.baseG,
@@ -206,10 +246,7 @@ export default function PersonaParticleBot({
     };
     img.src = src;
 
-    // Genuine Starlight Particle Hologram Render Loop:
-    // - Circular arc dots with delicate optical spacing (NOT blocky square pixels)
-    // - Subtle micro-shimmer across particles
-    // - Stable figure with whole-body gentle organic breathing
+    // Interactive Hover Physics + Hologram Render Loop
     const render = () => {
       if (!isMounted) return;
       time += 0.022;
@@ -219,21 +256,50 @@ export default function PersonaParticleBot({
       if (isInitialized && particles.length > 0) {
         const robotX = (canvasWidth - targetWidth) / 2;
         const robotY = (canvasHeight - targetHeight) / 2;
-
-        // Subtle organic breathing motion for the entire figure
         const breathY = Math.sin(time * 1.1) * 1.4;
+
+        const mx = mousePosRef.current.x;
+        const my = mousePosRef.current.y;
+        const isMouseActive = mousePosRef.current.active;
+        const repelRadius = 60;
+        const repelRadiusSq = repelRadius * repelRadius;
 
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
-          const px = robotX + p.relX;
-          const py = robotY + p.relY + breathY;
 
-          // Subtle organic starlight shimmer gives undeniable holographic particle depth
+          // 1. Interactive hover dispersion physics
+          if (isMouseActive) {
+            const dx = p.x - mx;
+            const dy = p.y - my;
+            const distSq = dx * dx + dy * dy;
+
+            if (distSq < repelRadiusSq && distSq > 0.1) {
+              const dist = Math.sqrt(distSq);
+              const force = (1 - dist / repelRadius) * 5.5;
+              const angle = Math.atan2(dy, dx);
+              p.vx += Math.cos(angle) * force;
+              p.vy += Math.sin(angle) * force;
+            }
+          }
+
+          // 2. Elastic spring return to target home position
+          const homeX = robotX + p.relX;
+          const homeY = robotY + p.relY + breathY;
+
+          p.vx += (homeX - p.x) * 0.14;
+          p.vy += (homeY - p.y) * 0.14;
+          p.vx *= 0.80;
+          p.vy *= 0.80;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // 3. Delicate starlight optical shimmer
           const alpha = 0.85 + Math.sin(time * 2.2 + p.pindex * 0.32) * 0.15;
 
           ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${alpha.toFixed(3)})`;
           ctx.beginPath();
-          ctx.arc(px, py, p.radius, 0, 6.28318);
+          ctx.arc(p.x, p.y, p.radius, 0, 6.28318);
           ctx.fill();
         }
       }
@@ -253,6 +319,8 @@ export default function PersonaParticleBot({
     <div
       ref={containerRef}
       className={`persona-bot-container ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{
         position: 'relative',
         width,
@@ -261,6 +329,7 @@ export default function PersonaParticleBot({
         alignItems: 'center',
         justifyContent: 'center',
         userSelect: 'none',
+        cursor: 'pointer',
       }}
     >
       <canvas

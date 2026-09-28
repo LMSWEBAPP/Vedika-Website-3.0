@@ -32,6 +32,8 @@ export default function VedikaOrbitStage() {
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
   // Tracks if the sequential animation has permanently finished
   const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
+  // Controls smooth fade-in of the center bot on Page 5 entry
+  const [isBotFadedIn, setIsBotFadedIn] = useState<boolean>(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -62,7 +64,7 @@ export default function VedikaOrbitStage() {
     }
   }, []);
 
-  // Construct master GSAP timeline
+  // Construct master GSAP timeline with optimized, brisk, and fluid timings
   const buildTimeline = useCallback(() => {
     const tl = gsap.timeline({
       paused: true,
@@ -85,21 +87,19 @@ export default function VedikaOrbitStage() {
 
         // Softly settle the energy bead into the completed ring
         if (beadGroupRef.current) {
-          gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.5 });
+          gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.4 });
         }
       },
     });
 
-    const S_TRAVEL = 0.95;   // 0.95s travel for each equal 40-degree segment
-    const ICON_WAIT = 0.30;  // 0.30s pause so ICON is shown first in compact form!
-    const C_EXPAND = 0.45;   // 0.45s bar smoothly expands to full width with point content!
-    const C_READ = 1.35;     // 1.35s reading time before bead travels to next node!
+    // Snappy, energetic, high-momentum timings (1.2s per node, full tour ~11s)
+    const S_TRAVEL = 0.40;   // 0.40s swift, fluid glide along the circular neon arc
+    const ICON_WAIT = 0.12;  // 0.12s responsive icon arrival
+    const C_EXPAND = 0.28;   // 0.28s smooth snappy rollout of the point content
+    const C_READ = 0.45;     // 0.45s display before the bead progresses
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEP 0: Node 1 (Pink, Non-Judgmental Space)
-    // 1. Node 1 appears as a compact circular icon first!
-    // 2. That SAME bar smoothly expands into the full content bar!
-    // 3. AND IT STAYS EXPANDED!
     // ──────────────────────────────────────────────────────────────────────────
     tl.call(() => {
       setRevealedIcons(new Set([1]));
@@ -109,29 +109,21 @@ export default function VedikaOrbitStage() {
       }
     });
 
-    // Icon arrives first in compact form
     tl.to({}, { duration: ICON_WAIT });
 
-    // The single bar smoothly expands with point content!
     tl.call(() => {
       setRevealedBars(new Set([1]));
       setActiveStep(1);
     });
 
-    // User reads point 1 — bar STAYS expanded!
     tl.to({}, { duration: C_EXPAND + C_READ });
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
-    // As bead travels, ring paints.
-    // At node k:
-    // 1. Node k appears as compact icon first! (Previous nodes stay expanded!)
-    // 2. Bar k smoothly expands with point content!
-    // 3. Node k STAYS expanded alongside all previous points!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
-      const targetFeatureIndex = i + 2; // 1-based index of arriving node (2..9)
+      const targetFeatureIndex = i + 2;
       const travelLabel = `seg-travel-${i}`;
 
       const beadState = {
@@ -143,7 +135,6 @@ export default function VedikaOrbitStage() {
 
       tl.addLabel(travelLabel);
 
-      // Move energy bead along the circular path while simultaneously painting the stroke
       tl.to(
         beadState,
         {
@@ -152,7 +143,7 @@ export default function VedikaOrbitStage() {
           g: seg.toRgb[1],
           b: seg.toRgb[2],
           duration: S_TRAVEL,
-          ease: 'power1.inOut',
+          ease: 'power2.inOut',
           onStart: () => {
             const pathEl = segmentRefs.current[i];
             if (pathEl) {
@@ -180,22 +171,20 @@ export default function VedikaOrbitStage() {
         travelLabel
       );
 
-      // 1. Energy bead arrives: Node k appears in compact circular icon form first!
+      // Node k icon arrives
       tl.call(() => {
         setRevealedIcons((prev) => new Set(prev).add(targetFeatureIndex));
         setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
       });
 
-      // Pause so user sees icon arrive first
       tl.to({}, { duration: ICON_WAIT });
 
-      // 2. THEN THAT SINGLE BAR EXPANDS OUTWARD TO REVEAL THE POINT CONTENT!
+      // Node k bar smoothly expands and stays visible
       tl.call(() => {
         setRevealedBars((prev) => new Set(prev).add(targetFeatureIndex));
         setActiveStep(targetFeatureIndex);
       });
 
-      // Reading duration — previous points all REMAIN VISIBLE!
       tl.to({}, { duration: C_EXPAND + C_READ });
     }
 
@@ -222,7 +211,7 @@ export default function VedikaOrbitStage() {
         g: finalSeg.toRgb[1],
         b: finalSeg.toRgb[2],
         duration: S_TRAVEL,
-        ease: 'power1.inOut',
+        ease: 'power2.inOut',
         onStart: () => {
           const pathEl = segmentRefs.current[8];
           if (pathEl) {
@@ -255,7 +244,6 @@ export default function VedikaOrbitStage() {
 
   // Clean initialization
   useEffect(() => {
-    // Reset all 9 segments to empty initial state
     segmentRefs.current.forEach((el, idx) => {
       const seg = ORBIT_SEGMENTS[idx];
       if (el && seg) {
@@ -266,7 +254,6 @@ export default function VedikaOrbitStage() {
       }
     });
 
-    // Reset bead to starting position (Node 1 Pink) but hidden until page 5 activates
     const firstSeg = ORBIT_SEGMENTS[0];
     updateBead(firstSeg.startAngleDeg, firstSeg.fromRgb[0], firstSeg.fromRgb[1], firstSeg.fromRgb[2]);
     if (beadGroupRef.current) {
@@ -281,15 +268,19 @@ export default function VedikaOrbitStage() {
     };
   }, [buildTimeline, updateBead]);
 
-  // Gated trigger: Start only when Page 5 is completely loaded!
+  // Gated trigger: Fade in 5th page bot & kid first, then start ring animation smoothly
   useEffect(() => {
     if (!timelineRef.current) return;
 
     if (isPage5Active && !hasStartedRef.current) {
       hasStartedRef.current = true;
+      // 1. Immediately trigger smooth fade-in of Page 5 Vedika robot and kid
+      setIsBotFadedIn(true);
+
+      // 2. Start ring sequential tour after the bots have gracefully faded in (~750ms)
       const startTimer = setTimeout(() => {
         timelineRef.current?.play();
-      }, 350);
+      }, 750);
       return () => clearTimeout(startTimer);
     } else if (hasStartedRef.current && !isAnimationFinished) {
       if (!isPage5Active) {
@@ -300,7 +291,7 @@ export default function VedikaOrbitStage() {
     }
   }, [isPage5Active, isAnimationFinished]);
 
-  // Click handler: user can spotlight any feature bar
+  // Click handler
   const handleCardClick = (stepIndex: number) => {
     if (!isAnimationFinished) {
       timelineRef.current?.pause();
@@ -331,12 +322,12 @@ export default function VedikaOrbitStage() {
   return (
     <div
       ref={stageRef}
-      className="vedika-orbit-stage-clean"
+      className={`vedika-orbit-stage-clean ${isBotFadedIn ? 'stage-faded-in' : 'stage-fading-in'}`}
       role="region"
       aria-label="Student Learning Ecosystem 360-Degree Circular Orbit"
     >
-      {/* ── CENTER: 3D BOT + PROGRESSIVE MULTICOLOR RING ───────────────── */}
-      <div className="vedika-center-pod-clean">
+      {/* ── CENTER: 3D BOT + PROGRESSIVE NEON RING ───────────────── */}
+      <div className={`vedika-center-pod-clean ${isBotFadedIn ? 'bot-visible' : 'bot-entering'}`}>
         {/* SVG Progress Ring with 9 individual multicolor arc segments + energy bead */}
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
@@ -347,7 +338,7 @@ export default function VedikaOrbitStage() {
           />
         </div>
 
-        {/* Central 3D Vedika Robot Canvas */}
+        {/* Central 3D Vedika Robot Canvas (floating dead-center in the ring) */}
         <div className="vedika-robot-canvas-box">
           <CentralVedika3D />
         </div>

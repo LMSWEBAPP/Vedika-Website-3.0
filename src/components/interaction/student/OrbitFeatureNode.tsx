@@ -53,8 +53,11 @@ export default function OrbitFeatureNode({
     '--card-accent-rgb': feature.rgb,
   } as React.CSSProperties;
 
+  const isLeftSide = feature.direction === 'left'; // Points 6, 7, 8, 9
+
   const nodeStateClasses = [
     `dir-${feature.direction}`,
+    isLeftSide ? 'align-right' : 'align-left',
     isIconVisible ? 'is-visible' : 'is-hidden',
     isExpanded ? 'is-expanded' : 'is-compact',
     isActive ? 'is-active' : '',
@@ -81,7 +84,7 @@ export default function OrbitFeatureNode({
       tabIndex={0}
       aria-label={`${feature.title}: ${feature.shortLabel}`}
       aria-expanded={isExpanded}
-      title={`0${feature.index} • ${feature.title}`}
+      title={feature.title}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -89,25 +92,24 @@ export default function OrbitFeatureNode({
         }
       }}
     >
-      {/* ── ICON ON LEFT FOR RIGHT & TOP ORIENTED BARS ── */}
-      {feature.direction !== 'left' && (
+      {/* ── ICON ON LEFT FOR RIGHT & TOP ORIENTED BARS (Points 1, 2, 3, 4, 5) ── */}
+      {!isLeftSide && (
         <div className="bar-icon-box">
           {getIcon(feature.id)}
         </div>
       )}
 
-      {/* ── EXPANDING CONTENT BOX (Tag, Title, Description) ── */}
-      <div className="bar-content-box">
+      {/* ── EXPANDING CONTENT BOX (Tag, Title, Description — NO numbers) ── */}
+      <div className={`bar-content-box ${isLeftSide ? 'text-align-right' : 'text-align-left'}`}>
         <div className="drawer-header-row">
           <span className="drawer-short-tag">{feature.shortLabel}</span>
-          <span className="drawer-step-num">0{feature.index}</span>
         </div>
         <div className="drawer-title-text">{feature.title}</div>
         <p className="drawer-desc-text">{feature.desc}</p>
       </div>
 
-      {/* ── ICON ON RIGHT FOR LEFT ORIENTED BARS ── */}
-      {feature.direction === 'left' && (
+      {/* ── ICON ON RIGHT FOR LEFT ORIENTED BARS (Points 6, 7, 8, 9) ── */}
+      {isLeftSide && (
         <div className="bar-icon-box">
           {getIcon(feature.id)}
         </div>

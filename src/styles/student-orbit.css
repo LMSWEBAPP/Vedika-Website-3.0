@@ -2,14 +2,14 @@
    VEDIKA STUDENT ORBIT SYSTEM
    ─────────────────────────────────────────────────────────────────────────
    Architecture:
-     • .vedika-orbit-stage-clean    — full stage container (translated down to prevent top clipping)
+     • .vedika-orbit-stage-clean    — full stage container
      • .vedika-center-pod-clean     — center Vedika bot + progress ring
      • .orbit-unified-bar           — SINGLE unified bar containing icon + expanding point
-                                      - Icon side is fully curved to match circular icon
-                                      - Text side has normal crisp card corners
-                                      - Right nodes extend to the right of the ring
-                                      - Left nodes extend to the left of the ring
-                                      - ALL visited bars stay expanded & visible!
+                                      - Right side (1, 2, 3, 4, 5): icon on left, text align-left
+                                      - Left side (6, 7, 8, 9): icon on right, text align-right
+                                      - Icon side is fully curved (23px) to match circular icon
+                                      - Text side has normal crisp card corners (8px)
+                                      - Equalized 5-tier vertical spacing
    ========================================================================== */
 
 /* ==========================================================================
@@ -28,6 +28,7 @@
   outline: none;
   box-sizing: border-box;
   transform: translateY(35px);
+  transition: opacity 0.6s ease-out;
 }
 
 /* ==========================================================================
@@ -37,7 +38,6 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 360px;
   height: 360px;
   display: flex;
@@ -45,6 +45,19 @@
   justify-content: center;
   pointer-events: none;
   z-index: 5;
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vedika-center-pod-clean.bot-entering {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+.vedika-center-pod-clean.bot-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .vedika-ambient-aura {
@@ -65,10 +78,11 @@
   overflow: visible;
 }
 
+/* Central 3D Bot Canvas Container: perfectly centered in the ring */
 .vedika-robot-canvas-box {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,9 +101,6 @@
 
 /* ==========================================================================
    4. UNIFIED SINGLE BAR (.orbit-unified-bar)
-   Combines icon & point card into ONE single glassmorphic element.
-   Starts as a compact circle with icon, then smoothly expands to reveal
-   the point content while staying permanently visible!
    ========================================================================== */
 .orbit-unified-bar {
   position: absolute;
@@ -114,15 +125,15 @@
     0 6px 20px rgba(0, 0, 0, 0.85);
 
   transition:
-    width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.35s ease,
-    border-color 0.30s ease,
-    background 0.30s ease,
-    box-shadow 0.30s ease,
-    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.38s ease;
+    width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.30s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.32s ease;
 }
 
 /* Unrevealed: completely hidden before its sequential turn */
@@ -173,7 +184,6 @@
 
 /* ==========================================================================
    5. DIRECTION SPECIFIC ANCHORS & ASYMMETRIC BORDER RADII
-   "curve of the icon on one side and normal on the other side of the point boxes"
    - Icon side: 23px curve (exact semicircle curve of the 46px tall bar)
    - Text side: 8px normal card corners
    ========================================================================== */
@@ -221,7 +231,7 @@
 }
 
 /* ── TOP DIRECTION (Node 1) ──
-   Icon on LEFT, centered horizontally above robot.
+   Icon on LEFT, centered horizontally.
    Left side = 23px curve (icon curve).
    Right side = 8px (normal box).
 */
@@ -277,13 +287,15 @@
   justify-content: center;
 }
 
-.orbit-unified-bar.dir-right .bar-content-box,
-.orbit-unified-bar.dir-top .bar-content-box {
+/* Padding & directional alignment */
+.orbit-unified-bar.align-left .bar-content-box {
   padding: 0 12px 0 2px;
+  text-align: left;
 }
 
-.orbit-unified-bar.dir-left .bar-content-box {
-  padding: 0 4px 0 12px;
+.orbit-unified-bar.align-right .bar-content-box {
+  padding: 0 2px 0 12px;
+  text-align: right;
 }
 
 /* Compact: content hidden */
@@ -291,7 +303,7 @@
   max-width: 0;
   opacity: 0;
   pointer-events: none;
-  transition: max-width 0.35s ease, opacity 0.20s ease;
+  transition: max-width 0.30s ease, opacity 0.18s ease;
 }
 
 /* Expanded: content reveals smoothly inside the expanding bar */
@@ -299,18 +311,25 @@
   max-width: 175px;
   opacity: 1;
   pointer-events: auto;
-  transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease 0.10s;
+  transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease 0.08s;
 }
 
 /* ==========================================================================
-   7. TYPOGRAPHY & SMOOTH TEXT REVEAL IN EXPANDING BAR
+   7. TYPOGRAPHY (NO step numbers, crisp alignment)
    ========================================================================== */
 .drawer-header-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 2px;
   line-height: 1;
+}
+
+.orbit-unified-bar.align-left .drawer-header-row {
+  justify-content: flex-start;
+}
+
+.orbit-unified-bar.align-right .drawer-header-row {
+  justify-content: flex-end;
 }
 
 .drawer-short-tag {
@@ -321,14 +340,6 @@
   color: var(--card-accent);
   text-shadow: 0 0 8px rgba(var(--card-accent-rgb), 0.55);
   white-space: nowrap;
-}
-
-.drawer-step-num {
-  font-size: 0.54rem;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.38);
-  font-family: monospace;
-  flex-shrink: 0;
 }
 
 .drawer-title-text {
@@ -343,6 +354,14 @@
   text-overflow: ellipsis;
 }
 
+.orbit-unified-bar.align-left .drawer-title-text {
+  text-align: left;
+}
+
+.orbit-unified-bar.align-right .drawer-title-text {
+  text-align: right;
+}
+
 .drawer-desc-text {
   font-size: 0.62rem;
   line-height: 1.3;
@@ -354,6 +373,14 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   transition: color 0.3s ease;
+}
+
+.orbit-unified-bar.align-left .drawer-desc-text {
+  text-align: left;
+}
+
+.orbit-unified-bar.align-right .drawer-desc-text {
+  text-align: right;
 }
 
 .orbit-unified-bar.is-active .drawer-desc-text {
@@ -373,7 +400,7 @@
   );
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.40s ease;
+  transition: opacity 0.35s ease;
 }
 
 .orbit-unified-bar.is-active .drawer-shimmer-sweep {
@@ -408,8 +435,8 @@
   }
 
   .vedika-robot-canvas-box {
-    width: 165px;
-    height: 165px;
+    width: 175px;
+    height: 175px;
   }
 
   .orbit-unified-bar.dir-right.is-expanded,
