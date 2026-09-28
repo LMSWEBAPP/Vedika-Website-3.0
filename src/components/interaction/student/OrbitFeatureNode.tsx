@@ -7,26 +7,14 @@ import {
 } from 'lucide-react';
 import { StudentOrbitFeature } from './studentOrbitData';
 
-const BADGE_R = 18; // 36px badge / 2
-
 interface OrbitFeatureNodeProps {
   feature: StudentOrbitFeature;
   isActive: boolean;
   isIconVisible: boolean;
   isExpanded: boolean;
   isCompleted: boolean;
-  /**
-   * Icon badge center offset (px) from stage center (50%, 50%).
-   * iconCx > 0 = right, iconCy < 0 = up.
-   */
   iconCx: number;
   iconCy: number;
-  /**
-   * CSS style object for the card slot element.
-   * Includes positional properties (`left`/`right`, `top`/`bottom`)
-   * computed in VedikaOrbitStage so the card aligns perfectly with its icon.
-   */
-  cardCss: React.CSSProperties;
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -56,81 +44,59 @@ export default function OrbitFeatureNode({
   isCompleted,
   iconCx,
   iconCy,
-  cardCss,
   onClick,
   onMouseEnter,
   onMouseLeave,
 }: OrbitFeatureNodeProps) {
-  const iconStateClass = isActive
-    ? 'is-active is-revealed'
-    : isCompleted
-    ? 'is-completed is-revealed'
-    : isIconVisible
-    ? 'is-revealed'
-    : 'is-unrevealed';
-
-  const slotStateClass = isExpanded
-    ? isActive
-      ? 'is-expanded is-active'
-      : 'is-expanded is-revealed'
-    : 'is-collapsed';
-
   const cssVars = {
     '--card-accent': feature.color,
     '--card-accent-rgb': feature.rgb,
   } as React.CSSProperties;
 
-  // Icon positioned at its center offset from stage center
-  const iconStyle: React.CSSProperties = {
-    left: `calc(50% + ${iconCx - BADGE_R}px)`,
-    top: `calc(50% + ${iconCy - BADGE_R}px)`,
-    ...cssVars,
-  };
+  const nodeStateClasses = [
+    `dir-${feature.direction}`,
+    isIconVisible ? 'is-icon-visible' : 'is-icon-hidden',
+    isExpanded ? 'is-bar-expanded' : 'is-bar-collapsed',
+    isActive ? 'is-active' : '',
+    isCompleted ? 'is-completed' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  // Card slot: uses pre-computed cardCss (left/right + top/bottom)
-  const slotStyle: React.CSSProperties = {
+  const containerStyle: React.CSSProperties = {
     position: 'absolute',
-    ...cardCss,
+    left: `calc(50% + ${iconCx}px)`,
+    top: `calc(50% + ${iconCy}px)`,
     ...cssVars,
   };
 
   return (
-    <>
-      {/* ── 1. ICON BADGE on the orbit ring ────────────────────────────── */}
-      <div
-        className={`orbit-icon-pin dir-${feature.direction} ${iconStateClass}`}
-        style={iconStyle}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onClick();
-          }
-        }}
-        aria-label={`${feature.title}: ${feature.shortLabel}`}
-        aria-expanded={isExpanded}
-        title={`0${feature.index} • ${feature.title}`}
-      >
-        <div className="orbit-circle-icon-badge">
-          {getIcon(feature.id)}
-        </div>
+    <div
+      className={`orbit-combined-node ${nodeStateClasses}`}
+      style={containerStyle}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      role="button"
+      tabIndex={0}
+      aria-label={`${feature.title}: ${feature.shortLabel}`}
+      aria-expanded={isExpanded}
+      title={`0${feature.index} • ${feature.title}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+    >
+      {/* ── 1. UNIFIED ICON BADGE (centered at node origin) ── */}
+      <div className="orbit-combined-badge">
+        {getIcon(feature.id)}
       </div>
 
-      {/* ── 2. GLASSMORPHIC CARD aligned with icon ─────────────────────── */}
-      <div
-        className={`orbit-card-slot dir-${feature.direction} ${slotStateClass}`}
-        style={slotStyle}
-        onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        role="region"
-        aria-label={`${feature.title} details`}
-      >
-        <div className="orbit-drawer-card">
+      {/* ── 2. ATTACHED EXTENDING BAR (grows directly outward from the badge) ── */}
+      <div className="orbit-combined-bar">
+        <div className="orbit-bar-content">
           <div className="drawer-header-row">
             <span className="drawer-short-tag">{feature.shortLabel}</span>
             <span className="drawer-step-num">0{feature.index}</span>
@@ -140,6 +106,6 @@ export default function OrbitFeatureNode({
           <div className="drawer-shimmer-sweep" aria-hidden="true" />
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -2,19 +2,15 @@
    VEDIKA STUDENT ORBIT SYSTEM
    ─────────────────────────────────────────────────────────────────────────
    Architecture:
-     • .vedika-orbit-stage-clean    — full stage container
+     • .vedika-orbit-stage-clean    — full stage container (translated down to prevent top clipping)
      • .vedika-center-pod-clean     — center Vedika bot + progress ring
-     • .orbit-icon-pin              — icon badge, absolutely positioned at
-                                      exact (iconCx, iconCy) from stage center
-     • .orbit-card-slot             — glassmorphic card, absolutely positioned
-                                      directly adjacent to its icon:
-                                        dir-right → left-anchored, grows right
-                                        dir-left  → right-anchored, grows left
-                                        dir-top   → bottom-anchored, grows up
-   ─────────────────────────────────────────────────────────────────────────
-   Card animation uses max-width (right/left) or max-height (top) on the
-   card element itself. Correct CSS anchor ensures it always grows FROM the
-   icon OUTWARD.
+     • .orbit-combined-node         — unified element at (50% + iconCx, 50% + iconCy)
+       ├── .orbit-combined-badge    — circular 36px icon badge (centered at node origin 0,0)
+       └── .orbit-combined-bar      — attached extending bar containing point title & description
+                                      grows directly outward from the badge:
+                                        dir-right → extends rightward
+                                        dir-left  → extends leftward
+                                        dir-top   → extends upward
    ========================================================================== */
 
 /* ==========================================================================
@@ -81,7 +77,7 @@
 }
 
 /* ==========================================================================
-   3. NODES LAYER (holds all icon pins + card slots)
+   3. NODES LAYER
    ========================================================================== */
 .vedika-orbit-nodes-layer {
   position: absolute;
@@ -91,43 +87,56 @@
 }
 
 /* ==========================================================================
-   4. ICON BADGE (.orbit-icon-pin)
-   Crisp, clean, NO blurry glow cloud.
-   Unrevealed icons are completely hidden until their turn arrives.
+   4. UNIFIED COMBINED NODE CONTAINER (.orbit-combined-node)
+   Positioned at exact (iconCx, iconCy) from stage center.
+   Unrevealed nodes are completely hidden initially.
    ========================================================================== */
-.orbit-icon-pin {
+.orbit-combined-node {
   position: absolute;
   pointer-events: auto;
   cursor: pointer;
   z-index: 20;
   outline: none;
   transition:
-    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.45s ease;
+    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.38s ease;
 }
 
-/* Unrevealed: completely hidden initially */
-.orbit-icon-pin.is-unrevealed,
-.orbit-icon-pin.is-unvisited {
+/* Unrevealed: completely hidden before its sequential turn */
+.orbit-combined-node.is-icon-hidden {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: scale(0.4) !important;
+  transform: scale(0.3) !important;
 }
 
-/* Revealed: visible & clickable */
-.orbit-icon-pin.is-revealed,
-.orbit-icon-pin.is-completed {
+/* Revealed: icon has arrived and stays permanently visible on the ring */
+.orbit-combined-node.is-icon-visible {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
+  transform: scale(1) !important;
 }
 
-.orbit-circle-icon-badge {
+/* When the bar is expanded: elevate to top layer */
+.orbit-combined-node.is-bar-expanded {
+  z-index: 35;
+}
+
+/* ==========================================================================
+   5. UNIFIED CIRCULAR ICON BADGE (.orbit-combined-badge)
+   Centered precisely at (0, 0) of the combined node.
+   Crisp, clean dark container with accent border — NO blurry glow cloud!
+   ========================================================================== */
+.orbit-combined-badge {
+  position: absolute;
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,170 +144,174 @@
   border: 1.5px solid rgba(var(--card-accent-rgb), 0.65);
   color: var(--card-accent);
   flex-shrink: 0;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75);
+  z-index: 4;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease,
+    background 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 /* Completed node (reached and stays crisp) */
-.orbit-icon-pin.is-completed .orbit-circle-icon-badge {
-  opacity: 1 !important;
-  transform: scale(1.05) !important;
-  border: 1.6px solid var(--card-accent) !important;
-  background: rgba(var(--card-accent-rgb), 0.20) !important;
-  color: var(--card-accent) !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.80) !important;
+.orbit-combined-node.is-completed .orbit-combined-badge {
+  border: 1.6px solid var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.22);
+  color: var(--card-accent);
 }
 
-/* Active node (clean white/accent contrast) */
-.orbit-icon-pin.is-active .orbit-circle-icon-badge {
-  opacity: 1 !important;
-  transform: scale(1.18) !important;
-  border: 2px solid #FFFFFF !important;
-  background: rgba(var(--card-accent-rgb), 0.32) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85) !important;
+/* Active / Expanded node (clean white/accent contrast) */
+.orbit-combined-node.is-bar-expanded .orbit-combined-badge,
+.orbit-combined-node.is-active .orbit-combined-badge {
+  transform: translate(-50%, -50%) scale(1.18);
+  border: 2px solid #FFFFFF;
+  background: rgba(var(--card-accent-rgb), 0.36);
+  color: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.95);
 }
 
-.orbit-icon-pin:hover .orbit-circle-icon-badge {
-  opacity: 1;
+.orbit-combined-node:hover .orbit-combined-badge {
+  transform: translate(-50%, -50%) scale(1.12);
   border-color: var(--card-accent);
-  transform: scale(1.12);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.90);
 }
 
 /* ==========================================================================
-   5. CARD SLOT (.orbit-card-slot)
+   6. ATTACHED EXTENDING BAR (.orbit-combined-bar)
+   Physically emerges directly out from behind the badge.
+   Crisp glassmorphism, no outer blurry glow.
+   Smooth clip-path expands smoothly with the point in it.
    ========================================================================== */
-.orbit-card-slot {
-  pointer-events: auto;
-  cursor: pointer;
-  z-index: 12;
-}
-
-/* ==========================================================================
-   6. GLASSMORPHIC CARD (.orbit-drawer-card)
-   Crisp, clean glassmorphism without blurry glow bleeding.
-   Smooth clip-path expansion for 60fps buttery drawer slide.
-   ========================================================================== */
-.orbit-drawer-card {
-  position: relative;
-  width: 210px;
+.orbit-combined-bar {
+  position: absolute;
+  width: 215px;
   border-radius: 12px;
-  padding: 7px 11px 8px;
-  overflow: hidden;
+  padding: 7px 12px 8px;
   box-sizing: border-box;
+  overflow: hidden;
+  z-index: 2;
 
-  /* Premium glassmorphism with NO outer glow cloud */
+  /* Premium glassmorphism with crisp accent border & NO blurry glow bleed */
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
-    rgba(8, 14, 30, 0.92);
+    rgba(8, 14, 30, 0.94);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.35);
+  border: 1.5px solid rgba(var(--card-accent-rgb), 0.50);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 8px 24px rgba(0, 0, 0, 0.75);
+    inset 0 1px 1px rgba(255, 255, 255, 0.16),
+    0 8px 24px rgba(0, 0, 0, 0.85);
 
-  /* Start collapsed & hidden */
+  /* Start collapsed */
   opacity: 0;
   pointer-events: none;
 
   transition:
-    clip-path 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.35s ease,
-    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s ease;
+    clip-path 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.28s ease,
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.orbit-bar-content {
+  position: relative;
+  width: 100%;
 }
 
 /* Shimmer sweep on active */
 .drawer-shimmer-sweep {
   position: absolute;
-  inset: 0;
+  inset: -7px -12px -8px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--card-accent-rgb), 0.18) 50%,
+    rgba(var(--card-accent-rgb), 0.20) 50%,
     transparent 100%
   );
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s ease;
+  transition: opacity 0.40s ease;
 }
 
-.orbit-card-slot.is-active .drawer-shimmer-sweep,
-.orbit-card-slot.is-expanded .drawer-shimmer-sweep {
+.orbit-combined-node.is-bar-expanded .drawer-shimmer-sweep {
   opacity: 1;
 }
 
 /* ==========================================================================
-   7. DIRECTION: RIGHT (card left-anchored → grows from icon rightward)
+   7. DIRECTION: RIGHT (Bar extends rightward out of the badge)
+   Nodes 2, 3, 4, 5
    ========================================================================== */
-.orbit-card-slot.dir-right .orbit-drawer-card {
+.orbit-combined-node.dir-right .orbit-combined-bar {
+  left: 14px;
+  top: -27px;
   clip-path: inset(0 100% 0 0 round 12px);
-  transform: translateX(-6px);
+  transform: translateX(-8px);
 }
 
-.orbit-card-slot.dir-right.is-expanded .orbit-drawer-card {
+.orbit-combined-node.dir-right.is-bar-expanded .orbit-combined-bar {
   clip-path: inset(0 0% 0 0 round 12px);
-  max-width: 220px;
-  opacity: 1;
   transform: translateX(0);
+  opacity: 1;
   pointer-events: auto;
   border-color: var(--card-accent);
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.80);
+    0 8px 24px rgba(0, 0, 0, 0.90);
 }
 
 /* ==========================================================================
-   8. DIRECTION: LEFT (card right-anchored → grows from icon leftward)
+   8. DIRECTION: LEFT (Bar extends leftward out of the badge)
+   Nodes 6, 7, 8, 9
    ========================================================================== */
-.orbit-card-slot.dir-left .orbit-drawer-card {
+.orbit-combined-node.dir-left .orbit-combined-bar {
+  right: 14px;
+  top: -27px;
   clip-path: inset(0 0 0 100% round 12px);
-  transform: translateX(6px);
+  transform: translateX(8px);
 }
 
-.orbit-card-slot.dir-left.is-expanded .orbit-drawer-card {
+.orbit-combined-node.dir-left.is-bar-expanded .orbit-combined-bar {
   clip-path: inset(0 0 0 0% round 12px);
-  max-width: 220px;
-  opacity: 1;
   transform: translateX(0);
-  pointer-events: auto;
-  border-color: var(--card-accent);
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.80);
-}
-
-/* ==========================================================================
-   9. DIRECTION: TOP (card bottom-anchored → grows from icon upward)
-   ========================================================================== */
-.orbit-card-slot.dir-top .orbit-drawer-card {
-  clip-path: inset(100% 0 0 0 round 12px);
-  transform: translateY(6px);
-}
-
-.orbit-card-slot.dir-top.is-expanded .orbit-drawer-card {
-  clip-path: inset(0 0 0 0 round 12px);
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
   border-color: var(--card-accent);
   box-shadow:
     inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.80);
-}
-
-/* Active & hover accent borders */
-.orbit-card-slot:hover .orbit-drawer-card {
-  border-color: rgba(var(--card-accent-rgb), 0.70);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.20),
-    0 8px 24px rgba(0, 0, 0, 0.75);
+    0 8px 24px rgba(0, 0, 0, 0.90);
 }
 
 /* ==========================================================================
-   10. TYPOGRAPHY & SMOOTH CONTENT REVEAL
+   9. DIRECTION: TOP (Bar extends upward out of the badge)
+   Node 1 (Top Center)
+   ========================================================================== */
+.orbit-combined-node.dir-top .orbit-combined-bar {
+  bottom: 14px;
+  left: -107px;
+  clip-path: inset(100% 0 0 0 round 12px);
+  transform: translateY(8px);
+}
+
+.orbit-combined-node.dir-top.is-bar-expanded .orbit-combined-bar {
+  clip-path: inset(0 0 0 0 round 12px);
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--card-accent);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.90);
+}
+
+/* Hover highlight */
+.orbit-combined-node:hover .orbit-combined-bar {
+  border-color: rgba(var(--card-accent-rgb), 0.75);
+}
+
+/* ==========================================================================
+   10. TYPOGRAPHY & SMOOTH TEXT REVEAL IN EXTENDING BAR
    ========================================================================== */
 .drawer-header-row {
   display: flex;
@@ -350,59 +363,50 @@
   transition: color 0.3s ease;
 }
 
-.orbit-card-slot.is-expanded .drawer-desc-text {
+/* Text elements reveal smoothly when the bar extends */
+.orbit-combined-node.is-bar-expanded .drawer-header-row {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease 0.10s, transform 0.28s ease 0.10s;
+}
+
+.orbit-combined-node.is-bar-expanded .drawer-title-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.28s ease 0.15s, transform 0.28s ease 0.15s;
+}
+
+.orbit-combined-node.is-bar-expanded .drawer-desc-text {
+  opacity: 1;
+  transform: none;
   color: #F1F5F9;
+  transition: opacity 0.28s ease 0.20s, transform 0.28s ease 0.20s;
 }
 
-/* Content fade-in: text elements reveal smoothly after card expands
-   Subtle stagger:
-     0ms: card expands
-     120ms: eyebrow / short tag
-     180ms: title
-     260ms: description
-*/
-.orbit-card-slot.is-expanded .drawer-header-row {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.28s ease 0.12s, transform 0.28s ease 0.12s;
-}
-
-.orbit-card-slot.is-expanded .drawer-title-text {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.28s ease 0.18s, transform 0.28s ease 0.18s;
-}
-
-.orbit-card-slot.is-expanded .drawer-desc-text {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.28s ease 0.26s, transform 0.28s ease 0.26s;
-}
-
-/* When card is collapsed: all text fades out cleanly */
-.orbit-card-slot:not(.is-expanded) .drawer-header-row,
-.orbit-card-slot:not(.is-expanded) .drawer-title-text,
-.orbit-card-slot:not(.is-expanded) .drawer-desc-text {
+/* Collapsed state for text inside bar */
+.orbit-combined-node:not(.is-bar-expanded) .drawer-header-row,
+.orbit-combined-node:not(.is-bar-expanded) .drawer-title-text,
+.orbit-combined-node:not(.is-bar-expanded) .drawer-desc-text {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-.orbit-card-slot.dir-right:not(.is-expanded) .drawer-header-row,
-.orbit-card-slot.dir-right:not(.is-expanded) .drawer-title-text,
-.orbit-card-slot.dir-right:not(.is-expanded) .drawer-desc-text {
+.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-header-row,
+.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-title-text,
+.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-desc-text {
   transform: translateX(-6px);
 }
 
-.orbit-card-slot.dir-left:not(.is-expanded) .drawer-header-row,
-.orbit-card-slot.dir-left:not(.is-expanded) .drawer-title-text,
-.orbit-card-slot.dir-left:not(.is-expanded) .drawer-desc-text {
+.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-header-row,
+.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-title-text,
+.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-desc-text {
   transform: translateX(6px);
 }
 
-.orbit-card-slot.dir-top:not(.is-expanded) .drawer-header-row,
-.orbit-card-slot.dir-top:not(.is-expanded) .drawer-title-text,
-.orbit-card-slot.dir-top:not(.is-expanded) .drawer-desc-text {
+.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-header-row,
+.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-title-text,
+.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-desc-text {
   transform: translateY(6px);
 }
 
@@ -421,7 +425,7 @@
 }
 
 /* ==========================================================================
-   13. RESPONSIVE — 14-inch screens (lower height)
+   12. RESPONSIVE — Lower screen heights
    ========================================================================== */
 @media (max-height: 820px) {
   .vedika-orbit-stage-clean {
@@ -438,20 +442,14 @@
     height: 165px;
   }
 
-  .orbit-circle-icon-badge {
+  .orbit-combined-badge {
     width: 32px;
     height: 32px;
   }
 
-  .orbit-drawer-card {
-    width: 190px;
+  .orbit-combined-bar {
+    width: 195px;
     padding: 6px 10px 7px;
-  }
-
-  .orbit-card-slot.dir-right.is-expanded .orbit-drawer-card,
-  .orbit-card-slot.dir-left.is-expanded  .orbit-drawer-card,
-  .orbit-card-slot.dir-top.is-expanded   .orbit-drawer-card {
-    max-width: 200px;
   }
 
   .drawer-title-text {
@@ -468,18 +466,18 @@
     display: none;
   }
 
-  .orbit-card-slot.is-active .drawer-desc-text {
+  .orbit-combined-node.is-bar-expanded .drawer-desc-text {
     display: -webkit-box;
   }
 }
 
 /* ==========================================================================
-   14. REDUCED MOTION
+   13. REDUCED MOTION
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .orbit-drawer-card,
-  .orbit-circle-icon-badge,
-  .vedika-ambient-aura {
+  .orbit-combined-bar,
+  .orbit-combined-badge,
+  .orbit-combined-node {
     transition: none !important;
   }
 }
