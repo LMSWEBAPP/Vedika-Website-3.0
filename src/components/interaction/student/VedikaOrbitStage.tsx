@@ -13,22 +13,22 @@ import {
   ORBIT_SEGMENTS,
   PROGRESS_R,
   ORBIT_CENTER,
-  BEAD_START_X,
-  BEAD_START_Y,
 } from './studentOrbitData';
 import '@/styles/student-orbit.css';
 
 export default function VedikaOrbitStage() {
   const interactionContext = useInteraction();
   const scrollProgress = interactionContext?.scrollProgress ?? 4.0;
-  // Page 5 is completely loaded when scrollProgress >= 3.48 (or true if standalone)
+  // Page 5 is active when scrollProgress >= 3.48 (or true if standalone)
   const isPage5Active = interactionContext ? scrollProgress >= 3.48 : true;
 
-  // Active feature spotlight (0 = none extended, 1..9 = extended node)
-  const [activeStep, setActiveStep] = useState<number>(0);
-  // Icons that have been reached and stay permanently visible on the ring
+  // Active feature spotlight
+  const [activeStep, setActiveStep] = useState<number>(1);
+  // Tracks which nodes have appeared (initially in compact icon form)
   const [revealedIcons, setRevealedIcons] = useState<Set<number>>(() => new Set());
-  // Feature nodes that have been completed and stay prominently illuminated
+  // Tracks which nodes have expanded their bar (they STAY visible and never disappear)
+  const [revealedBars, setRevealedBars] = useState<Set<number>>(() => new Set());
+  // Tracks completed steps
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
   // Tracks if the sequential animation has permanently finished
   const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
@@ -76,11 +76,13 @@ export default function VedikaOrbitStage() {
             el.style.visibility = 'visible';
           }
         });
-        // All 9 icons stay visible and illuminated
-        setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-        setRevealedIcons(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-        // Keep Node 1 open for display, user can hover/click any node
+        // All 9 icons and all 9 bars remain permanently visible around the ring
+        const allSteps = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        setCompletedSteps(allSteps);
+        setRevealedIcons(allSteps);
+        setRevealedBars(allSteps);
         setActiveStep(1);
+
         // Softly settle the energy bead into the completed ring
         if (beadGroupRef.current) {
           gsap.to(beadGroupRef.current, { opacity: 0, duration: 0.5 });
@@ -89,17 +91,15 @@ export default function VedikaOrbitStage() {
     });
 
     const S_TRAVEL = 0.95;   // 0.95s travel for each equal 40-degree segment
-    const ICON_WAIT = 0.28;  // 0.28s pause so ICON arrives first!
-    const C_EXPAND = 0.40;   // 0.40s bar unfold
-    const C_READ = 1.65;     // 1.65s display for card reading
-    const C_COLLAPSE = 0.28; // 0.28s bar collapse before moving to next point
+    const ICON_WAIT = 0.30;  // 0.30s pause so ICON is shown first in compact form!
+    const C_EXPAND = 0.45;   // 0.45s bar smoothly expands to full width with point content!
+    const C_READ = 1.35;     // 1.35s reading time before bead travels to next node!
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEP 0: Node 1 (Pink, Non-Judgmental Space)
-    // 1. Icon appears smoothly first!
-    // 2. Attached bar extends smoothly with point content!
-    // 3. User reads point.
-    // 4. Bar collapses back into icon before bead travels to Node 2!
+    // 1. Node 1 appears as a compact circular icon first!
+    // 2. That SAME bar smoothly expands into the full content bar!
+    // 3. AND IT STAYS EXPANDED!
     // ──────────────────────────────────────────────────────────────────────────
     tl.call(() => {
       setRevealedIcons(new Set([1]));
@@ -108,27 +108,26 @@ export default function VedikaOrbitStage() {
         beadGroupRef.current.style.opacity = '1';
       }
     });
-    // Icon settles
+
+    // Icon arrives first in compact form
     tl.to({}, { duration: ICON_WAIT });
-    // Bar extends smoothly!
+
+    // The single bar smoothly expands with point content!
     tl.call(() => {
+      setRevealedBars(new Set([1]));
       setActiveStep(1);
     });
-    // Read point 1
+
+    // User reads point 1 — bar STAYS expanded!
     tl.to({}, { duration: C_EXPAND + C_READ });
-    // Collapse bar 1 back into icon before travel!
-    tl.call(() => {
-      setActiveStep(0);
-    });
-    tl.to({}, { duration: C_COLLAPSE });
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
-    // As bead travels, ring paints. Arriving at node k:
-    // 1. Icon k appears first!
-    // 2. Bar k extends smoothly!
-    // 3. Display for reading.
-    // 4. Bar k collapses back into icon before bead travels to node k+1!
+    // As bead travels, ring paints.
+    // At node k:
+    // 1. Node k appears as compact icon first! (Previous nodes stay expanded!)
+    // 2. Bar k smoothly expands with point content!
+    // 3. Node k STAYS expanded alongside all previous points!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
@@ -181,28 +180,23 @@ export default function VedikaOrbitStage() {
         travelLabel
       );
 
-      // 1. Energy bead arrives: ICON COMES FIRST!
+      // 1. Energy bead arrives: Node k appears in compact circular icon form first!
       tl.call(() => {
         setRevealedIcons((prev) => new Set(prev).add(targetFeatureIndex));
         setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
       });
 
-      // Brief pause so icon settles
+      // Pause so user sees icon arrive first
       tl.to({}, { duration: ICON_WAIT });
 
-      // 2. THEN BAR EXTENDS SMOOTHLY OUTWARD FROM ICON!
+      // 2. THEN THAT SINGLE BAR EXPANDS OUTWARD TO REVEAL THE POINT CONTENT!
       tl.call(() => {
+        setRevealedBars((prev) => new Set(prev).add(targetFeatureIndex));
         setActiveStep(targetFeatureIndex);
       });
 
-      // Read the point
+      // Reading duration — previous points all REMAIN VISIBLE!
       tl.to({}, { duration: C_EXPAND + C_READ });
-
-      // 3. COLLAPSE BAR BACK INTO ICON BEFORE NEXT TRAVEL!
-      tl.call(() => {
-        setActiveStep(0);
-      });
-      tl.to({}, { duration: C_COLLAPSE });
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -293,7 +287,6 @@ export default function VedikaOrbitStage() {
 
     if (isPage5Active && !hasStartedRef.current) {
       hasStartedRef.current = true;
-      // Start smoothly after page transition settles
       const startTimer = setTimeout(() => {
         timelineRef.current?.play();
       }, 350);
@@ -307,7 +300,7 @@ export default function VedikaOrbitStage() {
     }
   }, [isPage5Active, isAnimationFinished]);
 
-  // Click handler: user can inspect any feature node
+  // Click handler: user can spotlight any feature bar
   const handleCardClick = (stepIndex: number) => {
     if (!isAnimationFinished) {
       timelineRef.current?.pause();
@@ -319,21 +312,20 @@ export default function VedikaOrbitStage() {
           el.style.visibility = 'visible';
         }
       });
-      setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-      setRevealedIcons(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+      const allSteps = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      setCompletedSteps(allSteps);
+      setRevealedIcons(allSteps);
+      setRevealedBars(allSteps);
       if (beadGroupRef.current) {
         beadGroupRef.current.style.opacity = '0';
       }
     }
 
-    // Toggle: if already active, collapse; otherwise expand clicked node
-    setActiveStep((prev) => (prev === stepIndex ? 0 : stepIndex));
+    setActiveStep(stepIndex);
   };
 
   const handleCardMouseEnter = (stepIndex: number) => {
-    if (isAnimationFinished) {
-      setActiveStep(stepIndex);
-    }
+    setActiveStep(stepIndex);
   };
 
   return (
@@ -361,12 +353,13 @@ export default function VedikaOrbitStage() {
         </div>
       </div>
 
-      {/* ── 9 ORBITAL NODES (Combined Icon + Attached Extending Bar) ── */}
+      {/* ── 9 ORBITAL NODES (Unified Single Bar: Icon + Expanding Point) ── */}
       <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const pos = NODE_POSITIONS[feat.index];
           const isCurrentActive = feat.index === activeStep;
           const isIconVis = revealedIcons.has(feat.index);
+          const isBarExp = revealedBars.has(feat.index);
           const isAlreadyCompleted = completedSteps.has(feat.index);
 
           return (
@@ -375,7 +368,7 @@ export default function VedikaOrbitStage() {
               feature={feat}
               isActive={isCurrentActive}
               isIconVisible={isIconVis}
-              isExpanded={isCurrentActive}
+              isExpanded={isBarExp}
               isCompleted={isAlreadyCompleted}
               iconCx={pos.iconCx}
               iconCy={pos.iconCy}

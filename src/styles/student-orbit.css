@@ -4,13 +4,10 @@
    Architecture:
      • .vedika-orbit-stage-clean    — full stage container (translated down to prevent top clipping)
      • .vedika-center-pod-clean     — center Vedika bot + progress ring
-     • .orbit-combined-node         — unified element at (50% + iconCx, 50% + iconCy)
-       ├── .orbit-combined-badge    — circular 36px icon badge (centered at node origin 0,0)
-       └── .orbit-combined-bar      — attached extending bar containing point title & description
-                                      grows directly outward from the badge:
-                                        dir-right → extends rightward
-                                        dir-left  → extends leftward
-                                        dir-top   → extends upward
+     • .orbit-unified-bar           — SINGLE unified bar containing icon + expanding point
+                                      - Starts as a compact circular icon badge
+                                      - Smoothly expands to full width with point in it
+                                      - ALL visited bars stay expanded & visible!
    ========================================================================== */
 
 /* ==========================================================================
@@ -87,110 +84,21 @@
 }
 
 /* ==========================================================================
-   4. UNIFIED COMBINED NODE CONTAINER (.orbit-combined-node)
-   Positioned at exact (iconCx, iconCy) from stage center.
-   Unrevealed nodes are completely hidden initially.
+   4. UNIFIED SINGLE BAR (.orbit-unified-bar)
+   Combines icon & point card into ONE single glassmorphic element.
+   Starts as a compact circle with icon, then smoothly expands to reveal
+   the point content while staying permanently visible!
    ========================================================================== */
-.orbit-combined-node {
+.orbit-unified-bar {
   position: absolute;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
   pointer-events: auto;
   cursor: pointer;
   z-index: 20;
   outline: none;
-  transition:
-    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.38s ease;
-}
-
-/* Unrevealed: completely hidden before its sequential turn */
-.orbit-combined-node.is-icon-hidden {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transform: scale(0.3) !important;
-}
-
-/* Revealed: icon has arrived and stays permanently visible on the ring */
-.orbit-combined-node.is-icon-visible {
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  transform: scale(1) !important;
-}
-
-/* When the bar is expanded: elevate to top layer */
-.orbit-combined-node.is-bar-expanded {
-  z-index: 35;
-}
-
-/* ==========================================================================
-   5. UNIFIED CIRCULAR ICON BADGE (.orbit-combined-badge)
-   Centered precisely at (0, 0) of the combined node.
-   Crisp, clean dark container with accent border — NO blurry glow cloud!
-   ========================================================================== */
-.orbit-combined-badge {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #080e20;
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.65);
-  color: var(--card-accent);
-  flex-shrink: 0;
-  z-index: 4;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85);
-  transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s ease,
-    background 0.35s ease,
-    color 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-/* Completed node (reached and stays crisp) */
-.orbit-combined-node.is-completed .orbit-combined-badge {
-  border: 1.6px solid var(--card-accent);
-  background: rgba(var(--card-accent-rgb), 0.22);
-  color: var(--card-accent);
-}
-
-/* Active / Expanded node (clean white/accent contrast) */
-.orbit-combined-node.is-bar-expanded .orbit-combined-badge,
-.orbit-combined-node.is-active .orbit-combined-badge {
-  transform: translate(-50%, -50%) scale(1.18);
-  border: 2px solid #FFFFFF;
-  background: rgba(var(--card-accent-rgb), 0.36);
-  color: #FFFFFF;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.95);
-}
-
-.orbit-combined-node:hover .orbit-combined-badge {
-  transform: translate(-50%, -50%) scale(1.12);
-  border-color: var(--card-accent);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.90);
-}
-
-/* ==========================================================================
-   6. ATTACHED EXTENDING BAR (.orbit-combined-bar)
-   Physically emerges directly out from behind the badge.
-   Crisp glassmorphism, no outer blurry glow.
-   Smooth clip-path expands smoothly with the point in it.
-   ========================================================================== */
-.orbit-combined-bar {
-  position: absolute;
-  width: 215px;
-  border-radius: 12px;
-  padding: 7px 12px 8px;
-  box-sizing: border-box;
-  overflow: hidden;
-  z-index: 2;
 
   /* Premium glassmorphism with crisp accent border & NO blurry glow bleed */
   background:
@@ -201,127 +109,188 @@
   border: 1.5px solid rgba(var(--card-accent-rgb), 0.50);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.16),
-    0 8px 24px rgba(0, 0, 0, 0.85);
-
-  /* Start collapsed */
-  opacity: 0;
-  pointer-events: none;
+    0 6px 20px rgba(0, 0, 0, 0.85);
 
   transition:
-    clip-path 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.28s ease,
-    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.28s ease,
-    box-shadow 0.28s ease;
+    width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    right 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    top 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.35s ease,
+    border-color 0.30s ease,
+    background 0.30s ease,
+    box-shadow 0.30s ease,
+    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.38s ease;
 }
 
-.orbit-bar-content {
-  position: relative;
-  width: 100%;
+/* Unrevealed: completely hidden before its sequential turn */
+.orbit-unified-bar.is-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: scale(0.3) !important;
 }
 
-/* Shimmer sweep on active */
-.drawer-shimmer-sweep {
-  position: absolute;
-  inset: -7px -12px -8px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(var(--card-accent-rgb), 0.20) 50%,
-    transparent 100%
-  );
+/* Revealed: visible on stage */
+.orbit-unified-bar.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: scale(1) !important;
+}
+
+/* Active node (spotlight) */
+.orbit-unified-bar.is-active {
+  border-color: #FFFFFF;
+  border-width: 1.8px;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.95);
+  z-index: 35;
+}
+
+/* Completed node */
+.orbit-unified-bar.is-completed {
+  border-color: rgba(var(--card-accent-rgb), 0.65);
+}
+
+.orbit-unified-bar:hover {
+  border-color: var(--card-accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.90);
+}
+
+/* ==========================================================================
+   5. DIRECTION SPECIFIC DIMENSIONS & EXPANSIONS
+   ========================================================================== */
+
+/* ── RIGHT DIRECTION (Nodes 2, 3, 4, 5) ── */
+.orbit-unified-bar.dir-right.is-compact {
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  left: -19px;
+  top: -19px;
+}
+
+.orbit-unified-bar.dir-right.is-expanded {
+  width: 215px;
+  height: 46px;
+  border-radius: 12px;
+  left: -19px;
+  top: -23px;
+}
+
+/* ── LEFT DIRECTION (Nodes 6, 7, 8, 9) ── */
+.orbit-unified-bar.dir-left.is-compact {
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  right: -19px;
+  top: -19px;
+}
+
+.orbit-unified-bar.dir-left.is-expanded {
+  width: 215px;
+  height: 46px;
+  border-radius: 12px;
+  right: -19px;
+  top: -23px;
+}
+
+/* ── TOP DIRECTION (Node 1) ── */
+.orbit-unified-bar.dir-top.is-compact {
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  left: -19px;
+  top: -19px;
+}
+
+.orbit-unified-bar.dir-top.is-expanded {
+  width: 215px;
+  height: 46px;
+  border-radius: 12px;
+  left: -107px;
+  top: -52px;
+}
+
+/* ==========================================================================
+   6. INNER ELEMENTS: ICON BOX & EXPANDABLE CONTENT BOX
+   ========================================================================== */
+.bar-icon-box {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--card-accent);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.orbit-unified-bar.is-completed .bar-icon-box {
+  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.16);
+}
+
+.orbit-unified-bar.is-active .bar-icon-box {
+  color: #FFFFFF;
+  background: rgba(var(--card-accent-rgb), 0.35);
+}
+
+.bar-content-box {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.orbit-unified-bar.dir-right .bar-content-box,
+.orbit-unified-bar.dir-top .bar-content-box {
+  padding: 0 10px 0 2px;
+}
+
+.orbit-unified-bar.dir-left .bar-content-box {
+  padding: 0 2px 0 10px;
+}
+
+/* Compact: content hidden */
+.orbit-unified-bar.is-compact .bar-content-box {
+  max-width: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.40s ease;
+  transition: max-width 0.35s ease, opacity 0.20s ease;
 }
 
-.orbit-combined-node.is-bar-expanded .drawer-shimmer-sweep {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   7. DIRECTION: RIGHT (Bar extends rightward out of the badge)
-   Nodes 2, 3, 4, 5
-   ========================================================================== */
-.orbit-combined-node.dir-right .orbit-combined-bar {
-  left: 14px;
-  top: -27px;
-  clip-path: inset(0 100% 0 0 round 12px);
-  transform: translateX(-8px);
-}
-
-.orbit-combined-node.dir-right.is-bar-expanded .orbit-combined-bar {
-  clip-path: inset(0 0% 0 0 round 12px);
-  transform: translateX(0);
+/* Expanded: content reveals smoothly inside the expanding bar */
+.orbit-unified-bar.is-expanded .bar-content-box {
+  max-width: 175px;
   opacity: 1;
   pointer-events: auto;
-  border-color: var(--card-accent);
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.90);
+  transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.30s ease 0.10s;
 }
 
 /* ==========================================================================
-   8. DIRECTION: LEFT (Bar extends leftward out of the badge)
-   Nodes 6, 7, 8, 9
-   ========================================================================== */
-.orbit-combined-node.dir-left .orbit-combined-bar {
-  right: 14px;
-  top: -27px;
-  clip-path: inset(0 0 0 100% round 12px);
-  transform: translateX(8px);
-}
-
-.orbit-combined-node.dir-left.is-bar-expanded .orbit-combined-bar {
-  clip-path: inset(0 0 0 0% round 12px);
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
-  border-color: var(--card-accent);
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.90);
-}
-
-/* ==========================================================================
-   9. DIRECTION: TOP (Bar extends upward out of the badge)
-   Node 1 (Top Center)
-   ========================================================================== */
-.orbit-combined-node.dir-top .orbit-combined-bar {
-  bottom: 14px;
-  left: -107px;
-  clip-path: inset(100% 0 0 0 round 12px);
-  transform: translateY(8px);
-}
-
-.orbit-combined-node.dir-top.is-bar-expanded .orbit-combined-bar {
-  clip-path: inset(0 0 0 0 round 12px);
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-  border-color: var(--card-accent);
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.90);
-}
-
-/* Hover highlight */
-.orbit-combined-node:hover .orbit-combined-bar {
-  border-color: rgba(var(--card-accent-rgb), 0.75);
-}
-
-/* ==========================================================================
-   10. TYPOGRAPHY & SMOOTH TEXT REVEAL IN EXTENDING BAR
+   7. TYPOGRAPHY & SMOOTH TEXT REVEAL IN EXPANDING BAR
    ========================================================================== */
 .drawer-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  line-height: 1;
 }
 
 .drawer-short-tag {
-  font-size: 0.60rem;
+  font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -331,7 +300,7 @@
 }
 
 .drawer-step-num {
-  font-size: 0.56rem;
+  font-size: 0.54rem;
   font-weight: 800;
   color: rgba(255, 255, 255, 0.38);
   font-family: monospace;
@@ -339,11 +308,11 @@
 }
 
 .drawer-title-text {
-  font-size: 0.83rem;
+  font-size: 0.80rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0 0 2px 0;
-  line-height: 1.22;
+  margin: 0 0 1px 0;
+  line-height: 1.2;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -351,8 +320,8 @@
 }
 
 .drawer-desc-text {
-  font-size: 0.64rem;
-  line-height: 1.34;
+  font-size: 0.62rem;
+  line-height: 1.3;
   color: #94A3B8;
   margin: 0;
   font-weight: 400;
@@ -363,55 +332,31 @@
   transition: color 0.3s ease;
 }
 
-/* Text elements reveal smoothly when the bar extends */
-.orbit-combined-node.is-bar-expanded .drawer-header-row {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.28s ease 0.10s, transform 0.28s ease 0.10s;
-}
-
-.orbit-combined-node.is-bar-expanded .drawer-title-text {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.28s ease 0.15s, transform 0.28s ease 0.15s;
-}
-
-.orbit-combined-node.is-bar-expanded .drawer-desc-text {
-  opacity: 1;
-  transform: none;
+.orbit-unified-bar.is-active .drawer-desc-text {
   color: #F1F5F9;
-  transition: opacity 0.28s ease 0.20s, transform 0.28s ease 0.20s;
 }
 
-/* Collapsed state for text inside bar */
-.orbit-combined-node:not(.is-bar-expanded) .drawer-header-row,
-.orbit-combined-node:not(.is-bar-expanded) .drawer-title-text,
-.orbit-combined-node:not(.is-bar-expanded) .drawer-desc-text {
+/* Shimmer sweep */
+.drawer-shimmer-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--card-accent-rgb), 0.18) 50%,
+    transparent 100%
+  );
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.40s ease;
 }
 
-.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-header-row,
-.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-title-text,
-.orbit-combined-node.dir-right:not(.is-bar-expanded) .drawer-desc-text {
-  transform: translateX(-6px);
-}
-
-.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-header-row,
-.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-title-text,
-.orbit-combined-node.dir-left:not(.is-bar-expanded) .drawer-desc-text {
-  transform: translateX(6px);
-}
-
-.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-header-row,
-.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-title-text,
-.orbit-combined-node.dir-top:not(.is-bar-expanded) .drawer-desc-text {
-  transform: translateY(6px);
+.orbit-unified-bar.is-active .drawer-shimmer-sweep {
+  opacity: 1;
 }
 
 /* ==========================================================================
-   11. PROGRESS RING ELEMENTS & ENERGY BEAD
+   8. PROGRESS RING ELEMENTS & ENERGY BEAD
    ========================================================================== */
 .orbit-segment-arc,
 .orbit-segment-aura {
@@ -425,7 +370,7 @@
 }
 
 /* ==========================================================================
-   12. RESPONSIVE — Lower screen heights
+   9. RESPONSIVE — Lower screen heights
    ========================================================================== */
 @media (max-height: 820px) {
   .vedika-orbit-stage-clean {
@@ -442,22 +387,19 @@
     height: 165px;
   }
 
-  .orbit-combined-badge {
-    width: 32px;
-    height: 32px;
-  }
-
-  .orbit-combined-bar {
+  .orbit-unified-bar.dir-right.is-expanded,
+  .orbit-unified-bar.dir-left.is-expanded,
+  .orbit-unified-bar.dir-top.is-expanded {
     width: 195px;
-    padding: 6px 10px 7px;
+    height: 44px;
   }
 
   .drawer-title-text {
-    font-size: 0.77rem;
+    font-size: 0.76rem;
   }
 
   .drawer-desc-text {
-    font-size: 0.60rem;
+    font-size: 0.58rem;
   }
 }
 
@@ -465,19 +407,13 @@
   .drawer-desc-text {
     display: none;
   }
-
-  .orbit-combined-node.is-bar-expanded .drawer-desc-text {
-    display: -webkit-box;
-  }
 }
 
 /* ==========================================================================
-   13. REDUCED MOTION
+   10. REDUCED MOTION
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .orbit-combined-bar,
-  .orbit-combined-badge,
-  .orbit-combined-node {
+  .orbit-unified-bar {
     transition: none !important;
   }
 }

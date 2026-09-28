@@ -21,7 +21,7 @@ interface OrbitFeatureNodeProps {
 }
 
 function getIcon(id: string) {
-  const p = { size: 16, strokeWidth: 2.4 } as const;
+  const p = { size: 17, strokeWidth: 2.3 } as const;
   switch (id) {
     case 'study-companion':      return <Clock {...p} />;
     case 'non-judgmental':       return <Heart {...p} fill="currentColor" fillOpacity={0.4} />;
@@ -55,8 +55,8 @@ export default function OrbitFeatureNode({
 
   const nodeStateClasses = [
     `dir-${feature.direction}`,
-    isIconVisible ? 'is-icon-visible' : 'is-icon-hidden',
-    isExpanded ? 'is-bar-expanded' : 'is-bar-collapsed',
+    isIconVisible ? 'is-visible' : 'is-hidden',
+    isExpanded ? 'is-expanded' : 'is-compact',
     isActive ? 'is-active' : '',
     isCompleted ? 'is-completed' : '',
   ]
@@ -72,7 +72,7 @@ export default function OrbitFeatureNode({
 
   return (
     <div
-      className={`orbit-combined-node ${nodeStateClasses}`}
+      className={`orbit-unified-bar ${nodeStateClasses}`}
       style={containerStyle}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
@@ -89,23 +89,32 @@ export default function OrbitFeatureNode({
         }
       }}
     >
-      {/* ── 1. UNIFIED ICON BADGE (centered at node origin) ── */}
-      <div className="orbit-combined-badge">
-        {getIcon(feature.id)}
+      {/* ── ICON ON LEFT FOR RIGHT & TOP ORIENTED BARS ── */}
+      {feature.direction !== 'left' && (
+        <div className="bar-icon-box">
+          {getIcon(feature.id)}
+        </div>
+      )}
+
+      {/* ── EXPANDING CONTENT BOX (Tag, Title, Description) ── */}
+      <div className="bar-content-box">
+        <div className="drawer-header-row">
+          <span className="drawer-short-tag">{feature.shortLabel}</span>
+          <span className="drawer-step-num">0{feature.index}</span>
+        </div>
+        <div className="drawer-title-text">{feature.title}</div>
+        <p className="drawer-desc-text">{feature.desc}</p>
       </div>
 
-      {/* ── 2. ATTACHED EXTENDING BAR (grows directly outward from the badge) ── */}
-      <div className="orbit-combined-bar">
-        <div className="orbit-bar-content">
-          <div className="drawer-header-row">
-            <span className="drawer-short-tag">{feature.shortLabel}</span>
-            <span className="drawer-step-num">0{feature.index}</span>
-          </div>
-          <div className="drawer-title-text">{feature.title}</div>
-          <p className="drawer-desc-text">{feature.desc}</p>
-          <div className="drawer-shimmer-sweep" aria-hidden="true" />
+      {/* ── ICON ON RIGHT FOR LEFT ORIENTED BARS ── */}
+      {feature.direction === 'left' && (
+        <div className="bar-icon-box">
+          {getIcon(feature.id)}
         </div>
-      </div>
+      )}
+
+      {/* Dynamic shimmer sweep across active bar */}
+      <div className="drawer-shimmer-sweep" aria-hidden="true" />
     </div>
   );
 }
