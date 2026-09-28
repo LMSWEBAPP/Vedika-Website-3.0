@@ -86,9 +86,9 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   },
 ];
 
-// Clean, delicate uniform particle sphere: 150 particles per sphere
+// Clean, delicate uniform particle sphere: 260 particles per sphere
 // Fibonacci sphere algorithm provides a perfectly isotropic, pattern-free spherical cloud!
-const PARTICLES_PER_SPHERE = 150;
+const PARTICLES_PER_SPHERE = 260;
 const BIG_SPHERE_RADIUS = 0.84;
 const MINI_SPHERE_SCALE = 0.28;
 
