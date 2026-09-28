@@ -5,8 +5,10 @@
      • .vedika-orbit-stage-clean    — full stage container (translated down to prevent top clipping)
      • .vedika-center-pod-clean     — center Vedika bot + progress ring
      • .orbit-unified-bar           — SINGLE unified bar containing icon + expanding point
-                                      - Starts as a compact circular icon badge
-                                      - Smoothly expands to full width with point in it
+                                      - Icon side is fully curved to match circular icon
+                                      - Text side has normal crisp card corners
+                                      - Right nodes extend to the right of the ring
+                                      - Left nodes extend to the left of the ring
                                       - ALL visited bars stay expanded & visible!
    ========================================================================== */
 
@@ -114,15 +116,12 @@
   transition:
     width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
     height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    left 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    right 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    top 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
     border-radius 0.35s ease,
     border-color 0.30s ease,
     background 0.30s ease,
     box-shadow 0.30s ease,
     opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
     visibility 0.38s ease;
 }
 
@@ -131,7 +130,18 @@
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: scale(0.3) !important;
+}
+
+.orbit-unified-bar.dir-right.is-hidden {
+  transform: translate(-19px, -50%) scale(0.3) !important;
+}
+
+.orbit-unified-bar.dir-left.is-hidden {
+  transform: translate(calc(-100% + 19px), -50%) scale(0.3) !important;
+}
+
+.orbit-unified-bar.dir-top.is-hidden {
+  transform: translate(-50%, -50%) scale(0.3) !important;
 }
 
 /* Revealed: visible on stage */
@@ -139,7 +149,6 @@
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  transform: scale(1) !important;
 }
 
 /* Active node (spotlight) */
@@ -163,58 +172,73 @@
 }
 
 /* ==========================================================================
-   5. DIRECTION SPECIFIC DIMENSIONS & EXPANSIONS
+   5. DIRECTION SPECIFIC ANCHORS & ASYMMETRIC BORDER RADII
+   "curve of the icon on one side and normal on the other side of the point boxes"
+   - Icon side: 23px curve (exact semicircle curve of the 46px tall bar)
+   - Text side: 8px normal card corners
    ========================================================================== */
 
-/* ── RIGHT DIRECTION (Nodes 2, 3, 4, 5) ── */
+/* ── RIGHT DIRECTION (Nodes 2, 3, 4, 5) ──
+   Icon on LEFT, extends to the RIGHT of the ring.
+   Left side = 23px curve (icon curve).
+   Right side = 8px (normal box).
+*/
+.orbit-unified-bar.dir-right {
+  transform: translate(-19px, -50%);
+}
+
 .orbit-unified-bar.dir-right.is-compact {
   width: 38px;
   height: 38px;
   border-radius: 19px;
-  left: -19px;
-  top: -19px;
 }
 
 .orbit-unified-bar.dir-right.is-expanded {
   width: 215px;
   height: 46px;
-  border-radius: 12px;
-  left: -19px;
-  top: -23px;
+  border-radius: 23px 8px 8px 23px;
 }
 
-/* ── LEFT DIRECTION (Nodes 6, 7, 8, 9) ── */
+/* ── LEFT DIRECTION (Nodes 6, 7, 8, 9) ──
+   Icon on RIGHT, extends to the LEFT of the ring.
+   Right side = 23px curve (icon curve).
+   Left side = 8px (normal box).
+*/
+.orbit-unified-bar.dir-left {
+  transform: translate(calc(-100% + 19px), -50%);
+}
+
 .orbit-unified-bar.dir-left.is-compact {
   width: 38px;
   height: 38px;
   border-radius: 19px;
-  right: -19px;
-  top: -19px;
 }
 
 .orbit-unified-bar.dir-left.is-expanded {
   width: 215px;
   height: 46px;
-  border-radius: 12px;
-  right: -19px;
-  top: -23px;
+  border-radius: 8px 23px 23px 8px;
 }
 
-/* ── TOP DIRECTION (Node 1) ── */
+/* ── TOP DIRECTION (Node 1) ──
+   Icon on LEFT, centered horizontally above robot.
+   Left side = 23px curve (icon curve).
+   Right side = 8px (normal box).
+*/
+.orbit-unified-bar.dir-top {
+  transform: translate(-50%, -50%);
+}
+
 .orbit-unified-bar.dir-top.is-compact {
   width: 38px;
   height: 38px;
   border-radius: 19px;
-  left: -19px;
-  top: -19px;
 }
 
 .orbit-unified-bar.dir-top.is-expanded {
   width: 215px;
   height: 46px;
-  border-radius: 12px;
-  left: -107px;
-  top: -52px;
+  border-radius: 23px 8px 8px 23px;
 }
 
 /* ==========================================================================
@@ -255,11 +279,11 @@
 
 .orbit-unified-bar.dir-right .bar-content-box,
 .orbit-unified-bar.dir-top .bar-content-box {
-  padding: 0 10px 0 2px;
+  padding: 0 12px 0 2px;
 }
 
 .orbit-unified-bar.dir-left .bar-content-box {
-  padding: 0 2px 0 10px;
+  padding: 0 4px 0 12px;
 }
 
 /* Compact: content hidden */
@@ -340,6 +364,7 @@
 .drawer-shimmer-sweep {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: linear-gradient(
     90deg,
     transparent 0%,
