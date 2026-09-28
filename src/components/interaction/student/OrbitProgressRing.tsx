@@ -72,6 +72,31 @@ export default function OrbitProgressRing({
 
       {/* Zero background circles: removed all background track/guide circles to eliminate any visual clutter */}
 
+      {/* ── 9 Radial Circuit Traces from Ring (R=122) towards Satellite Icons (R=145) ── */}
+      {STUDENT_ORBIT_FEATURES.map((feat, idx) => {
+        const angles = [270, 310, 350, 30, 70, 110, 150, 190, 230];
+        const rad = (angles[idx] * Math.PI) / 180;
+        const x1 = ORBIT_CENTER + 122 * Math.cos(rad);
+        const y1 = ORBIT_CENTER + 122 * Math.sin(rad);
+        const x2 = ORBIT_CENTER + 145 * Math.cos(rad);
+        const y2 = ORBIT_CENTER + 145 * Math.sin(rad);
+
+        return (
+          <line
+            key={`connector-${feat.id}`}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke={feat.color}
+            strokeWidth={1.4}
+            strokeDasharray="2 2"
+            opacity={0.35}
+            strokeLinecap="round"
+          />
+        );
+      })}
+
       {/* ── 9 Progressive Arc Segments: true mathematical circular arcs with no straight edges ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
@@ -82,7 +107,7 @@ export default function OrbitProgressRing({
           d={seg.pathD}
           fill="none"
           stroke={`url(#${seg.gradientId})`}
-          strokeWidth={3.8}
+          strokeWidth={3.6}
           strokeLinecap="round"
           strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
           strokeDashoffset={seg.arcLength}

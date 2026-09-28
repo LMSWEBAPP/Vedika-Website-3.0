@@ -175,10 +175,11 @@ export const BEAD_ANGLES: Record<number, number> = {
   9: 230,
 };
 
-/** Progress ring radius (100px) and canvas dimensions */
-export const PROGRESS_R = 100;
-export const ORBIT_SIZE = 300;
-export const ORBIT_CENTER = 150;
+/** Progress ring radius (120px) and orbital icon radius (165px) — clean 25px gap between ring and icons */
+export const PROGRESS_R = 120;
+export const ICON_R = 165;
+export const ORBIT_SIZE = 360;
+export const ORBIT_CENTER = 180;
 
 export interface OrbitSegmentData {
   segmentIndex: number;
@@ -206,8 +207,8 @@ function parseRgbString(rgbStr: string): [number, number, number] {
 }
 
 /**
- * Pre-computes the 9 continuous arc segments on the progress ring (R=100).
- * Every segment has an identical 40° span and identical arc length (69.81px).
+ * Pre-computes the 9 continuous arc segments on the progress ring (R=120).
+ * Every segment has an identical 40° span and identical arc length (83.78px).
  * Node 1 is at 270° (top), progressing clockwise in exact 40° increments.
  */
 export function buildOrbitSegments(): OrbitSegmentData[] {
@@ -226,7 +227,7 @@ export function buildOrbitSegments(): OrbitSegmentData[] {
     let span = a2 - a1;
     if (span <= 0) span += 360;
 
-    // Identical arc length for all segments: (40 / 360) * 2 * PI * 100 = 69.81px
+    // Identical arc length for all segments: (40 / 360) * 2 * PI * 120 = 83.78px
     const arcLength = parseFloat(((span / 360) * 2 * Math.PI * R).toFixed(2));
 
     const rad1 = (a1 * Math.PI) / 180;
@@ -275,86 +276,87 @@ export interface NodePositionData {
 
 /**
  * Precomputed 360-degree circular positions for all 9 orbital nodes and cards.
- * Exact 40° intervals centered around Vedika with clean spacing.
+ * Ring R=120px, Icons at R=165px (clean 25px gap so ring never overlaps icons).
+ * Generous card spacing with zero overlap between consecutive nodes.
  */
 export const NODE_POSITIONS: Record<number, NodePositionData> = {
   1: {
     iconCx: 0,
-    iconCy: -100,
+    iconCy: -165,
     cardCss: {
       left: 'calc(50% - 105px)',
-      bottom: 'calc(50% + 128px)',
+      bottom: 'calc(50% + 193px)',
     },
   },
   2: {
-    iconCx: 64,
-    iconCy: -77,
+    iconCx: 106,
+    iconCy: -126,
     cardCss: {
-      left: 'calc(50% + 92px)',
-      top: 'calc(50% - 100px)',
+      left: 'calc(50% + 134px)',
+      top: 'calc(50% - 150px)',
     },
   },
   3: {
-    iconCx: 98,
-    iconCy: -17,
+    iconCx: 162,
+    iconCy: -29,
     cardCss: {
-      left: 'calc(50% + 126px)',
-      top: 'calc(50% - 42px)',
+      left: 'calc(50% + 190px)',
+      top: 'calc(50% - 53px)',
     },
   },
   4: {
-    iconCx: 87,
-    iconCy: 50,
+    iconCx: 143,
+    iconCy: 83,
     cardCss: {
-      left: 'calc(50% + 115px)',
-      top: 'calc(50% + 28px)',
+      left: 'calc(50% + 171px)',
+      top: 'calc(50% + 59px)',
     },
   },
   5: {
-    iconCx: 34,
-    iconCy: 94,
+    iconCx: 56,
+    iconCy: 155,
     cardCss: {
-      left: 'calc(50% + 62px)',
-      top: 'calc(50% + 88px)',
+      left: 'calc(50% + 84px)',
+      top: 'calc(50% + 131px)',
     },
   },
   6: {
-    iconCx: -34,
-    iconCy: 94,
+    iconCx: -56,
+    iconCy: 155,
     cardCss: {
-      right: 'calc(50% + 62px)',
-      top: 'calc(50% + 88px)',
+      right: 'calc(50% + 84px)',
+      top: 'calc(50% + 131px)',
     },
   },
   7: {
-    iconCx: -87,
-    iconCy: 50,
+    iconCx: -143,
+    iconCy: 83,
     cardCss: {
-      right: 'calc(50% + 115px)',
-      top: 'calc(50% + 28px)',
+      right: 'calc(50% + 171px)',
+      top: 'calc(50% + 59px)',
     },
   },
   8: {
-    iconCx: -98,
-    iconCy: -17,
+    iconCx: -162,
+    iconCy: -29,
     cardCss: {
-      right: 'calc(50% + 126px)',
-      top: 'calc(50% - 42px)',
+      right: 'calc(50% + 190px)',
+      top: 'calc(50% - 53px)',
     },
   },
   9: {
-    iconCx: -64,
-    iconCy: -77,
+    iconCx: -106,
+    iconCy: -126,
     cardCss: {
-      right: 'calc(50% + 92px)',
-      top: 'calc(50% - 100px)',
+      right: 'calc(50% + 134px)',
+      top: 'calc(50% - 150px)',
     },
   },
 };
 
-/** Initial bead position (Node 1, top center, 270°) */
+/** Initial bead position (Node 1, top center, 270°, on R=120) */
 export const BEAD_START_X = ORBIT_CENTER;
-export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 150 - 95 = 55
+export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 180 - 120 = 60
 
 /** Recommended cinematic timeline timings (in ms) */
 export const ORBIT_TIMINGS = {

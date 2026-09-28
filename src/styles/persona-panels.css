@@ -412,27 +412,53 @@
 /* ==========================================================================
    STUDENT CONTENT: HEADER & ORBITAL COMPOSITION (FROM USER REFERENCE IMAGE)
    ========================================================================== */
-.student-header-box {
-  margin-bottom: 8px;
-  flex-shrink: 0;
-}
-
-.student-eyebrow {
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.10em;
-  color: #C084FC;
+.ecosystem-header-box {
   margin-bottom: 4px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
 }
 
-.student-main-title {
-  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
+.ecosystem-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #D8B4FE;
+  margin-bottom: 5px;
+}
+
+.ecosystem-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A855F7;
+  box-shadow: 0 0 8px #A855F7;
+}
+
+.ecosystem-main-title {
+  font-size: clamp(1.20rem, 1.7vw, 1.55rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   margin: 0;
   color: #FFFFFF;
-  line-height: 1.22;
+  line-height: 1.24;
+}
+
+.ecosystem-main-title .highlight-gradient {
+  background: linear-gradient(135deg, #EC4899 0%, #A855F7 50%, #38BDF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 /* Symmetrical Orbital Stage for Student */
