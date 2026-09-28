@@ -36,7 +36,7 @@ export default function OrbitFeatureNode({
       case 'study-companion':
         return <Clock size={15} strokeWidth={2.4} />;
       case 'non-judgmental':
-        return <Heart size={15} strokeWidth={2.4} fill="currentColor" fillOpacity={0.3} />;
+        return <Heart size={15} strokeWidth={2.4} fill="currentColor" fillOpacity={0.35} />;
       case 'own-pace':
         return <Compass size={15} strokeWidth={2.4} />;
       case 'concept-clarity':
@@ -82,12 +82,12 @@ export default function OrbitFeatureNode({
       }}
       aria-label={`${feature.title}: ${feature.shortLabel}`}
     >
-      {/* 1. Icon Badge (Anchored directly on the circular orbit ring) */}
+      {/* 1. Icon Badge (Anchored on the circular orbit ring) */}
       <div className="orbit-circle-icon-badge" title={`0${feature.index} • ${feature.title}`}>
         {getIcon(feature.id)}
       </div>
 
-      {/* 2. Text Content Drawer (Expands outward from the icon) */}
+      {/* 2. Text Content Drawer (Flows outward from the icon) */}
       <div className="orbit-drawer-card">
         <div className="drawer-header-row">
           <span className="drawer-short-tag">{feature.shortLabel}</span>
@@ -95,6 +95,9 @@ export default function OrbitFeatureNode({
         </div>
         <div className="drawer-title-text">{feature.title}</div>
         <p className="drawer-desc-text">{feature.desc}</p>
+
+        {/* Fluid Neon Sweep Wave on Reveal */}
+        <div className="drawer-shimmer-sweep" aria-hidden="true" />
       </div>
     </div>
   );
