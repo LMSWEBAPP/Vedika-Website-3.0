@@ -307,6 +307,7 @@ export default function HomePage() {
         }}
       >
         {/* PAGE 1: Editorial Introduction */}
+        {/* PAGE 1: Editorial Introduction */}
         <div
           style={{
             position: 'absolute',
@@ -321,6 +322,7 @@ export default function HomePage() {
             transform: `translate3d(0, ${-scrollProgress * 50}px, 0)`,
             transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
             pointerEvents: scrollProgress < 0.4 ? 'auto' : 'none',
+            visibility: scrollProgress < 0.6 ? 'visible' : 'hidden',
           }}
         >
           <div aria-hidden="true" className="page1-spacer" />
@@ -338,6 +340,7 @@ export default function HomePage() {
             transform: `translate3d(0, ${(1 - scrollProgress) * 35}px, 0)`,
             transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
             pointerEvents: scrollProgress >= 0.4 && scrollProgress <= 1.45 ? 'auto' : 'none',
+            visibility: scrollProgress >= 0.3 && scrollProgress <= 1.5 ? 'visible' : 'hidden',
           }}
         >
           <InteractionSection />
@@ -352,6 +355,7 @@ export default function HomePage() {
             transform: `translate3d(0, ${(1 - p3Ease) * 28}px, 0)`,
             transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
             pointerEvents: scrollProgress >= 1.8 && scrollProgress <= 2.2 ? 'auto' : 'none',
+            visibility: scrollProgress >= 1.6 && scrollProgress <= 2.35 ? 'visible' : 'hidden',
           }}
         >
           <ExplorationSection />
@@ -365,7 +369,8 @@ export default function HomePage() {
             opacity: p4UiOpacity,
             transform: `translate3d(0, ${(1 - p4Ease) * 28}px, 0)`,
             transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
-            pointerEvents: scrollProgress >= 2.7 && scrollProgress <= 3.3 ? 'auto' : 'none',
+            pointerEvents: scrollProgress >= 2.45 && scrollProgress <= 3.55 ? 'auto' : 'none',
+            visibility: scrollProgress >= 2.45 && scrollProgress <= 3.55 ? 'visible' : 'hidden',
           }}
         >
           <ParticleSphereSection />
@@ -380,6 +385,7 @@ export default function HomePage() {
             transform: `translate3d(0, ${(1 - p5Ease) * 28}px, 0)`,
             transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
             pointerEvents: scrollProgress >= 3.45 ? 'auto' : 'none',
+            visibility: scrollProgress >= 3.35 ? 'visible' : 'hidden',
           }}
         >
           <ProblemSolutionSection />

@@ -207,13 +207,13 @@ export function VedikaModel() {
       ref={groupRef}
       position={[isMobile ? 0 : values.posX, values.posY, 0]}
       onClick={(e) => {
-        if (scrollProgress >= 2.6 && scrollProgress <= 3.3) {
+        if (scrollProgress >= 2.45 && scrollProgress <= 3.55) {
           e.stopPropagation();
           setIsLabsExpanded((prev) => !prev);
         }
       }}
       onPointerOver={(e) => {
-        if (scrollProgress >= 2.6 && scrollProgress <= 3.3) {
+        if (scrollProgress >= 2.45 && scrollProgress <= 3.55) {
           e.stopPropagation();
           document.body.style.cursor = 'pointer';
         }

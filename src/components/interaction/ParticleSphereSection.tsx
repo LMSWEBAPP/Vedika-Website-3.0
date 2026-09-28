@@ -7,11 +7,11 @@ import { Sparkles, X } from 'lucide-react';
 export function ParticleSphereSection() {
   const { scrollProgress, isLabsExpanded, setIsLabsExpanded } = useInteraction();
 
-  const isPage4Active = scrollProgress >= 2.65 && scrollProgress <= 3.35;
+  const isPage4Active = scrollProgress >= 2.45 && scrollProgress <= 3.55;
 
   // Auto collapse if user scrolls back to previous pages or forward to Page 5
   React.useEffect(() => {
-    if ((scrollProgress < 2.45 || scrollProgress > 3.35) && isLabsExpanded) {
+    if ((scrollProgress < 2.25 || scrollProgress > 3.65) && isLabsExpanded) {
       setIsLabsExpanded(false);
     }
   }, [scrollProgress, isLabsExpanded, setIsLabsExpanded]);
@@ -33,14 +33,17 @@ export function ParticleSphereSection() {
     >
       {/* INVISIBLE CENTRAL CLICK TRIGGER DIRECTLY OVER VEDIKA (Centered at 50%) */}
       <div
-        onClick={() => setIsLabsExpanded((prev) => !prev)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsLabsExpanded((prev) => !prev);
+        }}
         style={{
           position: 'absolute',
           left: '50%',
           top: '50%',
           transform: 'translate(-50%, -50%)',
-          width: '230px',
-          height: '280px',
+          width: '270px',
+          height: '340px',
           borderRadius: '50%',
           cursor: 'pointer',
           pointerEvents: 'auto',
@@ -154,7 +157,10 @@ export function ParticleSphereSection() {
 
       {/* SUBTLE BOTTOM TOGGLE PILL OPTIMIZED FOR PURE WHITE BACKGROUND */}
       <div
-        onClick={() => setIsLabsExpanded((prev) => !prev)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsLabsExpanded((prev) => !prev);
+        }}
         style={{
           position: 'absolute',
           bottom: 'clamp(2.0rem, 4.5vh, 3.2rem)',
