@@ -274,14 +274,14 @@ export default function PersonaPanelsSection() {
               <circle cx="615" cy="345" r="3.5" fill="#F43F5E" />
 
               {/* 8. Bottom-Left (Sky Blue) */}
-              <path d="M 430 390 C 340 440, 250 480, 180 520" stroke="rgba(2, 132, 199, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="430" cy="390" r="7" fill="#0284C7" opacity="0.25" />
-              <circle cx="430" cy="390" r="3.5" fill="#0284C7" />
+              <path d="M 440 395 C 380 445, 320 495, 265 545" stroke="rgba(2, 132, 199, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="440" cy="395" r="7" fill="#0284C7" opacity="0.25" />
+              <circle cx="440" cy="395" r="3.5" fill="#0284C7" />
 
               {/* 9. Bottom-Right (Violet) */}
-              <path d="M 570 390 C 660 440, 750 480, 820 520" stroke="rgba(139, 92, 246, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
-              <circle cx="570" cy="390" r="7" fill="#8B5CF6" opacity="0.25" />
-              <circle cx="570" cy="390" r="3.5" fill="#8B5CF6" />
+              <path d="M 560 395 C 620 445, 680 495, 735 545" stroke="rgba(139, 92, 246, 0.50)" strokeWidth="1.6" strokeDasharray="3 3" fill="none" />
+              <circle cx="560" cy="395" r="7" fill="#8B5CF6" opacity="0.25" />
+              <circle cx="560" cy="395" r="3.5" fill="#8B5CF6" />
             </svg>
 
             {/* Central 3D Vedika Pod (Perfect Concentric Circular Framing) */}
@@ -352,7 +352,6 @@ export default function PersonaPanelsSection() {
                 src="/assets/human-student.png"
                 width={270}
                 height={335}
-                particleStep={2.85}
               />
             </div>
 

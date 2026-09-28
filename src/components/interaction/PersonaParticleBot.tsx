@@ -19,7 +19,7 @@ export default function PersonaParticleBot({
   width = 280,
   height = 350,
   className = '',
-  particleStep = 2.85,
+  particleStep = 1.5,
 }: PersonaParticleBotProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -62,11 +62,10 @@ export default function PersonaParticleBot({
 
     function sampleFromImage(sourceImg: HTMLImageElement) {
       updateCanvasSize();
-      // Step of 2.85px with 0.8px-1.15px radius creates clearly distinct, beautifully separated starlight particles
-      // This eliminates solid pixelated bitmap density and makes the character look made of genuine glowing particles.
-      const step = particleStep || 2.85;
+      // Step of 2.05px with 1.05px radius creates distinct, beautifully separated starlight particles
+      const step = particleStep || 2.05;
       const imageSrc = sourceImg?.currentSrc || sourceImg?.src || src;
-      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v25_particles`;
+      const cacheKey = `${imageSrc}_${width}_${height}_s${step}_v10_particles`;
 
       if (TARGET_CACHE.has(cacheKey)) {
         const cached = TARGET_CACHE.get(cacheKey)!;
@@ -132,14 +131,14 @@ export default function PersonaParticleBot({
           // Discard pure solid white background padding
           if (luminance > 248 && maxC - minC < 8 && a > 240) continue;
 
-          // Pure, vibrant, prominent color tuning
+          // Pure, saturated, prominent color tuning
           const avg = (r + g + b) / 3;
-          const satFactor = 1.35;
+          const satFactor = 1.40;
           let cr = avg + (r - avg) * satFactor;
           let cg = avg + (g - avg) * satFactor;
           let cb = avg + (b - avg) * satFactor;
 
-          const brightFactor = 1.18;
+          const brightFactor = 1.22;
           cr *= brightFactor;
           cg *= brightFactor;
           cb *= brightFactor;
@@ -157,20 +156,11 @@ export default function PersonaParticleBot({
             baseB = Math.min(255, Math.round(baseB + lift * 0.92));
           }
 
-          // Varied particle radii: bright highlights get 1.12px, midtones 0.95px, shadows 0.76px
-          // With 2.85px step, there is a clear, visible ~0.9px - 1.3px gap between particles!
-          let pRadius = 0.95;
-          if (lum > 170) {
-            pRadius = 1.12;
-          } else if (lum < 70) {
-            pRadius = 0.76;
-          }
+          // 1.05px radius circular particle (diameter 2.1px) with 2.05px step gives genuine particle dispersion
+          const pRadius = 1.05;
 
           const relX = x * scaleX;
           const relY = y * scaleY;
-
-          // Unique phase for twinkling scintillation
-          const twinklePhase = ((Math.floor(x) * 17 + Math.floor(y) * 31) % 100) / 100 * Math.PI * 2;
 
           targets.push({
             relX,
@@ -179,7 +169,6 @@ export default function PersonaParticleBot({
             baseR,
             baseG,
             baseB,
-            twinklePhase,
           });
         }
       }
@@ -203,7 +192,6 @@ export default function PersonaParticleBot({
           baseR: t.baseR,
           baseG: t.baseG,
           baseB: t.baseB,
-          twinklePhase: t.twinklePhase,
         });
       }
 
@@ -219,8 +207,8 @@ export default function PersonaParticleBot({
     img.src = src;
 
     // Genuine Starlight Particle Hologram Render Loop:
-    // - Circular arc dots with delicate optical spacing (distinct starry particles, NOT blocky solid pixels)
-    // - Twinkling starlight scintillation across particles
+    // - Circular arc dots with delicate optical spacing (NOT blocky square pixels)
+    // - Subtle micro-shimmer across particles
     // - Stable figure with whole-body gentle organic breathing
     const render = () => {
       if (!isMounted) return;
@@ -233,17 +221,17 @@ export default function PersonaParticleBot({
         const robotY = (canvasHeight - targetHeight) / 2;
 
         // Subtle organic breathing motion for the entire figure
-        const breathY = Math.sin(time * 1.1) * 1.5;
+        const breathY = Math.sin(time * 1.1) * 1.4;
 
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
           const px = robotX + p.relX;
           const py = robotY + p.relY + breathY;
 
-          // Twinkling starlight alpha gives unmistakable particle hologram depth
-          const twinkle = 0.72 + 0.28 * Math.sin(time * 2.3 + p.twinklePhase);
+          // Subtle organic starlight shimmer gives undeniable holographic particle depth
+          const alpha = 0.85 + Math.sin(time * 2.2 + p.pindex * 0.32) * 0.15;
 
-          ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${twinkle.toFixed(3)})`;
+          ctx.fillStyle = `rgba(${p.baseR}, ${p.baseG}, ${p.baseB}, ${alpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(px, py, p.radius, 0, 6.28318);
           ctx.fill();

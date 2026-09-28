@@ -440,14 +440,12 @@
   position: relative;
   width: 100%;
   flex: 1;
-  min-height: 0;
-  height: 100%;
-  max-height: 100%;
-  overflow: visible !important;
+  min-height: 500px;
+  max-height: calc(100vh - 130px);
+  overflow: hidden !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
 }
 
 /* SVG Circuit / Orbital Path Lines */
@@ -564,14 +562,14 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 8px 11px 9px;
+  padding: 10px 12px 11px;
   border-radius: 14px;
   background: linear-gradient(150deg, rgba(17, 24, 39, 0.95) 0%, rgba(9, 14, 26, 0.98) 100%);
   backdrop-filter: blur(14px);
   box-sizing: border-box;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
   z-index: 12;
-  width: clamp(148px, 12vw, 168px);
+  width: clamp(155px, 13vw, 175px);
   border: 1.5px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -581,50 +579,51 @@
 }
 
 /* 9 Specific Non-Overlapping Positions with Even Spacing */
+/* Top-Center has 24px clearance from top edge so its badge is never cut off */
 .student-capsule-card.pos-top-center {
-  top: 18px;
+  top: 24px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .student-capsule-card.pos-top-left {
-  top: 18px;
+  top: 24px;
   left: 5%;
 }
 
 .student-capsule-card.pos-top-right {
-  top: 18px;
+  top: 24px;
   right: 5%;
 }
 
 .student-capsule-card.pos-mid-left {
-  top: 25%;
+  top: 26%;
   left: 0.5%;
 }
 
 .student-capsule-card.pos-mid-right {
-  top: 25%;
+  top: 26%;
   right: 0.5%;
 }
 
 .student-capsule-card.pos-lower-left {
-  top: 50%;
+  top: 52%;
   left: 0.5%;
 }
 
 .student-capsule-card.pos-lower-right {
-  top: 50%;
+  top: 52%;
   right: 0.5%;
 }
 
 .student-capsule-card.pos-bottom-left {
-  bottom: 24px;
-  left: 10%;
+  bottom: 18px;
+  left: 18%;
 }
 
 .student-capsule-card.pos-bottom-right {
-  bottom: 24px;
-  right: 10%;
+  bottom: 18px;
+  right: 18%;
 }
 
 /* Eye-Catching Circular Icon Badges */
@@ -1071,92 +1070,5 @@
     padding-top: 10px;
     border-left: none;
     border-top: 2px solid rgba(245, 158, 11, 0.35);
-  }
-}
-
-/* ==========================================================================
-   RESPONSIVE COMPACT VIEWPORTS (14-INCH LAPTOPS / HIGH-DPI SCALING)
-   Guarantees 100% zero-clipping and full visibility of bottom cards on all screens
-   ========================================================================== */
-@media (max-height: 820px) {
-  .persona-panels-wrapper {
-    padding-top: 52px;
-  }
-  .student-header-box {
-    margin-bottom: 4px;
-  }
-  .student-eyebrow {
-    font-size: 0.68rem;
-    margin-bottom: 2px;
-  }
-  .student-main-title {
-    font-size: clamp(1.22rem, 1.85vw, 1.55rem);
-  }
-  .student-capsule-card {
-    padding: 7px 10px 8px;
-    width: clamp(140px, 11.5vw, 158px);
-  }
-  .capsule-title {
-    font-size: 0.74rem;
-    margin: 3px 0 2px 0;
-  }
-  .capsule-desc {
-    font-size: 0.61rem;
-    line-height: 1.24;
-  }
-  .student-capsule-card.pos-bottom-left {
-    bottom: 18px;
-    left: 8.5%;
-  }
-  .student-capsule-card.pos-bottom-right {
-    bottom: 18px;
-    right: 8.5%;
-  }
-  .orbital-center-pod {
-    width: 220px;
-    height: 220px;
-  }
-  .concentric-ring.outer-ring {
-    width: 240px;
-    height: 240px;
-  }
-  .concentric-ring.inner-ring,
-  .orbital-center-canvas {
-    width: 180px;
-    height: 180px;
-  }
-}
-
-@media (max-height: 720px) {
-  .persona-panels-wrapper {
-    padding-top: 44px;
-  }
-  .student-main-title {
-    font-size: 1.12rem;
-  }
-  .student-capsule-card {
-    padding: 5px 8px 6px;
-    width: 135px;
-  }
-  .capsule-icon-badge {
-    width: 22px;
-    height: 22px;
-    top: -11px;
-  }
-  .capsule-title {
-    font-size: 0.68rem;
-    margin: 2px 0 1px 0;
-  }
-  .capsule-desc {
-    font-size: 0.57rem;
-    line-height: 1.18;
-  }
-  .student-capsule-card.pos-bottom-left {
-    bottom: 12px;
-    left: 7.5%;
-  }
-  .student-capsule-card.pos-bottom-right {
-    bottom: 12px;
-    right: 7.5%;
   }
 }
