@@ -96,7 +96,7 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
 
   return (
     <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
-      {/* 1. OUTER HYPERCUBE (24K Polished Gold Wireframe) */}
+      {/* 1. OUTER HYPERCUBE (High-Contrast Metallic Cobalt & Royal Indigo) */}
       <group ref={outerCubeRef}>
         {/* 12 Outer Frame Struts */}
         {/* 4 Struts along X */}
@@ -109,11 +109,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
             >
               <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
               <meshStandardMaterial
-                color="#F59E0B"
-                emissive="#D97706"
-                emissiveIntensity={0.65}
+                color="#1E3A8A"
+                emissive="#2563EB"
+                emissiveIntensity={0.85}
                 metalness={0.92}
-                roughness={0.15}
+                roughness={0.12}
               />
             </mesh>
           ))
@@ -124,11 +124,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
             <mesh key={`oy-${i}-${j}`} position={[sx * Rout, 0, sz * Rout]}>
               <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
               <meshStandardMaterial
-                color="#F59E0B"
-                emissive="#D97706"
-                emissiveIntensity={0.65}
+                color="#1E3A8A"
+                emissive="#2563EB"
+                emissiveIntensity={0.85}
                 metalness={0.92}
-                roughness={0.15}
+                roughness={0.12}
               />
             </mesh>
           ))
@@ -143,17 +143,17 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
             >
               <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
               <meshStandardMaterial
-                color="#F59E0B"
-                emissive="#D97706"
-                emissiveIntensity={0.65}
+                color="#1E3A8A"
+                emissive="#2563EB"
+                emissiveIntensity={0.85}
                 metalness={0.92}
-                roughness={0.15}
+                roughness={0.12}
               />
             </mesh>
           ))
         )}
 
-        {/* 8 Outer Vertex Jewels */}
+        {/* 8 Outer Vertex Jewels (Electric Neon Cyan) */}
         {signs.map((sx, i) =>
           signs.map((sy, j) =>
             signs.map((sz, k) => (
@@ -163,10 +163,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
               >
                 <sphereGeometry args={[0.0075, 12, 12]} />
                 <meshStandardMaterial
-                  color="#FCD34D"
-                  emissive="#F59E0B"
-                  emissiveIntensity={1.4}
-                  metalness={0.95}
+                  color="#00F0FF"
+                  emissive="#06B6D4"
+                  emissiveIntensity={2.5}
                   roughness={0.1}
                 />
               </mesh>
@@ -174,21 +173,21 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
           )
         )}
 
-        {/* 8 Diagonal 4D Dimension Vectors bridging outer to inner frame */}
+        {/* 8 Diagonal 4D Dimension Vectors (Luminous Ice Cyan) */}
         {diagonalStruts.map((s, idx) => (
           <mesh key={`diag-${idx}`} position={s.position} rotation={s.rotation}>
             <cylinderGeometry args={[0.0028, 0.0028, s.length, 8]} />
             <meshStandardMaterial
-              color="#FBBF24"
-              emissive="#D97706"
-              emissiveIntensity={0.8}
-              metalness={0.9}
+              color="#0284C7"
+              emissive="#38BDF8"
+              emissiveIntensity={1.0}
+              metalness={0.85}
               roughness={0.15}
             />
           </mesh>
         ))}
 
-        {/* 2. INNER CORE CUBE (Luminous Golden Hyper-Core) */}
+        {/* 2. INNER CORE CUBE (Radiant Electric Cyan Hyper-Core) */}
         <group ref={innerCubeRef}>
           {/* 12 Inner Frame Struts */}
           {signs.map((sy, i) =>
@@ -200,11 +199,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
               >
                 <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
                 <meshStandardMaterial
-                  color="#FDE68A"
-                  emissive="#F59E0B"
-                  emissiveIntensity={1.2}
+                  color="#22D3EE"
+                  emissive="#06B6D4"
+                  emissiveIntensity={1.5}
                   metalness={0.85}
-                  roughness={0.12}
+                  roughness={0.1}
                 />
               </mesh>
             ))
@@ -214,11 +213,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
               <mesh key={`iy-${i}-${j}`} position={[sx * Rin, 0, sz * Rin]}>
                 <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
                 <meshStandardMaterial
-                  color="#FDE68A"
-                  emissive="#F59E0B"
-                  emissiveIntensity={1.2}
+                  color="#22D3EE"
+                  emissive="#06B6D4"
+                  emissiveIntensity={1.5}
                   metalness={0.85}
-                  roughness={0.12}
+                  roughness={0.1}
                 />
               </mesh>
             ))
@@ -232,11 +231,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
               >
                 <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
                 <meshStandardMaterial
-                  color="#FDE68A"
-                  emissive="#F59E0B"
-                  emissiveIntensity={1.2}
+                  color="#22D3EE"
+                  emissive="#06B6D4"
+                  emissiveIntensity={1.5}
                   metalness={0.85}
-                  roughness={0.12}
+                  roughness={0.1}
                 />
               </mesh>
             ))
@@ -253,21 +252,21 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
                   <sphereGeometry args={[0.006, 12, 12]} />
                   <meshStandardMaterial
                     color="#FFFFFF"
-                    emissive="#FCD34D"
-                    emissiveIntensity={2.0}
+                    emissive="#E0F2FE"
+                    emissiveIntensity={2.5}
                   />
                 </mesh>
               ))
             )
           )}
 
-          {/* 3. CENTRAL SINGULARITY GEM (Glowing Diamond Icosahedron) */}
+          {/* 3. CENTRAL SINGULARITY GEM (Glowing Diamond Magenta / White Icosahedron) */}
           <mesh ref={gemRef}>
             <icosahedronGeometry args={[0.016, 0]} />
             <meshStandardMaterial
               color="#FFFFFF"
-              emissive="#F59E0B"
-              emissiveIntensity={2.5}
+              emissive="#EC4899"
+              emissiveIntensity={3.0}
               metalness={0.8}
               roughness={0.08}
             />
@@ -275,14 +274,14 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         </group>
       </group>
 
-      {/* 4. CELESTIAL ASTROLABE RINGS (4D Mathematical Coordinates) */}
+      {/* 4. CELESTIAL ASTROLABE RINGS (High-Contrast Sapphire & Cyan) */}
       <group ref={ring1Ref}>
         <mesh>
           <torusGeometry args={[0.116, 0.0035, 16, 48]} />
           <meshStandardMaterial
-            color="#D97706"
-            emissive="#B45309"
-            emissiveIntensity={0.7}
+            color="#1D4ED8"
+            emissive="#3B82F6"
+            emissiveIntensity={0.9}
             metalness={0.9}
             roughness={0.15}
           />
@@ -290,11 +289,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         {/* Cardinal Coordinate Markers */}
         <mesh position={[0.116, 0, 0]}>
           <sphereGeometry args={[0.009, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FCD34D" emissiveIntensity={2.0} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#38BDF8" emissiveIntensity={2.2} />
         </mesh>
         <mesh position={[-0.116, 0, 0]}>
           <sphereGeometry args={[0.009, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FCD34D" emissiveIntensity={2.0} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#38BDF8" emissiveIntensity={2.2} />
         </mesh>
       </group>
 
@@ -302,20 +301,20 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh>
           <torusGeometry args={[0.116, 0.0028, 16, 48]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={0.6}
+            color="#06B6D4"
+            emissive="#22D3EE"
+            emissiveIntensity={0.8}
             metalness={0.9}
-            roughness={0.2}
+            roughness={0.15}
           />
         </mesh>
         <mesh position={[0, 0.116, 0]}>
           <sphereGeometry args={[0.008, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#F59E0B" emissiveIntensity={2.0} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#00F0FF" emissiveIntensity={2.2} />
         </mesh>
       </group>
 
-      <pointLight color="#F59E0B" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
+      <pointLight color="#38BDF8" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
     </group>
   );
 }
@@ -358,114 +357,117 @@ export function PhysicsLab3D({ hovered }: { hovered: boolean }) {
 
   return (
     <group ref={groupRef} scale={hovered ? 1.05 : 0.94}>
-      {/* 1. Bold Solid Nucleus (Multi-particle cluster) */}
+      {/* 1. Bold Solid Nucleus (High-Contrast Fiery Ruby & Solar Amber Core) */}
       <group>
-        {/* Core Proton 1 */}
+        {/* Core Proton 1 (Blazing Ruby) */}
         <mesh position={[0.015, 0.012, 0.010]}>
           <sphereGeometry args={[0.026, 16, 16]} />
           <meshStandardMaterial
-            color="#0891B2"
-            emissive="#0284C7"
-            emissiveIntensity={1.2}
-            roughness={0.15}
+            color="#EF4444"
+            emissive="#DC2626"
+            emissiveIntensity={2.2}
+            roughness={0.12}
           />
         </mesh>
-        {/* Core Proton 2 */}
+        {/* Core Proton 2 (Solar Amber) */}
         <mesh position={[-0.015, -0.010, 0.012]}>
           <sphereGeometry args={[0.026, 16, 16]} />
           <meshStandardMaterial
-            color="#0284C7"
-            emissive="#0369A1"
-            emissiveIntensity={1.0}
-            roughness={0.15}
+            color="#F59E0B"
+            emissive="#D97706"
+            emissiveIntensity={2.0}
+            roughness={0.12}
           />
         </mesh>
-        {/* Core Neutron 1 */}
+        {/* Core Neutron 1 (Fiery Orange) */}
         <mesh position={[0.012, -0.015, -0.010]}>
           <sphereGeometry args={[0.024, 16, 16]} />
           <meshStandardMaterial
-            color="#06B6D4"
-            emissive="#0891B2"
-            emissiveIntensity={1.5}
-            roughness={0.15}
+            color="#EA580C"
+            emissive="#C2410C"
+            emissiveIntensity={2.0}
+            roughness={0.12}
           />
         </mesh>
-        {/* Core Neutron 2 */}
+        {/* Core Neutron 2 (Rose Gold / Ruby Glow) */}
         <mesh position={[-0.010, 0.015, -0.012]}>
           <sphereGeometry args={[0.024, 16, 16]} />
           <meshStandardMaterial
-            color="#22D3EE"
-            emissive="#06B6D4"
-            emissiveIntensity={1.8}
-            roughness={0.15}
+            color="#FB7185"
+            emissive="#E11D48"
+            emissiveIntensity={2.0}
+            roughness={0.12}
           />
         </mesh>
       </group>
 
-      {/* 2. Ring 1 */}
+      {/* 2. Ring 1 (24K Polished Gold) */}
       <group ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
         <mesh>
           <torusGeometry args={[0.11, 0.007, 16, 48]} />
           <meshStandardMaterial
-            color="#0891B2"
-            emissive="#06B6D4"
-            emissiveIntensity={0.8}
-            roughness={0.2}
+            color="#F59E0B"
+            emissive="#D97706"
+            emissiveIntensity={0.9}
+            metalness={0.95}
+            roughness={0.1}
           />
         </mesh>
         <mesh ref={e1Ref}>
           <sphereGeometry args={[0.020, 16, 16]} />
           <meshStandardMaterial
             color="#FFFFFF"
-            emissive="#22D3EE"
-            emissiveIntensity={2.5}
+            emissive="#FEF08A"
+            emissiveIntensity={3.2}
           />
         </mesh>
       </group>
 
-      {/* 3. Ring 2 */}
+      {/* 3. Ring 2 (Radiant Solar Copper) */}
       <group ref={ring2Ref} rotation={[-Math.PI / 4, Math.PI / 3, 0]}>
         <mesh>
           <torusGeometry args={[0.11, 0.007, 16, 48]} />
           <meshStandardMaterial
-            color="#0284C7"
-            emissive="#0891B2"
-            emissiveIntensity={0.8}
-            roughness={0.2}
+            color="#F97316"
+            emissive="#EA580C"
+            emissiveIntensity={0.9}
+            metalness={0.95}
+            roughness={0.1}
           />
         </mesh>
         <mesh ref={e2Ref}>
           <sphereGeometry args={[0.020, 16, 16]} />
           <meshStandardMaterial
             color="#FFFFFF"
-            emissive="#38BDF8"
-            emissiveIntensity={2.5}
+            emissive="#FDE047"
+            emissiveIntensity={3.2}
           />
         </mesh>
       </group>
 
-      {/* 4. Ring 3 */}
+      {/* 4. Ring 3 (Deep Gold Bronze) */}
       <group ref={ring3Ref} rotation={[0, -Math.PI / 3, Math.PI / 4]}>
         <mesh>
           <torusGeometry args={[0.11, 0.007, 16, 48]} />
           <meshStandardMaterial
-            color="#0E7490"
-            emissive="#06B6D4"
-            emissiveIntensity={0.8}
-            roughness={0.2}
+            color="#D97706"
+            emissive="#B45309"
+            emissiveIntensity={0.9}
+            metalness={0.95}
+            roughness={0.1}
           />
         </mesh>
         <mesh ref={e3Ref}>
           <sphereGeometry args={[0.020, 16, 16]} />
           <meshStandardMaterial
             color="#FFFFFF"
-            emissive="#22D3EE"
-            emissiveIntensity={2.5}
+            emissive="#FEF08A"
+            emissiveIntensity={3.2}
           />
         </mesh>
       </group>
 
-      <pointLight color="#06B6D4" intensity={hovered ? 3.0 : 2.2} distance={0.65} />
+      <pointLight color="#F59E0B" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
     </group>
   );
 }
@@ -598,34 +600,34 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
           />
         </mesh>
 
-        {/* Dense Glowing Chemical Liquid Core inside bulb */}
+        {/* Dense Glowing Chemical Liquid Core inside bulb (Bioluminescent Emerald) */}
         <mesh position={[0, -0.034, 0]}>
           <sphereGeometry args={[0.054, 24, 24]} />
           <meshStandardMaterial
-            color="#E11D48"
-            emissive="#BE123C"
-            emissiveIntensity={2.2}
-            roughness={0.2}
+            color="#10B981"
+            emissive="#059669"
+            emissiveIntensity={2.6}
+            roughness={0.15}
           />
         </mesh>
 
-        {/* Liquid Meniscus Cap */}
+        {/* Liquid Meniscus Cap (Radiant Mint Aqua) */}
         <mesh position={[0, 0.002, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <circleGeometry args={[0.042, 24]} />
-          <meshStandardMaterial color="#FDA4AF" emissive="#F43F5E" emissiveIntensity={1.8} />
+          <meshStandardMaterial color="#6EE7B7" emissive="#34D399" emissiveIntensity={2.2} />
         </mesh>
 
-        {/* Cylindrical Flask Neck */}
+        {/* Cylindrical Flask Neck (Translucent Ice Cyan Glass) */}
         <mesh position={[0, 0.042, 0]}>
           <cylinderGeometry args={[0.020, 0.022, 0.065, 24]} />
           <meshStandardMaterial
-            color="#BE123C"
-            emissive="#881337"
+            color="#06B6D4"
+            emissive="#0891B2"
             emissiveIntensity={0.6}
             metalness={0.2}
             roughness={0.12}
             transparent
-            opacity={0.50}
+            opacity={0.45}
           />
         </mesh>
 
@@ -633,9 +635,9 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[0, 0.074, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.020, 0.005, 16, 24]} />
           <meshStandardMaterial
-            color="#FB7185"
-            emissive="#E11D48"
-            emissiveIntensity={1.6}
+            color="#2DD4BF"
+            emissive="#0D9488"
+            emissiveIntensity={1.8}
             roughness={0.1}
           />
         </mesh>
@@ -644,47 +646,47 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[0, 0.086, 0]}>
           <coneGeometry args={[0.014, 0.022, 16]} />
           <meshStandardMaterial
-            color="#FDA4AF"
-            emissive="#F43F5E"
-            emissiveIntensity={1.5}
+            color="#A7F3D0"
+            emissive="#34D399"
+            emissiveIntensity={1.8}
             metalness={0.3}
             roughness={0.1}
           />
         </mesh>
 
-        {/* Active Effervescent Reaction Micro-Bubbles */}
+        {/* Active Effervescent Reaction Micro-Bubbles (Phosphorescent Cyan-White) */}
         <mesh ref={b1}>
           <sphereGeometry args={[0.009, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FDA4AF" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#67E8F9" emissiveIntensity={3.0} />
         </mesh>
         <mesh ref={b2}>
           <sphereGeometry args={[0.007, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FDA4AF" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#67E8F9" emissiveIntensity={3.0} />
         </mesh>
         <mesh ref={b3}>
           <sphereGeometry args={[0.006, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FDA4AF" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#67E8F9" emissiveIntensity={3.0} />
         </mesh>
         <mesh ref={b4}>
           <sphereGeometry args={[0.008, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FDA4AF" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#67E8F9" emissiveIntensity={3.0} />
         </mesh>
         <mesh ref={b5}>
           <sphereGeometry args={[0.005, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#FDA4AF" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#67E8F9" emissiveIntensity={3.0} />
         </mesh>
       </group>
 
-      {/* 2. FLOATING 3D BENZENE MOLECULAR LATTICE (C6H6) */}
+      {/* 2. FLOATING 3D BENZENE MOLECULAR LATTICE (Electric Cyan Turquoise & Pearl White) */}
       <group ref={benzeneRef} position={[0, 0.020, 0]}>
-        {/* Carbon Atoms (6 Ruby Spheres) */}
+        {/* Carbon Atoms (6 Electric Turquoise Spheres) */}
         {benzeneNodes.carbons.map((pos, idx) => (
           <mesh key={`c-${idx}`} position={pos}>
             <sphereGeometry args={[0.013, 16, 16]} />
             <meshStandardMaterial
-              color="#BE123C"
-              emissive="#9F1239"
-              emissiveIntensity={1.6}
+              color="#06B6D4"
+              emissive="#0891B2"
+              emissiveIntensity={2.0}
               roughness={0.15}
             />
           </mesh>
@@ -696,8 +698,8 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
             <sphereGeometry args={[0.008, 12, 12]} />
             <meshStandardMaterial
               color="#FFFFFF"
-              emissive="#FDA4AF"
-              emissiveIntensity={1.4}
+              emissive="#E0F2FE"
+              emissiveIntensity={2.0}
             />
           </mesh>
         ))}
@@ -707,9 +709,9 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
           <mesh key={`cc-bond-${idx}`} position={b.pos} rotation={b.rot}>
             <cylinderGeometry args={[0.0035, 0.0035, b.len, 8]} />
             <meshStandardMaterial
-              color="#E11D48"
-              emissive="#9F1239"
-              emissiveIntensity={0.9}
+              color="#14B8A6"
+              emissive="#0D9488"
+              emissiveIntensity={1.0}
               metalness={0.8}
             />
           </mesh>
@@ -720,45 +722,45 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
           <mesh key={`ch-bond-${idx}`} position={b.pos} rotation={b.rot}>
             <cylinderGeometry args={[0.0025, 0.0025, b.len, 8]} />
             <meshStandardMaterial
-              color="#FDA4AF"
-              emissive="#F43F5E"
-              emissiveIntensity={0.8}
+              color="#67E8F9"
+              emissive="#06B6D4"
+              emissiveIntensity={1.0}
               metalness={0.7}
             />
           </mesh>
         ))}
       </group>
 
-      {/* 3. GYROSCOPIC VALENCE ORBITALS (Quantum Atomic Clouds) */}
+      {/* 3. GYROSCOPIC VALENCE ORBITALS (High-Contrast Emerald & Solar Gold) */}
       <group ref={orbitalRef}>
         <mesh rotation={[Math.PI / 4, 0, Math.PI / 6]}>
           <torusGeometry args={[0.116, 0.0030, 16, 48]} />
           <meshStandardMaterial
-            color="#FB7185"
-            emissive="#E11D48"
-            emissiveIntensity={1.0}
+            color="#10B981"
+            emissive="#059669"
+            emissiveIntensity={1.2}
           />
         </mesh>
         <mesh position={[0.116, 0, 0]}>
           <sphereGeometry args={[0.010, 12, 12]} />
-          <meshStandardMaterial color="#06B6D4" emissive="#22D3EE" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#00F0FF" emissive="#06B6D4" emissiveIntensity={2.5} />
         </mesh>
 
         <mesh rotation={[-Math.PI / 3, Math.PI / 4, 0]}>
           <torusGeometry args={[0.116, 0.0030, 16, 48]} />
           <meshStandardMaterial
-            color="#E11D48"
-            emissive="#BE123C"
-            emissiveIntensity={1.0}
+            color="#F59E0B"
+            emissive="#D97706"
+            emissiveIntensity={1.2}
           />
         </mesh>
         <mesh position={[-0.116, 0, 0]}>
           <sphereGeometry args={[0.010, 12, 12]} />
-          <meshStandardMaterial color="#F59E0B" emissive="#FCD34D" emissiveIntensity={2.5} />
+          <meshStandardMaterial color="#FCD34D" emissive="#F59E0B" emissiveIntensity={2.5} />
         </mesh>
       </group>
 
-      <pointLight color="#E11D48" intensity={hovered ? 3.2 : 2.4} distance={0.65} />
+      <pointLight color="#10B981" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
     </group>
   );
 }

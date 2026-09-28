@@ -86,10 +86,9 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   },
 ];
 
-// Prominent particle count: 14 slices x 48 particles = 672 particles per sphere
-// Rich, luminous contour that stands out with high clarity on pure white!
-const SLICES_PER_SATELLITE = 14;
-const PARTICLES_PER_SLICE = 48;
+// Clean, delicate uniform particle sphere: 150 particles per sphere
+// Fibonacci sphere algorithm provides a perfectly isotropic, pattern-free spherical cloud!
+const PARTICLES_PER_SPHERE = 150;
 const BIG_SPHERE_RADIUS = 0.84;
 const MINI_SPHERE_SCALE = 0.28;
 
@@ -123,7 +122,6 @@ function createSparkleTexture(): THREE.Texture {
 export function SphericalParticleCage() {
   const mainGroupRef = useRef<THREE.Group | null>(null);
   const satelliteGroupRefs = useRef<(THREE.Group | null)[]>([]);
-  const satelliteSliceRefs = useRef<(THREE.Group | null)[][]>([[], [], [], [], []]);
   const iconGroupRefs = useRef<(THREE.Group | null)[]>([]);
   const transitionTRef = useRef<number>(0);
 
@@ -138,59 +136,55 @@ export function SphericalParticleCage() {
     return createSparkleTexture();
   }, []);
 
-  // Pre-generate clean slice geometries for each of the 5 satellites
+  // Pre-generate clean, uniform, pattern-free spherical point clouds using Fibonacci spiral
   const satelliteData = useMemo(() => {
-    const deg = Math.PI / 180;
-    return SATELLITE_LABS.map((lab) => {
-      const slices = [];
-      for (let ix = 0; ix < SLICES_PER_SATELLITE; ix++) {
-        const positions = new Float32Array(PARTICLES_PER_SLICE * 3);
-        const colors = new Float32Array(PARTICLES_PER_SLICE * 3);
+    const goldenRatio = (1 + Math.sqrt(5)) / 2;
+    const goldenAngle = 2 * Math.PI * (1 - 1 / goldenRatio);
 
-        for (let iy = 0; iy < PARTICLES_PER_SLICE; iy++) {
-          const theta = (iy / PARTICLES_PER_SLICE) * Math.PI * 2;
-          const r = BIG_SPHERE_RADIUS * (0.98 + Math.sin(iy * 4.2 + ix) * 0.02);
+    return SATELLITE_LABS.map((lab, labIdx) => {
+      const positions = new Float32Array(PARTICLES_PER_SPHERE * 3);
+      const colors = new Float32Array(PARTICLES_PER_SPHERE * 3);
 
-          positions[iy * 3] = Math.sin(theta) * r;
-          positions[iy * 3 + 1] = Math.cos(theta) * r;
-          positions[iy * 3 + 2] = Math.sin(theta * 2 + ix) * 0.012;
+      for (let i = 0; i < PARTICLES_PER_SPHERE; i++) {
+        // Uniform spherical distribution without rings, lines, or poles
+        const y = 1 - (i / (PARTICLES_PER_SPHERE - 1)) * 2;
+        const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
+        const phi = i * goldenAngle + labIdx * 0.9;
 
-          const c = new THREE.Color();
-          const ratio = iy / PARTICLES_PER_SLICE;
-          if (ratio < 0.6) {
-            c.set(lab.color1);
-          } else {
-            c.set(lab.color2);
-          }
+        // Subtle organic depth variation (0.97 to 1.02) for natural celestial look
+        const rVar = 0.97 + (((i * 13 + labIdx * 7) % 11) / 10) * 0.05;
+        const r = BIG_SPHERE_RADIUS * rVar;
 
-          colors[iy * 3] = c.r;
-          colors[iy * 3 + 1] = c.g;
-          colors[iy * 3 + 2] = c.b;
-        }
+        positions[i * 3] = Math.cos(phi) * radiusAtY * r;
+        positions[i * 3 + 1] = y * r;
+        positions[i * 3 + 2] = Math.sin(phi) * radiusAtY * r;
 
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        // Soft gradient color from color1 to color2
+        const c = new THREE.Color();
+        const ratio = (y + 1) / 2;
+        c.lerpColors(new THREE.Color(lab.color1), new THREE.Color(lab.color2), ratio);
 
-        const rotX = deg * ((ix / SLICES_PER_SATELLITE) * 180);
-        const rotY = deg * ((ix / SLICES_PER_SATELLITE) * 180 * 2);
-        const rotZ = deg * ((ix / SLICES_PER_SATELLITE) * 180 * 3);
-
-        slices.push({ geometry, rotX, rotY, rotZ });
+        colors[i * 3] = c.r;
+        colors[i * 3 + 1] = c.g;
+        colors[i * 3 + 2] = c.b;
       }
 
-      // Prominent, radiant particle size and high opacity for crisp visibility
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      // Delicate, soft starlight particles: smaller, clean, and not dense
       const material = new THREE.PointsMaterial({
-        size: isMobile ? 0.038 : 0.032,
+        size: isMobile ? 0.026 : 0.022,
         map: texture || undefined,
         vertexColors: true,
         transparent: true,
-        opacity: 0.98,
+        opacity: 0.80,
         blending: THREE.NormalBlending,
         depthWrite: false,
       });
 
-      return { lab, slices, material };
+      return { lab, geometry, material };
     });
   }, [texture, isMobile]);
 
@@ -227,9 +221,9 @@ export function SphericalParticleCage() {
 
     const posMultiplier = isMobile ? 0.78 : 1.0;
 
-    satelliteData.forEach(({ material }, idx) => {
-      // Keep mini spheres bright, vibrant, and prominent around the 3D icons
-      material.opacity = THREE.MathUtils.lerp(0.98, 0.88, easeT);
+    satelliteData.forEach(({ material }) => {
+      // Keep mini spheres subtle and airy around the 3D icons
+      material.opacity = THREE.MathUtils.lerp(0.85, 0.75, easeT);
     });
 
     SATELLITE_LABS.forEach((lab, idx) => {
@@ -247,21 +241,11 @@ export function SphericalParticleCage() {
       const targetScale = THREE.MathUtils.lerp(1.0, MINI_SPHERE_SCALE, easeT) * smoothReveal;
       satGroup.scale.set(targetScale, targetScale, targetScale);
 
-      // 3. Rotation
-      satGroup.rotation.y = THREE.MathUtils.lerp(lab.rotYOffset, 0, easeT);
+      // 3. Rotation: gentle, smooth celestial rotation of the particle sphere
+      satGroup.rotation.y = THREE.MathUtils.lerp(lab.rotYOffset, 0, easeT) + time * 0.08;
+      satGroup.rotation.x = Math.sin(time * 0.35 + idx) * 0.08;
 
-      // 4. Continuous starlight rotation for each individual slice
-      const sliceList = satelliteSliceRefs.current[idx];
-      if (sliceList) {
-        sliceList.forEach((slice, i) => {
-          if (!slice) return;
-          slice.rotation.x += 0.0016 + 0.00015 * i;
-          slice.rotation.y += 0.0020 + 0.00015 * i;
-          slice.rotation.z += 0.0024 + 0.00015 * i;
-        });
-      }
-
-      // 5. 3D Icon Scale: bold, prominent, and clearly visible inside the mini sphere
+      // 4. 3D Icon Scale: bold, prominent, and clearly visible inside the mini sphere
       const iconGroup = iconGroupRefs.current[idx];
       if (iconGroup) {
         const isHovered = hoveredLab === lab.id;
@@ -287,33 +271,8 @@ export function SphericalParticleCage() {
       <directionalLight position={[0, 4, 3]} intensity={1.8} />
 
       {/* THE 5 SATELLITE CLUSTERS */}
-      {satelliteData.map(({ lab, slices, material }, idx) => {
+      {satelliteData.map(({ lab, geometry, material }, idx) => {
         const isHovered = hoveredLab === lab.id;
-
-        // Label position relative to the satellite group:
-        // - Math Lab (top): centered above sphere [0, 1.02, 0]
-        // - Left Labs (Computer, Biology): anchored to the LEFT [-1.02, 0, 0]
-        // - Right Labs (Physics, Chemistry): anchored to the RIGHT [+1.02, 0, 0]
-        const labelPos: [number, number, number] =
-          lab.labelPlacement === 'top'
-            ? [0, 1.02, 0]
-            : lab.labelPlacement === 'left'
-            ? [-1.02, 0, 0]
-            : [1.02, 0, 0];
-
-        const labelTransform =
-          lab.labelPlacement === 'top'
-            ? 'translate(-50%, -100%)'
-            : lab.labelPlacement === 'left'
-            ? 'translate(-100%, -50%)'
-            : 'translate(0%, -50%)';
-
-        const labelMargin =
-          lab.labelPlacement === 'top'
-            ? { marginBottom: '8px' }
-            : lab.labelPlacement === 'left'
-            ? { marginRight: '14px' }
-            : { marginLeft: '14px' };
 
         return (
           <group
@@ -334,21 +293,8 @@ export function SphericalParticleCage() {
               document.body.style.cursor = 'auto';
             }}
           >
-            {/* A. The Starlight Particle Slices (subtle, clean, solid contour) */}
-            {slices.map((slice, i) => (
-              <group
-                key={i}
-                ref={(el) => {
-                  if (!satelliteSliceRefs.current[idx]) {
-                    satelliteSliceRefs.current[idx] = [];
-                  }
-                  satelliteSliceRefs.current[idx][i] = el;
-                }}
-                rotation={[slice.rotX, slice.rotY, slice.rotZ]}
-              >
-                <points geometry={slice.geometry} material={material} />
-              </group>
-            ))}
+            {/* A. Clean, pattern-free uniform particle sphere cloud */}
+            <points geometry={geometry} material={material} />
 
             {/* B. The 3D Lab Icon inside the mini particle sphere */}
             <group
