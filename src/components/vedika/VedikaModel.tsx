@@ -21,7 +21,7 @@ export function VedikaModel() {
   // Load existing Vedika model from public folder
   const { scene } = useGLTF('/vedika-M1.glb');
 
-  // Clone scene to isolate instances cleanly
+  // Clone scene to isolate instances cleanly with private materials
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
@@ -29,6 +29,13 @@ export function VedikaModel() {
         const mesh = child as THREE.Mesh;
         mesh.castShadow = false;
         mesh.receiveShadow = false;
+        if (mesh.material) {
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map((m) => m.clone());
+          } else {
+            mesh.material = (mesh.material as THREE.Material).clone();
+          }
+        }
       }
     });
     return clone;

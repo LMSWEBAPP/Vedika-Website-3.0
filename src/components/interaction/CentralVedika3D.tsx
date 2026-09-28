@@ -9,6 +9,7 @@ function VedikaRobotModel() {
   const { scene } = useGLTF('/vedika-M1.glb');
   const groupRef = useRef<THREE.Group | null>(null);
 
+  // Deep clone scene AND materials so other instances never alter our visibility or materials
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
@@ -16,6 +17,24 @@ function VedikaRobotModel() {
         const mesh = child as THREE.Mesh;
         mesh.castShadow = false;
         mesh.receiveShadow = false;
+
+        if (mesh.material) {
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map((m) => {
+              const newMat = m.clone();
+              newMat.transparent = false;
+              newMat.opacity = 1.0;
+              newMat.needsUpdate = true;
+              return newMat;
+            });
+          } else {
+            const newMat = (mesh.material as THREE.Material).clone();
+            newMat.transparent = false;
+            newMat.opacity = 1.0;
+            newMat.needsUpdate = true;
+            mesh.material = newMat;
+          }
+        }
       }
     });
     return clone;
@@ -30,7 +49,7 @@ function VedikaRobotModel() {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.06, 0]} scale={[0.55, 0.55, 0.55]}>
+    <group ref={groupRef} position={[0, -0.06, 0]} scale={[0.56, 0.56, 0.56]}>
       <primitive object={clonedScene} />
     </group>
   );
