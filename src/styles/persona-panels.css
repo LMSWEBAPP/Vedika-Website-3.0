@@ -1027,7 +1027,12 @@
   opacity: 1;
   filter: blur(0px);
   z-index: 10;
-  cursor: default;
+  cursor: pointer;
+}
+
+.teacher-slide-card.active-center:hover,
+.teacher-slide-card.active-center:focus-within {
+  z-index: 50;
 }
 
 /* 2. Next Right Card */
@@ -1079,10 +1084,10 @@
 
 /* ==========================================================================
    SLIDE 1: Traditional Friction (Top Outer Card)
-   - Inactive / Default State:
+   - Default State:
      Sits at transform: translateY(100px); z-index: 2; border-radius: 20px;
-   - Active Center State (Smoothly sliding up to 0px):
-     transform: translateY(0px);
+   - On Hover State (CodePen exact behavior):
+     Smoothly slides up to translateY(0px) in .7s;
      border-radius: 20px 20px 0 0;
      border-bottom: none;
    ========================================================================== */
@@ -1104,14 +1109,14 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.12),
     0 12px 30px rgba(0, 0, 0, 0.6);
   transition:
-    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
     border-radius 0.35s ease,
     border-color 0.4s ease,
     box-shadow 0.5s ease;
 }
 
-/* Subtle seamless highlight at the bottom seam when opened */
-.teacher-slide-card.active-center .slide.slide1::after {
+/* Subtle seamless highlight at the bottom seam when opened on hover */
+.teacher-slide-card .slide.slide1::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -1120,10 +1125,13 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(16, 185, 129, 0.3), transparent);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-/* When in front (active-center): smoothly slides up to 0px, merged bottom corners */
-.teacher-slide-card.active-center .slide.slide1 {
+/* On Hover: Slide 1 smoothly slides up to translateY(0px) */
+.teacher-slide-card.active-center:hover .slide.slide1,
+.teacher-slide-card.active-center:focus-within .slide.slide1 {
   transform: translateY(0px);
   border-radius: 20px 20px 0 0;
   border-bottom: none;
@@ -1131,11 +1139,11 @@
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.16),
     0 16px 36px rgba(0, 0, 0, 0.75);
-  transition:
-    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
-    border-radius 0.35s ease 0.1s,
-    border-color 0.4s ease 0.1s,
-    box-shadow 0.5s ease 0.1s;
+}
+
+.teacher-slide-card.active-center:hover .slide.slide1::after,
+.teacher-slide-card.active-center:focus-within .slide.slide1::after {
+  opacity: 1;
 }
 
 .teacher-slide-card .slide.slide1 .content {
@@ -1163,8 +1171,9 @@
   transition: transform 0.4s ease;
 }
 
-.teacher-slide-card.active-center .icon {
-  transform: scale(0.94);
+.teacher-slide-card.active-center:hover .icon,
+.teacher-slide-card.active-center:focus-within .icon {
+  transform: scale(0.92);
 }
 
 .teacher-slide-card .friction-icon {
@@ -1191,16 +1200,16 @@
 
 /* ==========================================================================
    SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Sliding Downwards)
-   - Inactive / Default State:
+   - Default State:
      Sits at transform: translateY(-100px); z-index: 1; directly behind Slide 1.
      border-radius: 20px; fully rounded, border-color: transparent, box-shadow: none.
      Fully opaque (no opacity tricks) and cleanly tucked inside Slide 1 with NO sharp corners.
-   - Active Center State (Smoothly unfolds and slides down from inside to 0px):
-     transform: translateY(0px);
+   - On Hover State (CodePen exact behavior):
+     Smoothly slides down to translateY(0) in .8s out from inside Slide 1;
      border-radius: 0 0 20px 20px;
      border-top: none;
      border: 1.5px solid rgba(16, 185, 129, 0.6);
-     The outer card's bottom 2 corners and inner card's top 2 corners merge flush into 1 unified card.
+     Outer card's bottom 2 corners and inner card's top 2 corners merge flush into 1 unified card.
    ========================================================================== */
 .teacher-slide-card .slide.slide2 {
   position: relative;
@@ -1220,13 +1229,13 @@
   border-top: none;
   box-shadow: none;
   transition:
-    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
     border-radius 0.35s ease,
     border-color 0.4s ease,
-    box-shadow 0.5s ease;
+    box-shadow 0.6s ease;
 }
 
-/* Glowing bottom accent line */
+/* Glowing bottom accent line (matching CodePen ::after) */
 .teacher-slide-card .slide.slide2::after {
   content: "";
   position: absolute;
@@ -1239,11 +1248,12 @@
   border-radius: 2px;
   box-shadow: 0 0 12px #10B981;
   opacity: 0;
-  transition: opacity 0.5s ease 0.2s;
+  transition: opacity 0.4s ease;
 }
 
-/* When in front (active-center): smoothly glides down out from the inside to 0px */
-.teacher-slide-card.active-center .slide.slide2 {
+/* On Hover: Slide 2 smoothly glides down out from the inside to translateY(0) */
+.teacher-slide-card.active-center:hover .slide.slide2,
+.teacher-slide-card.active-center:focus-within .slide.slide2 {
   transform: translateY(0px);
   border-radius: 0 0 20px 20px;
   border-top: none;
@@ -1252,14 +1262,10 @@
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.85),
     0 0 28px rgba(16, 185, 129, 0.25);
-  transition:
-    transform 0.88s cubic-bezier(0.16, 1, 0.3, 1) 0.12s,
-    border-radius 0.35s ease 0.12s,
-    border-color 0.4s ease 0.12s,
-    box-shadow 0.6s ease 0.12s;
 }
 
-.teacher-slide-card.active-center .slide.slide2::after {
+.teacher-slide-card.active-center:hover .slide.slide2::after,
+.teacher-slide-card.active-center:focus-within .slide.slide2::after {
   opacity: 1;
 }
 
