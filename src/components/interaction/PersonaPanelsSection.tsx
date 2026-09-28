@@ -193,9 +193,6 @@ export default function PersonaPanelsSection() {
             <h1 className="content-title">
               Eliminate Burnout. Reclaim the Joy of Teaching.
             </h1>
-            <p className="content-subtitle">
-              Traditional teaching is weighed down by repetitive administrative drudgery, midnight grading, and fragmented resources. Hover over any traditional friction to reveal how Vedika resolves it.
-            </p>
           </div>
 
           {/* 4-at-a-time Hover Slide Dilemma Cards Container (CodePen Slide Effect) */}
