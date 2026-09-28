@@ -12,6 +12,7 @@ const BADGE_R = 18; // 36px badge / 2
 interface OrbitFeatureNodeProps {
   feature: StudentOrbitFeature;
   isActive: boolean;
+  isIconVisible: boolean;
   isExpanded: boolean;
   isCompleted: boolean;
   /**
@@ -50,6 +51,7 @@ function getIcon(id: string) {
 export default function OrbitFeatureNode({
   feature,
   isActive,
+  isIconVisible,
   isExpanded,
   isCompleted,
   iconCx,
@@ -59,12 +61,11 @@ export default function OrbitFeatureNode({
   onMouseEnter,
   onMouseLeave,
 }: OrbitFeatureNodeProps) {
-  const isRevealed = isActive || isCompleted || isExpanded;
   const iconStateClass = isActive
     ? 'is-active is-revealed'
     : isCompleted
     ? 'is-completed is-revealed'
-    : isRevealed
+    : isIconVisible
     ? 'is-revealed'
     : 'is-unrevealed';
 

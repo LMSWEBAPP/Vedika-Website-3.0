@@ -301,7 +301,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: -29,
     cardCss: {
       left: 'calc(50% + 190px)',
-      top: 'calc(50% - 53px)',
+      top: 'calc(50% - 55px)',
     },
   },
   4: {
@@ -309,7 +309,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: 83,
     cardCss: {
       left: 'calc(50% + 171px)',
-      top: 'calc(50% + 59px)',
+      top: 'calc(50% + 40px)',
     },
   },
   5: {
@@ -317,7 +317,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: 155,
     cardCss: {
       left: 'calc(50% + 84px)',
-      top: 'calc(50% + 131px)',
+      top: 'calc(50% + 155px)',
     },
   },
   6: {
@@ -325,7 +325,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: 155,
     cardCss: {
       right: 'calc(50% + 84px)',
-      top: 'calc(50% + 131px)',
+      top: 'calc(50% + 155px)',
     },
   },
   7: {
@@ -333,7 +333,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: 83,
     cardCss: {
       right: 'calc(50% + 171px)',
-      top: 'calc(50% + 59px)',
+      top: 'calc(50% + 40px)',
     },
   },
   8: {
@@ -341,7 +341,7 @@ export const NODE_POSITIONS: Record<number, NodePositionData> = {
     iconCy: -29,
     cardCss: {
       right: 'calc(50% + 190px)',
-      top: 'calc(50% - 53px)',
+      top: 'calc(50% - 55px)',
     },
   },
   9: {

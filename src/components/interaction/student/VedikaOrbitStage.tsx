@@ -26,9 +26,11 @@ export default function VedikaOrbitStage() {
 
   // Active feature spotlight (0 = none/settled, 1..9 = current step)
   const [activeStep, setActiveStep] = useState<number>(0);
-  // Cards and icons that have been reached and stay revealed on screen!
-  const [revealedSteps, setRevealedSteps] = useState<Set<number>>(() => new Set());
-  // Feature nodes that have been touched and stay prominently illuminated
+  // Icons that have been reached and stay visible
+  const [revealedIcons, setRevealedIcons] = useState<Set<number>>(() => new Set());
+  // Cards that have unfolded and stay visible
+  const [revealedCards, setRevealedCards] = useState<Set<number>>(() => new Set());
+  // Feature nodes that have been completed and stay prominently illuminated
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(() => new Set());
   // Tracks if the sequential animation has permanently finished
   const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
@@ -78,7 +80,8 @@ export default function VedikaOrbitStage() {
         });
         // All 9 icons and all 9 cards stay permanently revealed
         setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-        setRevealedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+        setRevealedIcons(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+        setRevealedCards(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
         setActiveStep(0);
         // Softly settle the energy bead into the completed ring
         if (beadGroupRef.current) {
@@ -87,21 +90,28 @@ export default function VedikaOrbitStage() {
       },
     });
 
-    const S_TRAVEL = 0.95; // Smooth 0.95s travel for each equal 40-degree segment
-    const C_EXPAND = 0.35; // 0.35s card unfold
-    const C_READ = 1.30;   // 1.30s display
+    const S_TRAVEL = 0.95;  // Smooth 0.95s travel for each equal 40-degree segment
+    const ICON_WAIT = 0.28; // 0.28s pause so ICON arrives first!
+    const C_EXPAND = 0.35;  // 0.35s card unfold
+    const C_READ = 1.30;    // 1.30s display for card reading
 
     // ──────────────────────────────────────────────────────────────────────────
-    // STEP 0: Reveal Node 1 ONLY (Pink, Non-Judgmental Space)
-    // Only 1st icon shows; 2..9 are completely hidden!
+    // STEP 0: Reveal Node 1 ICON FIRST, then POINT (Card)
     // ──────────────────────────────────────────────────────────────────────────
     tl.call(() => {
-      setActiveStep(1);
-      setRevealedSteps(new Set([1]));
+      // 1. Icon 1 appears smoothly first!
+      setRevealedIcons(new Set([1]));
       setCompletedSteps(new Set([1]));
       if (beadGroupRef.current) {
         beadGroupRef.current.style.opacity = '1';
       }
+    });
+    // Brief pause so icon is established
+    tl.to({}, { duration: ICON_WAIT });
+    // 2. Point 1 (card) smoothly fades in and unfolds after icon!
+    tl.call(() => {
+      setActiveStep(1);
+      setRevealedCards(new Set([1]));
     });
     // Card 1 expands and STAYS open!
     tl.to({}, { duration: C_EXPAND + C_READ });
@@ -109,7 +119,7 @@ export default function VedikaOrbitStage() {
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
     // As the energy point travels along each 40° arc, the ring paints dynamically.
-    // Arriving at node k reveals icon k and unfolds card k!
+    // At node k: ICON arrives first, then POINT (card) smoothly fades in!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
@@ -162,11 +172,19 @@ export default function VedikaOrbitStage() {
         travelLabel
       );
 
-      // Energy point arrives at next node! Icon k reveals and Card k unfolds!
+      // 1. Energy bead arrives: ICON COMES FIRST!
+      tl.call(() => {
+        setRevealedIcons((prev) => new Set(prev).add(targetFeatureIndex));
+        setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
+      });
+
+      // Brief pause so icon settles
+      tl.to({}, { duration: ICON_WAIT });
+
+      // 2. THEN POINT (CARD) COMES IN SMOOTH FADE-IN!
       tl.call(() => {
         setActiveStep(targetFeatureIndex);
-        setRevealedSteps((prev) => new Set(prev).add(targetFeatureIndex));
-        setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
+        setRevealedCards((prev) => new Set(prev).add(targetFeatureIndex));
       });
 
       // Card unfolds and displays while previous cards stay visible
@@ -288,7 +306,8 @@ export default function VedikaOrbitStage() {
         }
       });
       setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
-      setRevealedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+      setRevealedIcons(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+      setRevealedCards(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));
       if (beadGroupRef.current) {
         beadGroupRef.current.style.opacity = '0';
       }
@@ -333,7 +352,8 @@ export default function VedikaOrbitStage() {
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const pos = NODE_POSITIONS[feat.index];
           const isCurrentActive = feat.index === activeStep;
-          const isRevealed = revealedSteps.has(feat.index);
+          const isIconVis = revealedIcons.has(feat.index);
+          const isCardExp = revealedCards.has(feat.index);
           const isAlreadyCompleted = completedSteps.has(feat.index);
 
           return (
@@ -341,7 +361,8 @@ export default function VedikaOrbitStage() {
               key={feat.id}
               feature={feat}
               isActive={isCurrentActive}
-              isExpanded={isRevealed}
+              isIconVisible={isIconVis}
+              isExpanded={isCardExp}
               isCompleted={isAlreadyCompleted}
               iconCx={pos.iconCx}
               iconCy={pos.iconCy}
