@@ -10,6 +10,7 @@ import {
   Atom,
   CheckCircle2,
   Sliders,
+  ShieldCheck,
 } from 'lucide-react';
 import { StudentOrbitFeature } from './studentOrbitData';
 
@@ -17,7 +18,6 @@ interface OrbitFeatureNodeProps {
   feature: StudentOrbitFeature;
   isActive: boolean;
   isRevealed: boolean;
-  isHovered: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -27,7 +27,6 @@ export default function OrbitFeatureNode({
   feature,
   isActive,
   isRevealed,
-  isHovered,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -35,64 +34,68 @@ export default function OrbitFeatureNode({
   const getIcon = (id: string) => {
     switch (id) {
       case 'study-companion':
-        return <Clock size={14} strokeWidth={2.4} />;
+        return <Clock size={16} strokeWidth={2.4} />;
       case 'non-judgmental':
-        return <Heart size={14} strokeWidth={2.4} fill="currentColor" fillOpacity={0.25} />;
-      case 'unlimited-questions':
-        return <Sparkles size={14} strokeWidth={2.4} />;
+        return <Heart size={16} strokeWidth={2.4} fill="currentColor" fillOpacity={0.3} />;
       case 'own-pace':
-        return <Compass size={14} strokeWidth={2.4} />;
+        return <Compass size={16} strokeWidth={2.4} />;
       case 'concept-clarity':
-        return <Lightbulb size={14} strokeWidth={2.4} />;
-      case 'interactive-learning':
-        return <Atom size={14} strokeWidth={2.4} />;
-      case 'practice-exam':
-        return <CheckCircle2 size={14} strokeWidth={2.4} />;
+        return <Lightbulb size={16} strokeWidth={2.4} />;
       case 'personalized-support':
-        return <Sliders size={14} strokeWidth={2.4} />;
+        return <Sliders size={16} strokeWidth={2.4} />;
+      case 'build-confidence':
+        return <ShieldCheck size={16} strokeWidth={2.4} />;
+      case 'practice-exam':
+        return <CheckCircle2 size={16} strokeWidth={2.4} />;
+      case 'interactive-learning':
+        return <Atom size={16} strokeWidth={2.4} />;
+      case 'unlimited-questions':
+        return <Sparkles size={16} strokeWidth={2.4} />;
       default:
-        return <Sparkles size={14} strokeWidth={2.4} />;
+        return <Sparkles size={16} strokeWidth={2.4} />;
     }
   };
 
   return (
-    <button
-      type="button"
-      className={`orbit-node-card ${feature.positionClass} ${isActive ? 'is-active' : ''} ${
-        isRevealed ? 'is-revealed' : 'is-dim'
-      } ${isHovered ? 'is-hovered' : ''}`}
+    <div
+      className={`glass-orbit-card ${feature.positionClass} ${isActive ? 'is-active' : ''} ${
+        isRevealed ? 'is-revealed' : 'is-unrevealed'
+      }`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       aria-label={`Capability 0${feature.index}: ${feature.title}. ${feature.shortLabel}.`}
       aria-selected={isActive}
-      role="tab"
       style={{
-        '--node-color': feature.color,
-        '--node-rgb': feature.rgb,
+        '--card-accent': feature.color,
+        '--card-accent-rgb': feature.rgb,
       } as React.CSSProperties}
     >
-      {/* Orbital Anchor Pip */}
-      <span className="node-orbital-pip" aria-hidden="true" />
-
-      {/* Top Floating Badge with Icon & Step Index */}
-      <div className="node-icon-badge">
-        {getIcon(feature.id)}
-        <span className="node-step-num">0{feature.index}</span>
+      {/* 1. Left Icon Container (appears first) */}
+      <div className="card-icon-container">
+        <div className="card-icon-inner">{getIcon(feature.id)}</div>
       </div>
 
-      {/* Node Content Header */}
-      <div className="node-text-wrap">
-        <div className="node-header-row">
-          <span className="node-short-tag">{feature.shortLabel}</span>
-          {isActive && <span className="node-live-pulse" title="Active capability" />}
+      {/* 2. Right Text Container (comes to the right side of the icon) */}
+      <div className="card-text-container">
+        <div className="card-tag-row">
+          <span className="card-short-label">{feature.shortLabel}</span>
+          <span className="card-step-badge">0{feature.index}</span>
         </div>
-        <div className="node-title">{feature.title}</div>
-        <p className="node-desc">{feature.desc}</p>
+        <div className="card-title-text">{feature.title}</div>
+        <p className="card-desc-text">{feature.desc}</p>
       </div>
 
-      {/* Active Accent Glow Underlay */}
-      {isActive && <span className="node-active-glow-aura" aria-hidden="true" />}
-    </button>
+      {/* 3. Neon Bloom Halo */}
+      {isActive && <div className="card-neon-bloom-halo" aria-hidden="true" />}
+    </div>
   );
 }
