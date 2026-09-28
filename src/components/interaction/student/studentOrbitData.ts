@@ -22,7 +22,7 @@ export const LAYOUT = {
   /** Horizontal distance from stage center to icon badge center (left & right sides) */
   ICON_SIDE_X: 130,
   /** Vertical distance from stage center to top icon badge center (upward) */
-  ICON_TOP_Y: 128,
+  ICON_TOP_Y: 120,
   /** Icon badge radius = badge size (36px) / 2 */
   BADGE_R: 18,
   /** Gap in px between icon edge and card edge */
@@ -32,11 +32,15 @@ export const LAYOUT = {
   /** Approximate card height in px (used for vertical centering) */
   CARD_H: 54,
   /**
-   * Y offsets from stage center for each row (0–3), 74px apart.
-   * Symmetrically centered: [-111, -37, +37, +111]
+   * Y offsets from stage center for each row (0–3), 80px apart.
+   * Perfectly symmetric: [-120, -40, +40, +120].
+   * Robot at Y=0 is the exact center of the full icon grid.
    */
-  ROW_Y: [-111, -37, 37, 111] as readonly number[],
+  ROW_Y: [-120, -40, 40, 120] as readonly number[],
 } as const;
+
+/** Auto-advance interval in ms — also drives ring animation duration */
+export const STEP_MS = 2500;
 
 /**
  * 9 student capabilities.

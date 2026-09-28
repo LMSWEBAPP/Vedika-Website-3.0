@@ -9,32 +9,37 @@ import {
   StudentOrbitFeature,
   LAYOUT,
   BEAD_ANGLES,
+  STEP_MS,
 } from './studentOrbitData';
 import '@/styles/student-orbit.css';
 
 const {
   ICON_SIDE_X,  // 130
-  ICON_TOP_Y,   // 128
+  ICON_TOP_Y,   // 120
   BADGE_R,      // 18
   CARD_GAP,     // 10
   CARD_W,       // 215
   CARD_H,       // 54
-  ROW_Y,        // [-111, -37, 37, 111]
+  ROW_Y,        // [-120, -40, 40, 120]
 } = LAYOUT;
 
-/**
- * Distance from stage center to the near edge of each card.
- * = icon center X + badge radius + gap
- * = 130 + 18 + 10 = 158px
- */
-const ICON_TO_CARD_EDGE = ICON_SIDE_X + BADGE_R + CARD_GAP;
+// Distance from stage center to near edge of card (icon center + badge radius + gap)
+const ICON_TO_CARD_EDGE = ICON_SIDE_X + BADGE_R + CARD_GAP; // 130 + 18 + 10 = 158px
+
+// Top card bottom-anchor distance from stage center (icon center + badge radius + gap)
+const TOP_CARD_BOTTOM_ANCHOR = ICON_TOP_Y + BADGE_R + CARD_GAP; // 120 + 18 + 10 = 148px
 
 /**
- * Compute exact pixel-positions for icon badge center and card slot.
+ * Compute exact pixel-positions for icon badge and card slot.
  *
- * Key alignment rule:
- *   iconCy === card vertical center Y for all left/right cards.
- *   This ensures the card is perfectly horizontally aligned with its icon.
+ * Alignment guarantee:
+ *   For left/right cards: iconCy === cardCenterY === ROW_Y[cardRow].
+ *   Icon and card are always at the same vertical position.
+ *
+ * Animation direction (via CSS anchor):
+ *   dir-right → slot left-anchored  → max-width grows RIGHTWARD from icon ✓
+ *   dir-left  → slot right-anchored → max-width grows LEFTWARD  from icon ✓
+ *   dir-top   → slot bottom-anchored → max-height grows UPWARD   from icon ✓
  */
 function getPositions(feat: StudentOrbitFeature): {
   iconCx: number;
@@ -47,7 +52,6 @@ function getPositions(feat: StudentOrbitFeature): {
       iconCx: ICON_SIDE_X,
       iconCy,
       cardCss: {
-        // Card left edge = icon right edge + gap → grows RIGHT from icon
         left: `calc(50% + ${ICON_TO_CARD_EDGE}px)`,
         top: `calc(50% + ${iconCy - Math.ceil(CARD_H / 2)}px)`,
       },
@@ -60,9 +64,8 @@ function getPositions(feat: StudentOrbitFeature): {
       iconCx: -ICON_SIDE_X,
       iconCy,
       cardCss: {
-        // Card right edge = icon left edge - gap → grows LEFT from icon
-        // Using CSS `right` so the card's right edge is the anchor.
-        // right: calc(50% + 158px) means right edge is 158px left of center.
+        // right-anchor: card right edge is fixed at icon left edge − gap
+        // growing max-width expands the card leftward (away from icon) ✓
         right: `calc(50% + ${ICON_TO_CARD_EDGE}px)`,
         top: `calc(50% + ${iconCy - Math.ceil(CARD_H / 2)}px)`,
       },
@@ -74,48 +77,39 @@ function getPositions(feat: StudentOrbitFeature): {
     iconCx: 0,
     iconCy: -ICON_TOP_Y,
     cardCss: {
-      // Horizontally centered
       left: `calc(50% - ${Math.floor(CARD_W / 2)}px)`,
-      // bottom: slot's bottom edge is just above the icon's top edge
-      // bottom = ICON_TOP_Y + BADGE_R + CARD_GAP = 128+18+10 = 156px above center
-      // Using CSS `bottom` so the slot grows UPWARD from the icon as max-height increases.
-      bottom: `calc(50% + ${ICON_TOP_Y + BADGE_R + CARD_GAP}px)`,
+      // bottom-anchor: card bottom edge is fixed just above icon top edge
+      // growing max-height expands the card upward (away from icon) ✓
+      bottom: `calc(50% + ${TOP_CARD_BOTTOM_ANCHOR}px)`,
     },
   };
 }
 
 export default function VedikaOrbitStage() {
-  const [revealedCount, setRevealedCount] = useState<number>(1);
+  // All 9 cards are visible from the start — only the active spotlight cycles.
+  // This creates a single smooth loop (not a reveal loop then a cycling loop).
   const [activeStep, setActiveStep] = useState<number>(1);
   const isHoveredRef = useRef<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeFeature = STUDENT_ORBIT_FEATURES[activeStep - 1] ?? STUDENT_ORBIT_FEATURES[0];
 
+  // Advance active spotlight one step forward, wrapping 9 → 1
   const advance = useCallback(() => {
-    setRevealedCount((prev) => {
-      if (prev < 9) {
-        const next = prev + 1;
-        setActiveStep(next);
-        return next;
-      }
-      setActiveStep((a) => (a >= 9 ? 1 : a + 1));
-      return 9;
-    });
+    setActiveStep((a) => (a >= 9 ? 1 : a + 1));
   }, []);
 
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       if (!isHoveredRef.current) advance();
-    }, 2500);
+    }, STEP_MS);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [revealedCount, activeStep, advance]);
+  }, [activeStep, advance]);
 
   const handleCardClick = (index: number) => {
     setActiveStep(index);
-    if (index > revealedCount) setRevealedCount(index);
   };
 
   return (
@@ -126,7 +120,7 @@ export default function VedikaOrbitStage() {
     >
       {/* ── CENTER: 3D BOT + PROGRESS RING ─────────────────────────────── */}
       <div className="vedika-center-pod-clean">
-        {/* Ambient radial aura that changes color with active step */}
+        {/* Ambient aura that breathes with the active feature color */}
         <div
           className="vedika-ambient-aura"
           style={{
@@ -135,10 +129,9 @@ export default function VedikaOrbitStage() {
           aria-hidden="true"
         />
 
-        {/* SVG progress ring with energy bead */}
+        {/* SVG progress ring — continuously sweeping arc + energy bead */}
         <div className="vedika-ring-wrap">
           <OrbitProgressRing
-            currentStep={activeStep}
             activeColor={activeFeature.color}
             beadAngleDeg={BEAD_ANGLES[activeStep] ?? 270}
           />
@@ -150,7 +143,7 @@ export default function VedikaOrbitStage() {
         </div>
       </div>
 
-      {/* ── 9 ORBITAL NODES ─────────────────────────────────────────────── */}
+      {/* ── 9 ORBITAL NODES (all always visible, active spotlight cycles) ─ */}
       <div className="vedika-orbit-nodes-layer">
         {STUDENT_ORBIT_FEATURES.map((feat: StudentOrbitFeature) => {
           const { iconCx, iconCy, cardCss } = getPositions(feat);
@@ -159,7 +152,7 @@ export default function VedikaOrbitStage() {
               key={feat.id}
               feature={feat}
               isActive={feat.index === activeStep}
-              isRevealed={feat.index <= revealedCount}
+              isRevealed={true}         // all cards always revealed (single loop)
               iconCx={iconCx}
               iconCy={iconCy}
               cardCss={cardCss}

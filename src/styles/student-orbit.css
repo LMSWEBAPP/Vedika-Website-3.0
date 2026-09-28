@@ -368,6 +368,25 @@
 }
 
 /* ==========================================================================
+   RING: CONTINUOUS FLOWING ANIMATION
+   stroke-dashoffset sweeps from CIRCₒ0 over one full loop duration.
+   `infinite` ensures it never resets — no backward jump on loop.
+   The transform `rotate(270)` starts the sweep at 12 o'clock.
+   ========================================================================== */
+@keyframes orbitRingFill {
+  from { stroke-dashoffset: 596.9; } /* 2π × 95 = 596.903 */
+  to   { stroke-dashoffset: 0; }
+}
+
+.orbit-ring-arc,
+.orbit-ring-aura {
+  animation-name: orbitRingFill;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* animation-duration is set via inline style from OrbitProgressRing */
+}
+
+/* ==========================================================================
    13. RESPONSIVE — 14-inch screens (lower height)
    ========================================================================== */
 @media (max-height: 820px) {
