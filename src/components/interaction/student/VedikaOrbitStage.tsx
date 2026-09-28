@@ -132,7 +132,7 @@ export default function VedikaOrbitStage() {
           const aura = auraRefs.current[idx];
           if (aura) {
             aura.style.strokeDashoffset = '0px';
-            aura.style.opacity = '0.28';
+            aura.style.opacity = '0.55';
             aura.style.visibility = 'visible';
           }
         });
@@ -159,13 +159,14 @@ export default function VedikaOrbitStage() {
     tl.call(() => {
       setActiveStep(1);
       setExpandedStep(1);
+      // Touched node immediately remains illuminated
+      setCompletedSteps((prev) => new Set(prev).add(1));
     });
     // Expansion & reading pause for first card
     tl.to({}, { duration: C_EXPAND + C_READ });
     // Collapse first card smoothly
     tl.call(() => {
       setExpandedStep(null);
-      setCompletedSteps((prev) => new Set(prev).add(1));
     });
     tl.to({}, { duration: C_COLLAPSE });
 
@@ -206,7 +207,7 @@ export default function VedikaOrbitStage() {
             }
             if (auraEl) {
               auraEl.style.visibility = 'visible';
-              auraEl.style.opacity = '0.28';
+              auraEl.style.opacity = '0.55';
             }
           },
           onUpdate: () => {
@@ -240,10 +241,11 @@ export default function VedikaOrbitStage() {
         travelLabel
       );
 
-      // Energy point arrives at next node! Node activates, card unfolds
+      // Energy point arrives at next node! Node activates, card unfolds, node stays illuminated
       tl.call(() => {
         setActiveStep(targetFeatureIndex);
         setExpandedStep(targetFeatureIndex);
+        setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
       });
 
       // Card reading duration
@@ -252,7 +254,6 @@ export default function VedikaOrbitStage() {
       // Collapse card smoothly before next segment starts drawing
       tl.call(() => {
         setExpandedStep(null);
-        setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
       });
       tl.to({}, { duration: C_COLLAPSE });
     }
@@ -290,7 +291,7 @@ export default function VedikaOrbitStage() {
           }
           if (auraEl) {
             auraEl.style.visibility = 'visible';
-            auraEl.style.opacity = '0.28';
+            auraEl.style.opacity = '0.55';
           }
         },
         onUpdate: () => {
@@ -388,7 +389,7 @@ export default function VedikaOrbitStage() {
       auraRefs.current.forEach((el) => {
         if (el) {
           el.style.strokeDashoffset = '0px';
-          el.style.opacity = '0.28';
+          el.style.opacity = '0.55';
           el.style.visibility = 'visible';
         }
       });

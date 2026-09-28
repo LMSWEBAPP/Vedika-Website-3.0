@@ -40,11 +40,13 @@ export default function OrbitProgressRing({
       style={{ overflow: 'visible' }}
     >
       <defs>
-        {/* Glow filter for progressive arcs, aura, and energy head */}
-        <filter id="vOrbitGlow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3.5" result="blur1" />
-          <feGaussianBlur stdDeviation="7" result="blur2" />
+        {/* Multi-stage optical glow filter for prominent, neat neon diffusion */}
+        <filter id="vOrbitGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="2" result="blur1" />
+          <feGaussianBlur stdDeviation="5" result="blur2" />
+          <feGaussianBlur stdDeviation="10" result="blur3" />
           <feMerge>
+            <feMergeNode in="blur3" />
             <feMergeNode in="blur2" />
             <feMergeNode in="blur1" />
             <feMergeNode in="SourceGraphic" />
@@ -91,7 +93,7 @@ export default function OrbitProgressRing({
         strokeDasharray="3 8"
       />
 
-      {/* ── 9 Glow Aura Segments (strokeWidth=7, 0% progress at start, completely invisible) ── */}
+      {/* ── 9 Glow Aura Segments (strokeWidth=9, prominent neon bloom) ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
           key={`aura-${seg.gradientId}`}
@@ -101,7 +103,7 @@ export default function OrbitProgressRing({
           d={seg.pathD}
           fill="none"
           stroke={`url(#${seg.gradientId})`}
-          strokeWidth={7}
+          strokeWidth={9}
           strokeLinecap="round"
           strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
           strokeDashoffset={seg.arcLength}
@@ -116,7 +118,7 @@ export default function OrbitProgressRing({
         />
       ))}
 
-      {/* ── 9 Progressive Arc Segments (strokeWidth=3.5, 0% progress at start, completely invisible) ── */}
+      {/* ── 9 Progressive Arc Segments (strokeWidth=4, crisp, prominent neon light) ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
           key={`arc-${seg.gradientId}`}
@@ -126,7 +128,7 @@ export default function OrbitProgressRing({
           d={seg.pathD}
           fill="none"
           stroke={`url(#${seg.gradientId})`}
-          strokeWidth={3.5}
+          strokeWidth={4}
           strokeLinecap="round"
           strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
           strokeDashoffset={seg.arcLength}
@@ -150,26 +152,26 @@ export default function OrbitProgressRing({
         transform={`translate(${BEAD_START_X}, ${BEAD_START_Y})`}
         className="orbit-energy-bead"
       >
-        {/* Soft outer glow halo */}
+        {/* Prominent outer glow halo */}
         <circle
           ref={beadHaloRef}
-          r="9"
+          r="11"
           cx="0"
           cy="0"
           fill={initialColor}
-          opacity={0.55}
+          opacity={0.65}
           filter="url(#vOrbitGlow)"
         />
-        {/* Intense core bead */}
+        {/* Vibrant core bead */}
         <circle
           ref={beadCoreRef}
-          r="4.8"
+          r="5.5"
           cx="0"
           cy="0"
           fill={initialColor}
         />
-        {/* Bright white focal point */}
-        <circle r="2.2" cx="0" cy="0" fill="#FFFFFF" />
+        {/* Bright white focal spark */}
+        <circle r="2.6" cx="0" cy="0" fill="#FFFFFF" />
       </g>
     </svg>
   );
