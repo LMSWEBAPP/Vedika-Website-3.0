@@ -246,34 +246,36 @@ export default function PersonaPanelsSection() {
                     tabIndex={0}
                     aria-label={item.dilemmaTitle}
                   >
-                    {/* SLIDE 1: Traditional Friction (Top Outer Card) */}
-                    <div className="slide slide1">
-                      <div className="content">
-                        <div className="icon">
-                          <span className="friction-icon">{item.icon}</span>
-                        </div>
-                        <span className="friction-tag">Traditional Friction</span>
-                        <h3 className="friction-title">{item.dilemmaTitle}</h3>
-                      </div>
-                    </div>
-
-                    {/* SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Unfolding Downward) */}
-                    <div className="slide slide2">
-                      <div className="content">
-                        <div className="bot-and-badge-row">
-                          <img
-                            src="/assets/vedika-bot.png"
-                            alt="Happy Vedika AI Bot"
-                            className="tiny-vedika-avatar"
-                          />
-                          <div className="resolution-badge-pill">
-                            <span>✨ Vedika AI Resolution</span>
+                    <div className="teacher-unfold-wrapper">
+                      {/* SLIDE 1: Traditional Friction (Top Outer Card) */}
+                      <div className="slide slide1">
+                        <div className="content">
+                          <div className="icon">
+                            <span className="friction-icon">{item.icon}</span>
                           </div>
+                          <span className="friction-tag">Traditional Friction</span>
+                          <h3 className="friction-title">{item.dilemmaTitle}</h3>
                         </div>
+                      </div>
 
-                        <h3 className="resolution-title">{item.rectTitle}</h3>
-                        <p className="resolution-desc">{item.rectDesc}</p>
-                        <div className="resolution-impact-badge">{item.impact}</div>
+                      {/* SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Unfolding Downward) */}
+                      <div className="slide slide2">
+                        <div className="content">
+                          <div className="bot-and-badge-row">
+                            <img
+                              src="/assets/vedika-bot.png"
+                              alt="Happy Vedika AI Bot"
+                              className="tiny-vedika-avatar"
+                            />
+                            <div className="resolution-badge-pill">
+                              <span>✨ Vedika AI Resolution</span>
+                            </div>
+                          </div>
+
+                          <h3 className="resolution-title">{item.rectTitle}</h3>
+                          <p className="resolution-desc">{item.rectDesc}</p>
+                          <div className="resolution-impact-badge">{item.impact}</div>
+                        </div>
                       </div>
                     </div>
                   </div>

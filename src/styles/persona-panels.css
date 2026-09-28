@@ -1081,16 +1081,27 @@
   pointer-events: none;
 }
 
-/* Individual Slides (CodePen exact logic - no generic transition) */
-.teacher-slide-card .slide {
+/* ==========================================================================
+   ISOLATED 400px UNFOLDING WRAPPER (Exact CodePen Architecture)
+   ========================================================================== */
+.teacher-unfold-wrapper {
   position: relative;
+  width: 320px;
+  height: 400px;
+  overflow: visible;
+}
+
+/* Individual Slides: Absolutely positioned relative to the wrapper */
+.teacher-unfold-wrapper .slide {
+  position: absolute;
+  left: 0;
   width: 320px;
   height: 200px;
   box-sizing: border-box;
 }
 
-.teacher-slide-card .slide.slide1,
-.teacher-slide-card .slide.slide2 {
+.teacher-unfold-wrapper .slide.slide1,
+.teacher-unfold-wrapper .slide.slide2 {
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -1098,19 +1109,18 @@
 
 /* ==========================================================================
    SLIDE 1: Traditional Friction (Top Outer Card)
+   - Initial: top: 0, translateY(100px) -> sits at center Y = 100px..300px
+   - Hover:   translateY(0)             -> moves UP to Y = 0px..200px
    ========================================================================== */
-.teacher-slide-card .slide.slide1 {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.teacher-unfold-wrapper .slide.slide1 {
+  top: 0;
   z-index: 2;
+  transform: translateY(100px);
   transition:
     transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     border-radius 0.5s ease,
     border-color 0.5s ease,
     box-shadow 0.7s ease;
-  transform: translateY(100px);
   border-radius: 20px;
   background:
     linear-gradient(150deg, #22121b 0%, #12090e 100%),
@@ -1124,7 +1134,7 @@
 }
 
 /* Subtle seamless highlight at the bottom seam when opened on hover */
-.teacher-slide-card .slide.slide1::after {
+.teacher-unfold-wrapper .slide.slide1::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -1148,11 +1158,6 @@
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.16),
     0 16px 36px rgba(0, 0, 0, 0.75);
-  transition:
-    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-radius 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.7s ease;
 }
 
 .teacher-slide-card.active-center:hover .slide.slide1::after,
@@ -1161,7 +1166,7 @@
   opacity: 1;
 }
 
-.teacher-slide-card .slide.slide1 .content {
+.teacher-unfold-wrapper .slide.slide1 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1173,7 +1178,7 @@
   gap: 10px;
 }
 
-.teacher-slide-card .icon {
+.teacher-unfold-wrapper .icon {
   width: 58px;
   height: 58px;
   border-radius: 16px;
@@ -1192,12 +1197,12 @@
   transform: scale(0.92);
 }
 
-.teacher-slide-card .friction-icon {
+.teacher-unfold-wrapper .friction-icon {
   font-size: 28px;
   line-height: 1;
 }
 
-.teacher-slide-card .friction-tag {
+.teacher-unfold-wrapper .friction-tag {
   font-size: 0.68rem;
   font-weight: 700;
   color: #F87171;
@@ -1205,7 +1210,7 @@
   letter-spacing: 0.08em;
 }
 
-.teacher-slide-card .friction-title {
+.teacher-unfold-wrapper .friction-title {
   font-size: 1.10rem;
   font-weight: 800;
   line-height: 1.25;
@@ -1216,20 +1221,18 @@
 
 /* ==========================================================================
    SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Sliding Downwards)
+   - Initial: top: 200px, translateY(-100px) -> sits at center Y = 100px..300px
+   - Hover:   translateY(0)                  -> moves DOWN to Y = 200px..400px
    ========================================================================== */
-.teacher-slide-card .slide.slide2 {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+.teacher-unfold-wrapper .slide.slide2 {
+  top: 200px;
   z-index: 1;
+  transform: translateY(-100px);
   transition:
     transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     border-radius 0.5s ease,
     border-color 0.5s ease,
     box-shadow 0.8s ease;
-  transform: translateY(-100px);
   border-radius: 20px;
   background:
     linear-gradient(160deg, #061e16 0%, #03100c 100%),
@@ -1242,7 +1245,7 @@
 }
 
 /* Glowing bottom accent line (matching CodePen ::after) */
-.teacher-slide-card .slide.slide2::after {
+.teacher-unfold-wrapper .slide.slide2::after {
   content: "";
   position: absolute;
   width: 30px;
@@ -1268,11 +1271,6 @@
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.6),
     0 0 28px rgba(16, 185, 129, 0.25);
-  transition:
-    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-radius 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.8s ease;
 }
 
 .teacher-slide-card.active-center:hover .slide.slide2::after,
@@ -1281,7 +1279,7 @@
   opacity: 1;
 }
 
-.teacher-slide-card .slide.slide2 .content {
+.teacher-unfold-wrapper .slide.slide2 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1293,7 +1291,7 @@
   gap: 7px;
 }
 
-.teacher-slide-card .bot-and-badge-row {
+.teacher-unfold-wrapper .bot-and-badge-row {
   display: flex;
   align-items: center;
   gap: 8px;
