@@ -13,6 +13,9 @@ export default function PersonaPanelsSection() {
   // Carousel slide index for admin role
   const [adminSlide, setAdminSlide] = useState(0);
 
+  // Carousel active index for teacher dilemmas
+  const [activeTeacherIndex, setActiveTeacherIndex] = useState(0);
+
   const teacherDilemmas = [
     {
       icon: '💬',
@@ -187,53 +190,103 @@ export default function PersonaPanelsSection() {
         {/* ============================================================== */}
         <section className="panel-section-slot teacher-content" aria-label="Teacher Dilemmas and Vedika Rectifications">
           <div className="content-header-bar">
-            <div className="content-eyebrow" style={{ color: '#FBBF24' }}>
-              Teacher Empowerment • AI Co-Pilot
+            <div className="teacher-header-flex-row">
+              <div>
+                <div className="content-eyebrow" style={{ color: '#FBBF24' }}>
+                  Teacher Empowerment • AI Co-Pilot
+                </div>
+                <h1 className="content-title">
+                  Eliminate Burnout. Reclaim the Joy of Teaching.
+                </h1>
+              </div>
+
+              {/* Small Carousel Arrows & Dots */}
+              <div className="teacher-carousel-controls" aria-label="Dilemma Carousel Navigation">
+                <button
+                  type="button"
+                  className="teacher-nav-arrow prev"
+                  onClick={() =>
+                    setActiveTeacherIndex(
+                      (prev) => (prev - 1 + teacherDilemmas.length) % teacherDilemmas.length
+                    )
+                  }
+                  aria-label="Previous Dilemma"
+                >
+                  ‹
+                </button>
+                <div className="teacher-dots-group">
+                  {teacherDilemmas.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={`teacher-nav-dot ${i === activeTeacherIndex ? 'active' : ''}`}
+                      onClick={() => setActiveTeacherIndex(i)}
+                      aria-label={`Select dilemma ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="teacher-nav-arrow next"
+                  onClick={() =>
+                    setActiveTeacherIndex((prev) => (prev + 1) % teacherDilemmas.length)
+                  }
+                  aria-label="Next Dilemma"
+                >
+                  ›
+                </button>
+              </div>
             </div>
-            <h1 className="content-title">
-              Eliminate Burnout. Reclaim the Joy of Teaching.
-            </h1>
           </div>
 
-          {/* 4-at-a-time Hover Slide Dilemma Cards Container (CodePen Slide Effect) */}
+          {/* 4-Card Carousel with Active Focused Card & 3 Background Blurred Cards */}
           <div className="teacher-dilemmas-stage">
             <div className="teacher-cards-container">
-              {teacherDilemmas.map((item, idx) => (
-                <div key={idx} className="teacher-slide-card">
-                  {/* SLIDE 1: Traditional Friction (Visible by default) */}
-                  <div className="slide slide1">
-                    <div className="content">
-                      <div className="card-top-content">
-                        <div className="card-badge-row">
-                          <span className="card-icon-pill dilemma">{item.icon}</span>
-                          <span className="dilemma-label">Traditional Friction</span>
+              {teacherDilemmas.map((item, idx) => {
+                const isActive = idx === activeTeacherIndex;
+                return (
+                  <div
+                    key={idx}
+                    className={`teacher-slide-card ${isActive ? 'active' : 'inactive'}`}
+                    onClick={() => {
+                      if (!isActive) setActiveTeacherIndex(idx);
+                    }}
+                    role="region"
+                    aria-label={item.dilemmaTitle}
+                  >
+                    {/* SLIDE 1: Traditional Friction (Icon + Heading only, centered as in CodePen) */}
+                    <div className="slide slide1">
+                      <div className="content">
+                        <div className="icon">
+                          <span className="friction-icon">{item.icon}</span>
                         </div>
-                        <h3 className="card-headline dilemma">{item.dilemmaTitle}</h3>
-                        <p className="card-text dilemma">{item.dilemmaDesc}</p>
-                      </div>
-                      <div className="hover-trigger-indicator">
-                        <span>Hover for AI Resolution</span>
-                        <span className="trigger-arrow">➔</span>
+                        <span className="friction-tag">Traditional Friction</span>
+                        <h3 className="friction-title">{item.dilemmaTitle}</h3>
                       </div>
                     </div>
-                  </div>
 
-                  {/* SLIDE 2: Vedika AI Resolution (Unfolds on hover) */}
-                  <div className="slide slide2">
-                    <div className="content">
-                      <div className="card-top-content">
-                        <div className="card-badge-row">
-                          <span className="card-icon-pill resolution">✨</span>
-                          <span className="rectification-label">Vedika AI Resolution</span>
+                    {/* SLIDE 2: Vedika AI Resolution (Smooth unfolding on hover reveals happy tiny Vedika bot + resolution) */}
+                    <div className="slide slide2">
+                      <div className="content">
+                        <div className="bot-and-badge-row">
+                          <img
+                            src="/assets/vedika-bot.png"
+                            alt="Happy Vedika AI Bot"
+                            className="tiny-vedika-avatar"
+                          />
+                          <div className="resolution-badge-pill">
+                            <span>✨ Vedika AI Resolution</span>
+                          </div>
                         </div>
-                        <h3 className="card-headline resolution">{item.rectTitle}</h3>
-                        <p className="card-text resolution">{item.rectDesc}</p>
+
+                        <h3 className="resolution-title">{item.rectTitle}</h3>
+                        <p className="resolution-desc">{item.rectDesc}</p>
+                        <div className="resolution-impact-badge">{item.impact}</div>
                       </div>
-                      <div className="resolution-impact-pill">{item.impact}</div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
