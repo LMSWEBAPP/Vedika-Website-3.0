@@ -5,658 +5,802 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
 // ============================================================================
-// 1. MATH LAB 3D: STANDOUT 4D GOLDEN TESSERACT (HYPERCUBE) & ASTROLABE
-// Represents higher-dimensional mathematics, tensor calculus & sacred geometry.
-// Outer 24K golden hyperframe, suspended counter-rotating inner core,
-// 8 dimensional vectors, and central glowing singularity gem!
+// 1. MATH LAB 3D: LUMINOUS 3D DIAMOND OCTAHEDRON & MATHEMATICAL POLYHEDRON
+// Directly inspired by the reference image: glowing translucent violet crystal
+// octahedron with glowing edge struts, vertex jewels, inner singularity diamond,
+// floating mathematical polyhedra/symbols, and holographic emitter base!
 // ============================================================================
 export function MathLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
-  const outerCubeRef = useRef<THREE.Group | null>(null);
-  const innerCubeRef = useRef<THREE.Group | null>(null);
-  const gemRef = useRef<THREE.Mesh | null>(null);
+  const octaRef = useRef<THREE.Group | null>(null);
+  const innerOctaRef = useRef<THREE.Mesh | null>(null);
+  const floatItemsRef = useRef<THREE.Group | null>(null);
 
-  // Outer cube half-size and inner cube half-size
-  const Rout = 0.062;
-  const Rin = 0.031;
+  // Octahedron geometry: 6 vertices, 12 edges
+  const H = 0.082; // Top & bottom apex height
+  const R = 0.068; // Equatorial radius
 
-  // Precompute 8 diagonal struts connecting outer vertices to inner vertices
-  const diagonalStruts = useMemo(() => {
-    const struts: { position: [number, number, number]; rotation: [number, number, number]; length: number }[] = [];
-    const signs = [-1, 1];
+  const edges = useMemo(() => {
+    const verts: [number, number, number][] = [
+      [0, H, 0],
+      [0, -H, 0],
+      [R, 0, 0],
+      [0, 0, R],
+      [-R, 0, 0],
+      [0, 0, -R],
+    ];
+    const pairs: [number, number][] = [
+      [0, 2], [0, 3], [0, 4], [0, 5], // Top pyramid edges
+      [1, 2], [1, 3], [1, 4], [1, 5], // Bottom pyramid edges
+      [2, 3], [3, 4], [4, 5], [5, 2], // Equatorial perimeter edges
+    ];
     const up = new THREE.Vector3(0, 1, 0);
+    return pairs.map(([i, j]) => {
+      const p1 = new THREE.Vector3(...verts[i]);
+      const p2 = new THREE.Vector3(...verts[j]);
+      const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+      const dir = new THREE.Vector3().subVectors(p2, p1);
+      const len = dir.length();
+      dir.normalize();
+      const q = new THREE.Quaternion().setFromUnitVectors(up, dir);
+      const e = new THREE.Euler().setFromQuaternion(q);
+      return { pos: [mid.x, mid.y, mid.z] as [number, number, number], rot: [e.x, e.y, e.z] as [number, number, number], len };
+    });
+  }, [H, R]);
 
-    for (const sx of signs) {
-      for (const sy of signs) {
-        for (const sz of signs) {
-          const pOut = new THREE.Vector3(sx * Rout, sy * Rout, sz * Rout);
-          const pIn = new THREE.Vector3(sx * Rin, sy * Rin, sz * Rin);
-          const mid = new THREE.Vector3().addVectors(pOut, pIn).multiplyScalar(0.5);
-          const dir = new THREE.Vector3().subVectors(pOut, pIn);
-          const len = dir.length();
-
-          dir.normalize();
-          const quat = new THREE.Quaternion().setFromUnitVectors(up, dir);
-          const euler = new THREE.Euler().setFromQuaternion(quat);
-
-          struts.push({
-            position: [mid.x, mid.y, mid.z],
-            rotation: [euler.x, euler.y, euler.z],
-            length: len,
-          });
-        }
-      }
-    }
-    return struts;
-  }, [Rout, Rin]);
+  const vertexNodes: [number, number, number][] = useMemo(() => [
+    [0, H, 0],
+    [0, -H, 0],
+    [R, 0, 0],
+    [0, 0, R],
+    [-R, 0, 0],
+    [0, 0, -R],
+  ], [H, R]);
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
-    const speed = hovered ? 2.2 : 1.1;
+    const speed = hovered ? 2.2 : 1.2;
 
     // Levitation bobbing
-    groupRef.current.position.y = Math.sin(t * 2.2) * 0.008;
+    groupRef.current.position.y = Math.sin(t * 2.0) * 0.008;
 
-    // 4D Dimensional Tesseract Gyroscopic Rotation
-    if (outerCubeRef.current) {
-      outerCubeRef.current.rotation.y += delta * speed * 0.65;
-      outerCubeRef.current.rotation.x = Math.sin(t * 1.2) * 0.22 + 0.12;
-      outerCubeRef.current.rotation.z = Math.cos(t * 0.9) * 0.15;
+    // Smooth crystal rotation
+    if (octaRef.current) {
+      octaRef.current.rotation.y += delta * speed * 0.75;
+      octaRef.current.rotation.x = Math.sin(t * 1.1) * 0.12 + 0.08;
     }
 
-    if (innerCubeRef.current) {
-      // Counter-rotation to showcase 4D inversion perspective
-      innerCubeRef.current.rotation.y -= delta * speed * 1.1;
-      innerCubeRef.current.rotation.x = Math.cos(t * 1.4) * 0.30;
-      innerCubeRef.current.rotation.z = Math.sin(t * 1.0) * 0.20;
-
-      // 4D breathing expansion/contraction pulsation
-      const pulse = 1.0 + Math.sin(t * 2.4) * 0.08;
-      innerCubeRef.current.scale.set(pulse, pulse, pulse);
+    // Counter-rotating inner singularity core
+    if (innerOctaRef.current) {
+      innerOctaRef.current.rotation.y -= delta * speed * 1.5;
+      innerOctaRef.current.rotation.z += delta * speed * 1.0;
+      const pulse = 1.0 + Math.sin(t * 3.0) * 0.12;
+      innerOctaRef.current.scale.set(pulse, pulse, pulse);
     }
 
-    if (gemRef.current) {
-      gemRef.current.rotation.x += delta * speed * 1.8;
-      gemRef.current.rotation.y += delta * speed * 2.2;
+    // Floating satellite math glyphs
+    if (floatItemsRef.current) {
+      floatItemsRef.current.rotation.y -= delta * speed * 0.45;
     }
   });
 
-  const signs = [-1, 1];
-
   return (
     <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
-      {/* 1. OUTER HYPERCUBE (High-Contrast Metallic Cobalt & Royal Indigo, No Rings) */}
-      <group ref={outerCubeRef}>
-        {/* 12 Outer Frame Struts */}
-        {/* 4 Struts along X */}
-        {signs.map((sy, i) =>
-          signs.map((sz, j) => (
-            <mesh
-              key={`ox-${i}-${j}`}
-              position={[0, sy * Rout, sz * Rout]}
-              rotation={[0, 0, Math.PI / 2]}
-            >
-              <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
-              <meshStandardMaterial
-                color="#1E3A8A"
-                emissive="#2563EB"
-                emissiveIntensity={0.85}
-                metalness={0.92}
-                roughness={0.12}
-              />
-            </mesh>
-          ))
-        )}
-        {/* 4 Struts along Y */}
-        {signs.map((sx, i) =>
-          signs.map((sz, j) => (
-            <mesh key={`oy-${i}-${j}`} position={[sx * Rout, 0, sz * Rout]}>
-              <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
-              <meshStandardMaterial
-                color="#1E3A8A"
-                emissive="#2563EB"
-                emissiveIntensity={0.85}
-                metalness={0.92}
-                roughness={0.12}
-              />
-            </mesh>
-          ))
-        )}
-        {/* 4 Struts along Z */}
-        {signs.map((sx, i) =>
-          signs.map((sy, j) => (
-            <mesh
-              key={`oz-${i}-${j}`}
-              position={[sx * Rout, sy * Rout, 0]}
-              rotation={[Math.PI / 2, 0, 0]}
-            >
-              <cylinderGeometry args={[0.0035, 0.0035, Rout * 2, 8]} />
-              <meshStandardMaterial
-                color="#1E3A8A"
-                emissive="#2563EB"
-                emissiveIntensity={0.85}
-                metalness={0.92}
-                roughness={0.12}
-              />
-            </mesh>
-          ))
-        )}
+      {/* 1. MAIN GLOWING 3D DIAMOND OCTAHEDRON */}
+      <group ref={octaRef} position={[0, 0.012, 0]}>
+        {/* Solid Translucent Crystal Faces (Vivid Royal Violet & Magenta Sheen) */}
+        <mesh>
+          <octahedronGeometry args={[0.076, 0]} />
+          <meshStandardMaterial
+            color="#8B5CF6"
+            emissive="#6D28D9"
+            emissiveIntensity={1.8}
+            roughness={0.12}
+            metalness={0.35}
+            transparent
+            opacity={0.65}
+          />
+        </mesh>
 
-        {/* 8 Outer Vertex Jewels (Electric Neon Cyan) */}
-        {signs.map((sx, i) =>
-          signs.map((sy, j) =>
-            signs.map((sz, k) => (
-              <mesh
-                key={`ov-${i}-${j}-${k}`}
-                position={[sx * Rout, sy * Rout, sz * Rout]}
-              >
-                <sphereGeometry args={[0.0075, 12, 12]} />
-                <meshStandardMaterial
-                  color="#00F0FF"
-                  emissive="#06B6D4"
-                  emissiveIntensity={2.5}
-                  roughness={0.1}
-                />
-              </mesh>
-            ))
-          )
-        )}
-
-        {/* 8 Diagonal 4D Dimension Vectors (Luminous Ice Cyan) */}
-        {diagonalStruts.map((s, idx) => (
-          <mesh key={`diag-${idx}`} position={s.position} rotation={s.rotation}>
-            <cylinderGeometry args={[0.0028, 0.0028, s.length, 8]} />
+        {/* 12 Glowing Edge Struts (Neon Ice / Lavender White) */}
+        {edges.map((e, idx) => (
+          <mesh key={`octa-edge-${idx}`} position={e.pos} rotation={e.rot}>
+            <cylinderGeometry args={[0.0026, 0.0026, e.len, 8]} />
             <meshStandardMaterial
-              color="#0284C7"
-              emissive="#38BDF8"
-              emissiveIntensity={1.0}
-              metalness={0.85}
-              roughness={0.15}
+              color="#E0E7FF"
+              emissive="#A78BFA"
+              emissiveIntensity={2.5}
+              metalness={0.9}
+              roughness={0.1}
             />
           </mesh>
         ))}
 
-        {/* 2. INNER CORE CUBE (Radiant Electric Cyan Hyper-Core) */}
-        <group ref={innerCubeRef}>
-          {/* 12 Inner Frame Struts */}
-          {signs.map((sy, i) =>
-            signs.map((sz, j) => (
-              <mesh
-                key={`ix-${i}-${j}`}
-                position={[0, sy * Rin, sz * Rin]}
-                rotation={[0, 0, Math.PI / 2]}
-              >
-                <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
-                <meshStandardMaterial
-                  color="#22D3EE"
-                  emissive="#06B6D4"
-                  emissiveIntensity={1.5}
-                  metalness={0.85}
-                  roughness={0.1}
-                />
-              </mesh>
-            ))
-          )}
-          {signs.map((sx, i) =>
-            signs.map((sz, j) => (
-              <mesh key={`iy-${i}-${j}`} position={[sx * Rin, 0, sz * Rin]}>
-                <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
-                <meshStandardMaterial
-                  color="#22D3EE"
-                  emissive="#06B6D4"
-                  emissiveIntensity={1.5}
-                  metalness={0.85}
-                  roughness={0.1}
-                />
-              </mesh>
-            ))
-          )}
-          {signs.map((sx, i) =>
-            signs.map((sy, j) => (
-              <mesh
-                key={`iz-${i}-${j}`}
-                position={[sx * Rin, sy * Rin, 0]}
-                rotation={[Math.PI / 2, 0, 0]}
-              >
-                <cylinderGeometry args={[0.0032, 0.0032, Rin * 2, 8]} />
-                <meshStandardMaterial
-                  color="#22D3EE"
-                  emissive="#06B6D4"
-                  emissiveIntensity={1.5}
-                  metalness={0.85}
-                  roughness={0.1}
-                />
-              </mesh>
-            ))
-          )}
-
-          {/* 8 Inner Vertex Core Nodes */}
-          {signs.map((sx, i) =>
-            signs.map((sy, j) =>
-              signs.map((sz, k) => (
-                <mesh
-                  key={`iv-${i}-${j}-${k}`}
-                  position={[sx * Rin, sy * Rin, sz * Rin]}
-                >
-                  <sphereGeometry args={[0.006, 12, 12]} />
-                  <meshStandardMaterial
-                    color="#FFFFFF"
-                    emissive="#E0F2FE"
-                    emissiveIntensity={2.5}
-                  />
-                </mesh>
-              ))
-            )
-          )}
-
-          {/* 3. CENTRAL SINGULARITY GEM (Glowing Diamond Magenta / White Icosahedron) */}
-          <mesh ref={gemRef}>
-            <icosahedronGeometry args={[0.016, 0]} />
+        {/* 6 Corner Vertex Node Jewels */}
+        {vertexNodes.map((pos, idx) => (
+          <mesh key={`octa-vert-${idx}`} position={pos}>
+            <sphereGeometry args={[0.0055, 12, 12]} />
             <meshStandardMaterial
               color="#FFFFFF"
-              emissive="#EC4899"
-              emissiveIntensity={3.0}
-              metalness={0.8}
-              roughness={0.08}
+              emissive="#C4B5FD"
+              emissiveIntensity={3.2}
             />
           </mesh>
-        </group>
-      </group>
+        ))}
 
-      <pointLight color="#38BDF8" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
-    </group>
-  );
-}
-
-// ============================================================================
-// 2. PHYSICS LAB 3D: RADIANT QUANTUM ATOM (RING-FREE)
-// High-contrast fiery ruby & solar amber nucleus with 4 energetic electrons
-// orbiting freely on dynamic 3D paths with zero physical torus rings!
-// ============================================================================
-export function PhysicsLab3D({ hovered }: { hovered: boolean }) {
-  const groupRef = useRef<THREE.Group | null>(null);
-  const coreRef = useRef<THREE.Group | null>(null);
-  const e1Ref = useRef<THREE.Mesh | null>(null);
-  const e2Ref = useRef<THREE.Mesh | null>(null);
-  const e3Ref = useRef<THREE.Mesh | null>(null);
-  const e4Ref = useRef<THREE.Mesh | null>(null);
-
-  useFrame((state, delta) => {
-    if (!groupRef.current) return;
-    const t = state.clock.getElapsedTime();
-    const speed = hovered ? 2.8 : 1.6;
-
-    if (coreRef.current) {
-      coreRef.current.rotation.y += delta * speed * 0.8;
-      coreRef.current.rotation.x = Math.sin(t * 1.5) * 0.25;
-    }
-
-    const R = 0.115;
-    // Electron 1: XY orbit with inclination
-    if (e1Ref.current) {
-      const angle = t * speed * 2.2;
-      e1Ref.current.position.set(
-        Math.cos(angle) * R,
-        Math.sin(angle) * R * 0.85,
-        Math.sin(angle) * R * 0.52
-      );
-    }
-    // Electron 2: YZ orbit with inclination
-    if (e2Ref.current) {
-      const angle = (t + 1.2) * speed * 2.0;
-      e2Ref.current.position.set(
-        Math.sin(angle) * R * 0.55,
-        Math.cos(angle) * R,
-        Math.sin(angle) * R * 0.85
-      );
-    }
-    // Electron 3: XZ orbit with inclination
-    if (e3Ref.current) {
-      const angle = (t + 2.5) * speed * 2.4;
-      e3Ref.current.position.set(
-        Math.sin(angle) * R * 0.85,
-        Math.cos(angle) * R * 0.50,
-        Math.cos(angle) * R
-      );
-    }
-    // Electron 4: Diagonal reverse orbit
-    if (e4Ref.current) {
-      const angle = -(t + 3.8) * speed * 1.9;
-      e4Ref.current.position.set(
-        Math.cos(angle) * R * 0.80,
-        Math.sin(angle) * R * 0.80,
-        -Math.cos(angle) * R * 0.60
-      );
-    }
-
-    groupRef.current.position.y = Math.sin(t * 2.1 + 1) * 0.010;
-  });
-
-  return (
-    <group ref={groupRef} scale={hovered ? 1.05 : 0.94}>
-      {/* 1. Bold Solid Nucleus (High-Contrast Fiery Ruby & Solar Amber Core) */}
-      <group ref={coreRef}>
-        {/* Core Proton 1 (Blazing Ruby) */}
-        <mesh position={[0.015, 0.012, 0.010]}>
-          <sphereGeometry args={[0.026, 16, 16]} />
+        {/* Central Glowing Singularity Core Diamond */}
+        <mesh ref={innerOctaRef}>
+          <octahedronGeometry args={[0.034, 0]} />
           <meshStandardMaterial
-            color="#EF4444"
-            emissive="#DC2626"
-            emissiveIntensity={2.2}
-            roughness={0.12}
+            color="#FFFFFF"
+            emissive="#EC4899"
+            emissiveIntensity={3.0}
+            metalness={0.8}
+            roughness={0.08}
           />
         </mesh>
-        {/* Core Proton 2 (Solar Amber) */}
-        <mesh position={[-0.015, -0.010, 0.012]}>
-          <sphereGeometry args={[0.026, 16, 16]} />
+      </group>
+
+      {/* 2. FLOATING MATHEMATICAL POLYHEDRA & GLYPHS (Matching Reference Card) */}
+      <group ref={floatItemsRef} position={[0, 0.012, 0]}>
+        {/* Floating Mini Cube (Gold / Amber) */}
+        <mesh position={[0.095, 0.035, 0.02]} rotation={[0.4, 0.5, 0.2]}>
+          <boxGeometry args={[0.016, 0.016, 0.016]} />
           <meshStandardMaterial
             color="#F59E0B"
             emissive="#D97706"
             emissiveIntensity={2.0}
-            roughness={0.12}
+            metalness={0.8}
+            roughness={0.15}
           />
         </mesh>
-        {/* Core Neutron 1 (Fiery Orange) */}
-        <mesh position={[0.012, -0.015, -0.010]}>
-          <sphereGeometry args={[0.024, 16, 16]} />
+
+        {/* Floating Mini Tetrahedron (Electric Cyan) */}
+        <mesh position={[-0.092, -0.030, 0.03]} rotation={[0.3, -0.4, 0.6]}>
+          <tetrahedronGeometry args={[0.015, 0]} />
           <meshStandardMaterial
-            color="#EA580C"
-            emissive="#C2410C"
-            emissiveIntensity={2.0}
-            roughness={0.12}
-          />
-        </mesh>
-        {/* Core Neutron 2 (Rose Gold / Ruby Glow) */}
-        <mesh position={[-0.010, 0.015, -0.012]}>
-          <sphereGeometry args={[0.024, 16, 16]} />
-          <meshStandardMaterial
-            color="#FB7185"
-            emissive="#E11D48"
-            emissiveIntensity={2.0}
+            color="#06B6D4"
+            emissive="#0891B2"
+            emissiveIntensity={2.2}
+            metalness={0.85}
             roughness={0.12}
           />
         </mesh>
 
-        {/* Quantum Magnetic Flux Axis Pins (Representing field polarity, NO rings) */}
-        <mesh rotation={[0, 0, 0]}>
-          <cylinderGeometry args={[0.0025, 0.0025, 0.14, 8]} />
-          <meshStandardMaterial color="#F59E0B" emissive="#D97706" emissiveIntensity={1.5} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.0025, 0.0025, 0.14, 8]} />
-          <meshStandardMaterial color="#F97316" emissive="#EA580C" emissiveIntensity={1.5} />
-        </mesh>
-        <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.0025, 0.0025, 0.14, 8]} />
-          <meshStandardMaterial color="#EF4444" emissive="#DC2626" emissiveIntensity={1.5} />
+        {/* Floating Pi / Symbol Node (Bright Magenta) */}
+        <mesh position={[-0.085, 0.055, -0.025]}>
+          <octahedronGeometry args={[0.011, 0]} />
+          <meshStandardMaterial
+            color="#F43F5E"
+            emissive="#E11D48"
+            emissiveIntensity={2.5}
+          />
         </mesh>
       </group>
 
-      {/* 2. Freely Orbiting Luminous Quantum Electrons (NO rings) */}
-      <mesh ref={e1Ref}>
-        <sphereGeometry args={[0.018, 16, 16]} />
-        <meshStandardMaterial
-          color="#FFFFFF"
-          emissive="#FEF08A"
-          emissiveIntensity={3.5}
-          roughness={0.1}
-        />
-      </mesh>
-      <mesh ref={e2Ref}>
-        <sphereGeometry args={[0.018, 16, 16]} />
-        <meshStandardMaterial
-          color="#FFFFFF"
-          emissive="#FDE047"
-          emissiveIntensity={3.5}
-          roughness={0.1}
-        />
-      </mesh>
-      <mesh ref={e3Ref}>
-        <sphereGeometry args={[0.018, 16, 16]} />
-        <meshStandardMaterial
-          color="#FFFFFF"
-          emissive="#FEF08A"
-          emissiveIntensity={3.5}
-          roughness={0.1}
-        />
-      </mesh>
-      <mesh ref={e4Ref}>
-        <sphereGeometry args={[0.016, 16, 16]} />
-        <meshStandardMaterial
-          color="#FFFFFF"
-          emissive="#F59E0B"
-          emissiveIntensity={3.2}
-          roughness={0.1}
-        />
-      </mesh>
+      {/* 3. HOLOGRAPHIC EMITTER PEDESTAL BASE (Matching Reference Card) */}
+      <group position={[0, -0.075, 0]}>
+        {/* Base Outer Bevel Disk */}
+        <mesh position={[0, -0.008, 0]}>
+          <cylinderGeometry args={[0.068, 0.072, 0.007, 32]} />
+          <meshStandardMaterial
+            color="#2E1065"
+            emissive="#4C1D95"
+            emissiveIntensity={0.8}
+            metalness={0.9}
+            roughness={0.2}
+          />
+        </mesh>
+        {/* Glowing Neon Violet Emitter Ring */}
+        <mesh position={[0, -0.004, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.055, 0.0035, 16, 32]} />
+          <meshStandardMaterial
+            color="#A855F7"
+            emissive="#7C3AED"
+            emissiveIntensity={2.8}
+          />
+        </mesh>
+        {/* Inner Luminous Core Disc */}
+        <mesh position={[0, -0.003, 0]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.002, 24]} />
+          <meshStandardMaterial
+            color="#C084FC"
+            emissive="#9333EA"
+            emissiveIntensity={2.2}
+          />
+        </mesh>
+        {/* Holographic Projection Light Beam Cone */}
+        <mesh position={[0, 0.045, 0]}>
+          <cylinderGeometry args={[0.068, 0.035, 0.095, 32, 1, true]} />
+          <meshBasicMaterial
+            color="#A855F7"
+            transparent
+            opacity={0.11}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </group>
 
-      <pointLight color="#F59E0B" intensity={hovered ? 3.4 : 2.4} distance={0.65} />
+      <pointLight color="#A855F7" intensity={hovered ? 3.6 : 2.5} distance={0.65} />
     </group>
   );
 }
 
 // ============================================================================
-// 3. CHEMISTRY LAB 3D: LABORATORY GLASS FUNNEL WITH REACTING CHEMICAL,
-// FORMING BUBBLES & SLOW EVAPORATION (RING-FREE)
-// Borosilicate glass funnel holding bioluminescent emerald solution with
-// continuous bubbling from throat and slow vapor evaporation emerging upward!
+// 2. PHYSICS LAB 3D: COSMIC STRIPED RINGED PLANET & SATELLITE MOONS
+// Directly inspired by the reference image: a glowing striped Gas Giant planet
+// (Saturn-like celestial world) in luminous cyan/sapphire with banded atmosphere,
+// radiant tilted planetary ring disc, orbiting satellite moons, and emitter base!
+// ============================================================================
+export function PhysicsLab3D({ hovered }: { hovered: boolean }) {
+  const groupRef = useRef<THREE.Group | null>(null);
+  const planetTiltRef = useRef<THREE.Group | null>(null);
+  const planetCoreRef = useRef<THREE.Mesh | null>(null);
+  const moon1Ref = useRef<THREE.Mesh | null>(null);
+  const moon2Ref = useRef<THREE.Mesh | null>(null);
+  const moon3Ref = useRef<THREE.Mesh | null>(null);
+
+  useFrame((state, delta) => {
+    if (!groupRef.current) return;
+    const t = state.clock.getElapsedTime();
+    const speed = hovered ? 2.2 : 1.2;
+
+    // Levitation bobbing
+    groupRef.current.position.y = Math.sin(t * 1.9 + 1) * 0.008;
+
+    // Planet rotation on its polar axis
+    if (planetCoreRef.current) {
+      planetCoreRef.current.rotation.y += delta * speed * 0.8;
+    }
+
+    // Orbiting Satellite Moons
+    const orbitSpeed = speed * 1.4;
+    if (moon1Ref.current) {
+      // Moon 1: outer edge of ring plane
+      const angle = t * orbitSpeed * 1.2;
+      moon1Ref.current.position.set(Math.cos(angle) * 0.135, 0, Math.sin(angle) * 0.135);
+    }
+    if (moon2Ref.current) {
+      // Moon 2: slightly inclined orbit
+      const angle = t * orbitSpeed * 1.6 + 2.0;
+      moon2Ref.current.position.set(
+        Math.cos(angle) * 0.115,
+        Math.sin(angle * 2) * 0.020,
+        Math.sin(angle) * 0.115
+      );
+    }
+    if (moon3Ref.current) {
+      // Moon 3: inner fast moon
+      const angle = -t * orbitSpeed * 2.0 + 4.0;
+      moon3Ref.current.position.set(Math.cos(angle) * 0.092, 0, Math.sin(angle) * 0.092);
+    }
+  });
+
+  return (
+    <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
+      {/* 1. PLANET ASSEMBLY (Tilted at 26-degree planetary axial tilt) */}
+      <group ref={planetTiltRef} rotation={[0.42, 0, 0.18]} position={[0, 0.015, 0]}>
+        {/* Celestial Sphere with Striped Bands */}
+        <group ref={planetCoreRef}>
+          {/* Base Oceanic Sapphire Planet Core */}
+          <mesh>
+            <sphereGeometry args={[0.054, 32, 32]} />
+            <meshStandardMaterial
+              color="#0284C7"
+              emissive="#0369A1"
+              emissiveIntensity={1.2}
+              roughness={0.25}
+              metalness={0.2}
+            />
+          </mesh>
+
+          {/* Central Equatorial Atmosphere Stripe (Electric Cyan) */}
+          <mesh>
+            <cylinderGeometry args={[0.0545, 0.0545, 0.020, 32, 1, true]} />
+            <meshStandardMaterial
+              color="#38BDF8"
+              emissive="#0EA5E9"
+              emissiveIntensity={2.0}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* North Temperate Atmospheric Band (Arctic Ice Cyan) */}
+          <mesh position={[0, 0.022, 0]}>
+            <cylinderGeometry args={[0.0485, 0.0485, 0.010, 32, 1, true]} />
+            <meshStandardMaterial
+              color="#67E8F9"
+              emissive="#06B6D4"
+              emissiveIntensity={2.2}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* South Temperate Atmospheric Band (Deep Midnight Blue) */}
+          <mesh position={[0, -0.022, 0]}>
+            <cylinderGeometry args={[0.0485, 0.0485, 0.010, 32, 1, true]} />
+            <meshStandardMaterial
+              color="#1E3A8A"
+              emissive="#1D4ED8"
+              emissiveIntensity={1.5}
+              roughness={0.2}
+            />
+          </mesh>
+
+          {/* North Polar Cap (Luminous White-Cyan Ice) */}
+          <mesh position={[0, 0.044, 0]}>
+            <sphereGeometry args={[0.025, 24, 16]} />
+            <meshStandardMaterial
+              color="#E0F2FE"
+              emissive="#38BDF8"
+              emissiveIntensity={1.8}
+            />
+          </mesh>
+        </group>
+
+        {/* 2. LUMINOUS PLANETARY RINGS (Matching Reference Image) */}
+        {/* Wide Translucent Planetary Ring Disc */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.074, 0.124, 64]} />
+          <meshStandardMaterial
+            color="#38BDF8"
+            emissive="#0284C7"
+            emissiveIntensity={1.8}
+            transparent
+            opacity={0.82}
+            side={THREE.DoubleSide}
+            roughness={0.15}
+          />
+        </mesh>
+
+        {/* Outer Ring Luminous Border Accent */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.124, 0.0022, 16, 64]} />
+          <meshStandardMaterial
+            color="#E0F2FE"
+            emissive="#38BDF8"
+            emissiveIntensity={2.8}
+          />
+        </mesh>
+
+        {/* Inner Ring Division Border Accent */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.074, 0.0020, 16, 64]} />
+          <meshStandardMaterial
+            color="#06B6D4"
+            emissive="#0891B2"
+            emissiveIntensity={2.0}
+          />
+        </mesh>
+
+        {/* 3. ORBITING SATELLITE MOONS */}
+        {/* Moon 1: Pearl White/Cyan Sphere */}
+        <mesh ref={moon1Ref}>
+          <sphereGeometry args={[0.009, 16, 16]} />
+          <meshStandardMaterial
+            color="#FFFFFF"
+            emissive="#7DD3FC"
+            emissiveIntensity={3.2}
+          />
+        </mesh>
+
+        {/* Moon 2: Electric Lapis Blue Sphere */}
+        <mesh ref={moon2Ref}>
+          <sphereGeometry args={[0.0075, 14, 14]} />
+          <meshStandardMaterial
+            color="#38BDF8"
+            emissive="#0284C7"
+            emissiveIntensity={2.8}
+          />
+        </mesh>
+
+        {/* Moon 3: Radiant Inner Starlight Moon */}
+        <mesh ref={moon3Ref}>
+          <sphereGeometry args={[0.0055, 12, 12]} />
+          <meshStandardMaterial
+            color="#FFFFFF"
+            emissive="#38BDF8"
+            emissiveIntensity={3.5}
+          />
+        </mesh>
+      </group>
+
+      {/* 4. HOLOGRAPHIC EMITTER PEDESTAL BASE (Matching Reference Card) */}
+      <group position={[0, -0.075, 0]}>
+        {/* Base Bevel Disc */}
+        <mesh position={[0, -0.008, 0]}>
+          <cylinderGeometry args={[0.068, 0.072, 0.007, 32]} />
+          <meshStandardMaterial
+            color="#082F49"
+            emissive="#075985"
+            emissiveIntensity={0.8}
+            metalness={0.9}
+            roughness={0.2}
+          />
+        </mesh>
+        {/* Glowing Neon Cyan Emitter Ring */}
+        <mesh position={[0, -0.004, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.055, 0.0035, 16, 32]} />
+          <meshStandardMaterial
+            color="#38BDF8"
+            emissive="#0284C7"
+            emissiveIntensity={2.8}
+          />
+        </mesh>
+        {/* Inner Luminous Core Disc */}
+        <mesh position={[0, -0.003, 0]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.002, 24]} />
+          <meshStandardMaterial
+            color="#7DD3FC"
+            emissive="#0284C7"
+            emissiveIntensity={2.2}
+          />
+        </mesh>
+        {/* Holographic Projection Light Beam Cone */}
+        <mesh position={[0, 0.045, 0]}>
+          <cylinderGeometry args={[0.068, 0.035, 0.095, 32, 1, true]} />
+          <meshBasicMaterial
+            color="#0284C7"
+            transparent
+            opacity={0.12}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </group>
+
+      <pointLight color="#38BDF8" intensity={hovered ? 3.6 : 2.5} distance={0.65} />
+    </group>
+  );
+}
+
+// ============================================================================
+// 3. CHEMISTRY LAB 3D: ERLENMEYER BEAKER WITH BUBBLING CHEMICAL & VIBRANT
+// COLORED EVAPORATION VAPOR
+// Directly inspired by the reference image & user requirements:
+// Classic conical laboratory beaker holding glowing emerald chemical liquid,
+// continuous effervescent bubbling inside, and prominently visible colored
+// evaporation vapor clouds rising upward with floating molecule clusters!
 // ============================================================================
 export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
 
-  // 6 micro-bubbles rising through liquid
+  // 8 active micro-bubbles rising inside the beaker liquid
   const b1 = useRef<THREE.Mesh | null>(null);
   const b2 = useRef<THREE.Mesh | null>(null);
   const b3 = useRef<THREE.Mesh | null>(null);
   const b4 = useRef<THREE.Mesh | null>(null);
   const b5 = useRef<THREE.Mesh | null>(null);
   const b6 = useRef<THREE.Mesh | null>(null);
+  const b7 = useRef<THREE.Mesh | null>(null);
+  const b8 = useRef<THREE.Mesh | null>(null);
 
-  // 8 slow evaporation vapor puffs ascending above the funnel
+  // 10 vibrant colored evaporation vapor puffs ascending into the air
   const vaporPuffs = useRef<(THREE.Mesh | null)[]>([]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
-    const speed = hovered ? 1.8 : 1.0;
+    const speed = hovered ? 1.8 : 1.1;
 
     // Gentle 3D levitation and subtle laboratory tilt
-    groupRef.current.position.y = Math.sin(t * 1.9 + 2) * 0.008;
-    groupRef.current.rotation.y = Math.sin(t * 0.9) * 0.15;
-    groupRef.current.rotation.z = Math.cos(t * 0.7) * 0.05;
+    groupRef.current.position.y = Math.sin(t * 1.8 + 2) * 0.008;
+    groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.12;
 
-    // Bubbles forming and rising inside the liquid
-    const bubbleRefs = [b1, b2, b3, b4, b5, b6];
+    // 8 Active micro-bubbles rising through the chemical liquid
+    const bubbleRefs = [b1, b2, b3, b4, b5, b6, b7, b8];
     const bParams = [
-      { speed: 0.045, offset: 0.0, xOffset: 0.008, zOffset: 0.004, wobble: 3.2 },
-      { speed: 0.055, offset: 0.2, xOffset: -0.010, zOffset: 0.006, wobble: 4.1 },
-      { speed: 0.040, offset: 0.45, xOffset: 0.004, zOffset: -0.008, wobble: 3.6 },
-      { speed: 0.050, offset: 0.65, xOffset: -0.006, zOffset: -0.004, wobble: 2.8 },
-      { speed: 0.060, offset: 0.85, xOffset: 0.012, zOffset: -0.002, wobble: 4.5 },
-      { speed: 0.048, offset: 0.15, xOffset: -0.003, zOffset: 0.010, wobble: 3.8 },
+      { speed: 0.050, offset: 0.00, xOff: 0.012, zOff: 0.008, wobble: 3.2 },
+      { speed: 0.060, offset: 0.15, xOff: -0.016, zOff: 0.010, wobble: 4.1 },
+      { speed: 0.045, offset: 0.30, xOff: 0.008, zOff: -0.014, wobble: 3.6 },
+      { speed: 0.055, offset: 0.45, xOff: -0.010, zOff: -0.008, wobble: 2.8 },
+      { speed: 0.065, offset: 0.60, xOff: 0.020, zOff: -0.004, wobble: 4.5 },
+      { speed: 0.050, offset: 0.72, xOff: -0.005, zOff: 0.018, wobble: 3.8 },
+      { speed: 0.058, offset: 0.85, xOff: 0.015, zOff: 0.012, wobble: 4.2 },
+      { speed: 0.048, offset: 0.92, xOff: -0.018, zOff: -0.012, wobble: 3.4 },
     ];
 
     bubbleRefs.forEach((bRef, i) => {
       if (!bRef.current) return;
       const bp = bParams[i];
       const progress = (t * bp.speed * speed + bp.offset) % 1;
-      // y moves from throat (-0.038) up to liquid surface (+0.026)
-      bRef.current.position.y = -0.038 + progress * 0.064;
-      const spread = 0.3 + progress * 0.7;
-      bRef.current.position.x = bp.xOffset * spread + Math.sin(t * bp.wobble + i) * 0.003;
-      bRef.current.position.z = bp.zOffset * spread + Math.cos(t * bp.wobble + i) * 0.003;
-      const s = 0.7 + progress * 0.5;
+      // y moves from beaker base (-0.050) up to meniscus surface (-0.008)
+      bRef.current.position.y = -0.050 + progress * 0.042;
+      // Spread narrows slightly as beaker body tapers upward
+      const taper = 1.0 - progress * 0.35;
+      bRef.current.position.x = bp.xOff * taper + Math.sin(t * bp.wobble + i) * 0.003;
+      bRef.current.position.z = bp.zOff * taper + Math.cos(t * bp.wobble + i) * 0.003;
+      const s = 0.75 + progress * 0.55;
       bRef.current.scale.set(s, s, s);
     });
 
-    // 8 Slow evaporation vapor puffs ascending from liquid surface into the air
+    // 10 VIBRANT COLORED EVAPORATION VAPOR PUFFS (High Visibility Emerald & Electric Mint)
     vaporPuffs.current.forEach((puff, i) => {
       if (!puff) return;
-      const puffOffset = i / 8;
-      const puffSpeed = (0.07 + (i % 3) * 0.015) * speed;
+      const count = 10;
+      const puffOffset = i / count;
+      const puffSpeed = (0.065 + (i % 4) * 0.012) * speed;
       const cycle = (t * puffSpeed + puffOffset) % 1;
 
-      // Height: starts just at liquid surface (+0.028) and drifts above funnel top (+0.14)
-      puff.position.y = 0.028 + cycle * 0.115;
+      // Height: Starts right at meniscus (-0.008), passes through neck (+0.04 to +0.06), ascends high into air (+0.16)
+      puff.position.y = -0.008 + cycle * 0.170;
 
-      // Slow drifting & outward dispersion
-      const angle = (i * Math.PI) / 4 + t * 0.3;
-      const driftRad = cycle * 0.038;
-      puff.position.x = Math.cos(angle) * driftRad + Math.sin(t * 1.5 + i) * 0.004;
-      puff.position.z = Math.sin(angle) * driftRad + Math.cos(t * 1.2 + i) * 0.004;
+      // Swirling atmospheric convection eddy
+      const swirlAngle = (i * Math.PI * 2) / count + t * 0.8;
+      // Radius widens out above the beaker neck
+      const driftRad = cycle > 0.38 ? 0.008 + (cycle - 0.38) * 0.045 : cycle * 0.012;
+      puff.position.x = Math.cos(swirlAngle) * driftRad + Math.sin(t * 1.8 + i) * 0.003;
+      puff.position.z = Math.sin(swirlAngle) * driftRad + Math.cos(t * 1.5 + i) * 0.003;
 
-      // Expansion as vapor disperses
-      const scaleVal = 0.7 + cycle * 1.6;
+      // Expansion as vapor billows outward
+      const scaleVal = 0.65 + cycle * 1.8;
       puff.scale.set(scaleVal, scaleVal, scaleVal);
 
-      // Smooth fade out as it reaches the top of evaporation
+      // Distinct colored visibility: high opacity emerging, soft dissipation at apex
       const mat = puff.material as THREE.MeshStandardMaterial;
       if (mat) {
-        const opacity = cycle < 0.2 ? (cycle / 0.2) * 0.65 : (1 - (cycle - 0.2) / 0.8) * 0.65;
-        mat.opacity = Math.max(0, opacity);
+        let opacity = 0.85;
+        if (cycle < 0.15) {
+          opacity = (cycle / 0.15) * 0.85;
+        } else if (cycle > 0.65) {
+          opacity = Math.max(0, (1 - (cycle - 0.65) / 0.35) * 0.85);
+        }
+        mat.opacity = opacity;
       }
     });
   });
 
   return (
-    <group ref={groupRef} scale={hovered ? 1.05 : 0.94}>
+    <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
       {/* ============================================================ */}
-      {/* 1. LABORATORY GLASS FUNNEL (Translucent Borosilicate Glass) */}
+      {/* 1. LABORATORY ERLENMEYER BEAKER (Borosilicate Glass) */}
       {/* ============================================================ */}
-      {/* Upper Conical Funnel Bowl (Wide top rim, tapering to throat) */}
-      <mesh position={[0, 0.024, 0]}>
-        <cylinderGeometry args={[0.075, 0.015, 0.078, 32, 1, true]} />
-        <meshStandardMaterial
-          color="#E0F2FE"
-          emissive="#38BDF8"
-          emissiveIntensity={0.35}
-          metalness={0.15}
-          roughness={0.08}
-          transparent
-          opacity={0.36}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Flared Glass Top Lip (Subtle bevel collar, NO torus ring) */}
-      <mesh position={[0, 0.063, 0]}>
-        <cylinderGeometry args={[0.078, 0.075, 0.004, 32, 1, true]} />
-        <meshStandardMaterial
-          color="#BAE6FD"
-          emissive="#0EA5E9"
-          emissiveIntensity={0.6}
-          roughness={0.1}
-          transparent
-          opacity={0.55}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Slender Glass Stem (Drain tube extending down) */}
-      <mesh position={[0, -0.050, 0]}>
-        <cylinderGeometry args={[0.014, 0.011, 0.070, 24, 1, false]} />
-        <meshStandardMaterial
-          color="#E0F2FE"
-          emissive="#38BDF8"
-          emissiveIntensity={0.35}
-          metalness={0.15}
-          roughness={0.08}
-          transparent
-          opacity={0.36}
-        />
-      </mesh>
-
-      {/* ============================================================ */}
-      {/* 2. GLOWING CHEMICAL LIQUID INSIDE THE FUNNEL */}
-      {/* High-contrast Bioluminescent Emerald & Vibrant Electric Mint */}
-      {/* ============================================================ */}
-      {/* Liquid in the Conical Bowl */}
-      <mesh position={[0, 0.005, 0]}>
-        <cylinderGeometry args={[0.048, 0.013, 0.042, 32]} />
-        <meshStandardMaterial
-          color="#10B981"
-          emissive="#059669"
-          emissiveIntensity={2.5}
-          roughness={0.15}
-          metalness={0.2}
-        />
-      </mesh>
-
-      {/* Liquid column in the Stem */}
-      <mesh position={[0, -0.045, 0]}>
-        <cylinderGeometry args={[0.010, 0.008, 0.060, 24]} />
-        <meshStandardMaterial
-          color="#10B981"
-          emissive="#059669"
-          emissiveIntensity={2.3}
-          roughness={0.15}
-        />
-      </mesh>
-
-      {/* Liquid Meniscus Surface Cap */}
-      <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.048, 32]} />
-        <meshStandardMaterial
-          color="#6EE7B7"
-          emissive="#34D399"
-          emissiveIntensity={2.8}
-          roughness={0.1}
-        />
-      </mesh>
-
-      {/* ============================================================ */}
-      {/* 3. ACTIVE MICRO-BUBBLES FORMING INSIDE THE CHEMICAL LIQUID */}
-      {/* ============================================================ */}
-      <mesh ref={b1}>
-        <sphereGeometry args={[0.0085, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-      <mesh ref={b2}>
-        <sphereGeometry args={[0.0070, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-      <mesh ref={b3}>
-        <sphereGeometry args={[0.0060, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-      <mesh ref={b4}>
-        <sphereGeometry args={[0.0080, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-      <mesh ref={b5}>
-        <sphereGeometry args={[0.0055, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-      <mesh ref={b6}>
-        <sphereGeometry args={[0.0075, 12, 12]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
-      </mesh>
-
-      {/* ============================================================ */}
-      {/* 4. SLOWLY EVAPORATING CHEMICAL VAPOR PUFFS (Emerging upward) */}
-      {/* ============================================================ */}
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <mesh
-          key={`vapor-${i}`}
-          ref={(el) => {
-            vaporPuffs.current[i] = el;
-          }}
-        >
-          <sphereGeometry args={[0.010, 14, 14]} />
+      <group position={[0, 0.008, 0]}>
+        {/* Cylindrical Glass Neck */}
+        <mesh position={[0, 0.042, 0]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.042, 32, 1, true]} />
           <meshStandardMaterial
-            color="#A7F3D0"
-            emissive="#34D399"
-            emissiveIntensity={2.2}
+            color="#E0F2FE"
+            emissive="#38BDF8"
+            emissiveIntensity={0.35}
+            metalness={0.15}
+            roughness={0.08}
             transparent
-            opacity={0.6}
-            roughness={0.3}
+            opacity={0.36}
+            side={THREE.DoubleSide}
           />
         </mesh>
-      ))}
 
-      {/* Dynamic Emerald/Mint Reaction Glow */}
-      <pointLight color="#10B981" intensity={hovered ? 3.6 : 2.5} distance={0.65} />
+        {/* Flared Glass Top Lip Rim */}
+        <mesh position={[0, 0.063, 0]}>
+          <cylinderGeometry args={[0.025, 0.022, 0.004, 32, 1, true]} />
+          <meshStandardMaterial
+            color="#BAE6FD"
+            emissive="#0EA5E9"
+            emissiveIntensity={0.65}
+            roughness={0.1}
+            transparent
+            opacity={0.55}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        {/* Expanding Conical Glass Body */}
+        <mesh position={[0, -0.016, 0]}>
+          <cylinderGeometry args={[0.022, 0.066, 0.074, 32, 1, true]} />
+          <meshStandardMaterial
+            color="#E0F2FE"
+            emissive="#38BDF8"
+            emissiveIntensity={0.32}
+            metalness={0.15}
+            roughness={0.08}
+            transparent
+            opacity={0.35}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        {/* Flat Glass Base Bottom Plate */}
+        <mesh position={[0, -0.053, 0]}>
+          <cylinderGeometry args={[0.066, 0.066, 0.005, 32]} />
+          <meshStandardMaterial
+            color="#BAE6FD"
+            emissive="#38BDF8"
+            emissiveIntensity={0.4}
+            metalness={0.2}
+            roughness={0.1}
+            transparent
+            opacity={0.45}
+          />
+        </mesh>
+
+        {/* White Etched Graduation Measurement Lines on Beaker Wall */}
+        <mesh position={[0, -0.038, 0]}>
+          <cylinderGeometry args={[0.0535, 0.0535, 0.0018, 32, 1, true]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#E0F2FE" emissiveIntensity={1.5} />
+        </mesh>
+        <mesh position={[0, -0.024, 0]}>
+          <cylinderGeometry args={[0.0455, 0.0455, 0.0018, 32, 1, true]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#E0F2FE" emissiveIntensity={1.5} />
+        </mesh>
+        <mesh position={[0, -0.010, 0]}>
+          <cylinderGeometry args={[0.0375, 0.0375, 0.0018, 32, 1, true]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#E0F2FE" emissiveIntensity={1.5} />
+        </mesh>
+
+        {/* ============================================================ */}
+        {/* 2. BIOLUMINESCENT EMERALD CHEMICAL LIQUID */}
+        {/* ============================================================ */}
+        {/* Conical Liquid Volume inside Beaker */}
+        <mesh position={[0, -0.030, 0]}>
+          <cylinderGeometry args={[0.038, 0.063, 0.045, 32]} />
+          <meshStandardMaterial
+            color="#10B981"
+            emissive="#059669"
+            emissiveIntensity={2.8}
+            roughness={0.15}
+            metalness={0.15}
+          />
+        </mesh>
+
+        {/* Liquid Meniscus Surface Cap */}
+        <mesh position={[0, -0.0075, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.038, 32]} />
+          <meshStandardMaterial
+            color="#6EE7B7"
+            emissive="#34D399"
+            emissiveIntensity={3.0}
+            roughness={0.1}
+          />
+        </mesh>
+
+        {/* ============================================================ */}
+        {/* 3. ACTIVE EFFERVESCENT REACTION MICRO-BUBBLES */}
+        {/* ============================================================ */}
+        <mesh ref={b1}>
+          <sphereGeometry args={[0.0085, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b2}>
+          <sphereGeometry args={[0.0070, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b3}>
+          <sphereGeometry args={[0.0060, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b4}>
+          <sphereGeometry args={[0.0080, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b5}>
+          <sphereGeometry args={[0.0055, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b6}>
+          <sphereGeometry args={[0.0075, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b7}>
+          <sphereGeometry args={[0.0065, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+        <mesh ref={b8}>
+          <sphereGeometry args={[0.0080, 12, 12]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#A7F3D0" emissiveIntensity={3.2} />
+        </mesh>
+
+        {/* ============================================================ */}
+        {/* 4. VISIBLY COLORED EVAPORATION VAPOR BILLOWS (Emerald / Mint) */}
+        {/* ============================================================ */}
+        {[
+          { color: '#00F5D4', emissive: '#059669', size: 0.013 },
+          { color: '#10B981', emissive: '#047857', size: 0.015 },
+          { color: '#34D399', emissive: '#10B981', size: 0.012 },
+          { color: '#6EE7B7', emissive: '#059669', size: 0.014 },
+          { color: '#00F5D4', emissive: '#059669', size: 0.016 },
+          { color: '#10B981', emissive: '#047857', size: 0.013 },
+          { color: '#4ADE80', emissive: '#16A34A', size: 0.015 },
+          { color: '#6EE7B7', emissive: '#059669', size: 0.014 },
+          { color: '#00F5D4', emissive: '#059669', size: 0.015 },
+          { color: '#34D399', emissive: '#10B981', size: 0.012 },
+        ].map((v, i) => (
+          <mesh
+            key={`colored-vapor-${i}`}
+            ref={(el) => {
+              vaporPuffs.current[i] = el;
+            }}
+          >
+            <sphereGeometry args={[v.size, 16, 16]} />
+            <meshStandardMaterial
+              color={v.color}
+              emissive={v.emissive}
+              emissiveIntensity={3.2}
+              transparent
+              opacity={0.85}
+              roughness={0.25}
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* 5. FLOATING CHEMICAL MOLECULE NODES (Matching Reference Card) */}
+      <group position={[0, 0.012, 0]}>
+        {/* Bonded Molecule Cluster 1 (Left side) */}
+        <group position={[-0.095, 0.015, 0.02]}>
+          <mesh position={[0, 0.012, 0]}>
+            <sphereGeometry args={[0.009, 12, 12]} />
+            <meshStandardMaterial color="#10B981" emissive="#059669" emissiveIntensity={2.5} />
+          </mesh>
+          <mesh position={[0.012, -0.008, 0]}>
+            <sphereGeometry args={[0.007, 12, 12]} />
+            <meshStandardMaterial color="#00F5D4" emissive="#059669" emissiveIntensity={2.5} />
+          </mesh>
+          <mesh position={[-0.012, -0.008, 0]}>
+            <sphereGeometry args={[0.007, 12, 12]} />
+            <meshStandardMaterial color="#00F5D4" emissive="#059669" emissiveIntensity={2.5} />
+          </mesh>
+        </group>
+
+        {/* Bonded Molecule Cluster 2 (Right side) */}
+        <group position={[0.095, 0.040, -0.02]}>
+          <mesh position={[0, 0, 0]}>
+            <sphereGeometry args={[0.009, 12, 12]} />
+            <meshStandardMaterial color="#34D399" emissive="#10B981" emissiveIntensity={2.5} />
+          </mesh>
+          <mesh position={[0.014, 0.012, 0]}>
+            <sphereGeometry args={[0.007, 12, 12]} />
+            <meshStandardMaterial color="#FFFFFF" emissive="#6EE7B7" emissiveIntensity={2.2} />
+          </mesh>
+        </group>
+      </group>
+
+      {/* 6. HOLOGRAPHIC EMITTER PEDESTAL BASE (Matching Reference Card) */}
+      <group position={[0, -0.075, 0]}>
+        {/* Base Bevel Disk */}
+        <mesh position={[0, -0.008, 0]}>
+          <cylinderGeometry args={[0.068, 0.072, 0.007, 32]} />
+          <meshStandardMaterial
+            color="#064E3B"
+            emissive="#065F46"
+            emissiveIntensity={0.8}
+            metalness={0.9}
+            roughness={0.2}
+          />
+        </mesh>
+        {/* Glowing Neon Emerald Emitter Ring */}
+        <mesh position={[0, -0.004, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.055, 0.0035, 16, 32]} />
+          <meshStandardMaterial
+            color="#10B981"
+            emissive="#059669"
+            emissiveIntensity={2.8}
+          />
+        </mesh>
+        {/* Inner Luminous Core Disc */}
+        <mesh position={[0, -0.003, 0]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.002, 24]} />
+          <meshStandardMaterial
+            color="#6EE7B7"
+            emissive="#10B981"
+            emissiveIntensity={2.2}
+          />
+        </mesh>
+        {/* Holographic Projection Light Beam Cone */}
+        <mesh position={[0, 0.045, 0]}>
+          <cylinderGeometry args={[0.068, 0.035, 0.095, 32, 1, true]} />
+          <meshBasicMaterial
+            color="#10B981"
+            transparent
+            opacity={0.12}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </group>
+
+      {/* Dynamic Colored Evaporation & Chemical Reaction Glow */}
+      <pointLight color="#10B981" intensity={hovered ? 3.8 : 2.6} distance={0.7} />
+      <pointLight position={[0, 0.08, 0]} color="#00F5D4" intensity={hovered ? 2.5 : 1.8} distance={0.5} />
     </group>
   );
 }
