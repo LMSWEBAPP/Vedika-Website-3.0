@@ -89,7 +89,6 @@ export default function VedikaOrbitStage() {
 
   const stageRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const hasStartedRef = useRef<boolean>(false);
 
   // SVG animated element refs
   const segmentRefs = useRef<(SVGPathElement | null)[]>(new Array(9).fill(null));
@@ -126,14 +125,14 @@ export default function VedikaOrbitStage() {
         // Ensure all 9 segments and auras remain permanently visible as a full spectrum
         segmentRefs.current.forEach((el, idx) => {
           if (el) {
-            el.style.strokeDashoffset = '0';
+            el.style.strokeDashoffset = '0px';
             el.style.opacity = '1';
             el.style.visibility = 'visible';
           }
           const aura = auraRefs.current[idx];
           if (aura) {
-            aura.style.strokeDashoffset = '0';
-            aura.style.opacity = '0.25';
+            aura.style.strokeDashoffset = '0px';
+            aura.style.opacity = '0.28';
             aura.style.visibility = 'visible';
           }
         });
@@ -149,10 +148,10 @@ export default function VedikaOrbitStage() {
     });
 
     const C_EXPAND = ORBIT_TIMINGS.CARD_EXPAND / 1000;     // 0.5s
-    const C_READ = ORBIT_TIMINGS.CARD_READ / 1000;         // 2.4s
-    const C_COLLAPSE = ORBIT_TIMINGS.CARD_COLLAPSE / 1000; // 0.4s
-    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.1s
-    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.2s
+    const C_READ = ORBIT_TIMINGS.CARD_READ / 1000;         // 2.2s
+    const C_COLLAPSE = ORBIT_TIMINGS.CARD_COLLAPSE / 1000; // 0.38s
+    const S_TRAVEL = ORBIT_TIMINGS.SEGMENT_TRAVEL / 1000;   // 1.2s
+    const F_TRAVEL = ORBIT_TIMINGS.FINAL_CLOSING_TRAVEL / 1000; // 1.3s
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEP 0: First node (Feature 01: Pink, Non-Judgmental Space)
@@ -172,6 +171,7 @@ export default function VedikaOrbitStage() {
 
     // ──────────────────────────────────────────────────────────────────────────
     // STEPS 1 through 7: Segments connecting Node 1 → 2 → 3 → ... → 9
+    // As the energy point travels, the ring segment paints dynamically behind it!
     // ──────────────────────────────────────────────────────────────────────────
     for (let i = 0; i < 8; i++) {
       const seg = ORBIT_SEGMENTS[i];
@@ -187,42 +187,7 @@ export default function VedikaOrbitStage() {
 
       tl.addLabel(travelLabel);
 
-      // 1. Reveal this segment path & aura as drawing begins
-      tl.call(() => {
-        const pathEl = segmentRefs.current[i];
-        const auraEl = auraRefs.current[i];
-        if (pathEl) {
-          pathEl.style.visibility = 'visible';
-          pathEl.style.opacity = '1';
-        }
-        if (auraEl) {
-          auraEl.style.visibility = 'visible';
-          auraEl.style.opacity = '0.25';
-        }
-      }, [], travelLabel);
-
-      // 2. Draw segment stroke from 100% to 0% (using pathLength=100)
-      tl.to(
-        segmentRefs.current[i],
-        {
-          strokeDashoffset: 0,
-          duration: S_TRAVEL,
-          ease: 'power2.inOut',
-        },
-        travelLabel
-      );
-
-      tl.to(
-        auraRefs.current[i],
-        {
-          strokeDashoffset: 0,
-          duration: S_TRAVEL,
-          ease: 'power2.inOut',
-        },
-        travelLabel
-      );
-
-      // 3. Move energy head along the circular path in exact lockstep
+      // Move energy bead along the circular path while simultaneously painting the stroke
       tl.to(
         beadState,
         {
@@ -232,23 +197,59 @@ export default function VedikaOrbitStage() {
           b: seg.toRgb[2],
           duration: S_TRAVEL,
           ease: 'power2.inOut',
+          onStart: () => {
+            const pathEl = segmentRefs.current[i];
+            const auraEl = auraRefs.current[i];
+            if (pathEl) {
+              pathEl.style.visibility = 'visible';
+              pathEl.style.opacity = '1';
+            }
+            if (auraEl) {
+              auraEl.style.visibility = 'visible';
+              auraEl.style.opacity = '0.28';
+            }
+          },
           onUpdate: () => {
+            // Update bead coordinates and color on this frame
             updateBead(beadState.angle, beadState.r, beadState.g, beadState.b);
+            // Synchronously paint the segment stroke with the moving point
+            const p = (beadState.angle - seg.startAngleDeg) / seg.spanDeg;
+            const progress = Math.max(0, Math.min(1, p));
+            const currentOffset = seg.arcLength * (1 - progress);
+            const pathEl = segmentRefs.current[i];
+            const auraEl = auraRefs.current[i];
+            if (pathEl) {
+              pathEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
+            }
+            if (auraEl) {
+              auraEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
+            }
+          },
+          onComplete: () => {
+            // Lock completed segment at 100% drawn
+            const pathEl = segmentRefs.current[i];
+            const auraEl = auraRefs.current[i];
+            if (pathEl) {
+              pathEl.style.strokeDashoffset = '0px';
+            }
+            if (auraEl) {
+              auraEl.style.strokeDashoffset = '0px';
+            }
           },
         },
         travelLabel
       );
 
-      // 4. Energy head arrives at next node! Icon activates, card emerges
+      // Energy point arrives at next node! Node activates, card unfolds
       tl.call(() => {
         setActiveStep(targetFeatureIndex);
         setExpandedStep(targetFeatureIndex);
       });
 
-      // 5. Card expansion and reading duration
+      // Card reading duration
       tl.to({}, { duration: C_EXPAND + C_READ });
 
-      // 6. Collapse card smoothly before next segment starts drawing
+      // Collapse card smoothly before next segment starts drawing
       tl.call(() => {
         setExpandedStep(null);
         setCompletedSteps((prev) => new Set(prev).add(targetFeatureIndex));
@@ -271,39 +272,6 @@ export default function VedikaOrbitStage() {
 
     tl.addLabel(finalLabel);
 
-    tl.call(() => {
-      const pathEl = segmentRefs.current[8];
-      const auraEl = auraRefs.current[8];
-      if (pathEl) {
-        pathEl.style.visibility = 'visible';
-        pathEl.style.opacity = '1';
-      }
-      if (auraEl) {
-        auraEl.style.visibility = 'visible';
-        auraEl.style.opacity = '0.25';
-      }
-    }, [], finalLabel);
-
-    tl.to(
-      segmentRefs.current[8],
-      {
-        strokeDashoffset: 0,
-        duration: F_TRAVEL,
-        ease: 'power2.inOut',
-      },
-      finalLabel
-    );
-
-    tl.to(
-      auraRefs.current[8],
-      {
-        strokeDashoffset: 0,
-        duration: F_TRAVEL,
-        ease: 'power2.inOut',
-      },
-      finalLabel
-    );
-
     tl.to(
       finalBeadState,
       {
@@ -313,8 +281,41 @@ export default function VedikaOrbitStage() {
         b: finalSeg.toRgb[2],
         duration: F_TRAVEL,
         ease: 'power2.inOut',
+        onStart: () => {
+          const pathEl = segmentRefs.current[8];
+          const auraEl = auraRefs.current[8];
+          if (pathEl) {
+            pathEl.style.visibility = 'visible';
+            pathEl.style.opacity = '1';
+          }
+          if (auraEl) {
+            auraEl.style.visibility = 'visible';
+            auraEl.style.opacity = '0.28';
+          }
+        },
         onUpdate: () => {
           updateBead(finalBeadState.angle, finalBeadState.r, finalBeadState.g, finalBeadState.b);
+          const p = (finalBeadState.angle - finalSeg.startAngleDeg) / finalSeg.spanDeg;
+          const progress = Math.max(0, Math.min(1, p));
+          const currentOffset = finalSeg.arcLength * (1 - progress);
+          const pathEl = segmentRefs.current[8];
+          const auraEl = auraRefs.current[8];
+          if (pathEl) {
+            pathEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
+          }
+          if (auraEl) {
+            auraEl.style.strokeDashoffset = `${currentOffset.toFixed(2)}px`;
+          }
+        },
+        onComplete: () => {
+          const pathEl = segmentRefs.current[8];
+          const auraEl = auraRefs.current[8];
+          if (pathEl) {
+            pathEl.style.strokeDashoffset = '0px';
+          }
+          if (auraEl) {
+            auraEl.style.strokeDashoffset = '0px';
+          }
         },
       },
       finalLabel
@@ -323,65 +324,53 @@ export default function VedikaOrbitStage() {
     return tl;
   }, [updateBead]);
 
-  // Clean initialization & viewport trigger
+  // Clean initialization & playback lifecycle (StrictMode safe)
   useEffect(() => {
-    // Explicitly guarantee all 9 segments start completely hidden and empty (0% progress)
-    segmentRefs.current.forEach((el) => {
-      if (el) {
-        el.style.strokeDashoffset = '100';
+    let isDisposed = false;
+
+    // Reset all 9 segments to empty initial state
+    segmentRefs.current.forEach((el, idx) => {
+      const seg = ORBIT_SEGMENTS[idx];
+      if (el && seg) {
+        el.style.strokeDasharray = `${seg.arcLength}px ${seg.arcLength}px`;
+        el.style.strokeDashoffset = `${seg.arcLength}px`;
         el.style.opacity = '0';
         el.style.visibility = 'hidden';
       }
     });
-    auraRefs.current.forEach((el) => {
-      if (el) {
-        el.style.strokeDashoffset = '100';
+    auraRefs.current.forEach((el, idx) => {
+      const seg = ORBIT_SEGMENTS[idx];
+      if (el && seg) {
+        el.style.strokeDasharray = `${seg.arcLength}px ${seg.arcLength}px`;
+        el.style.strokeDashoffset = `${seg.arcLength}px`;
         el.style.opacity = '0';
         el.style.visibility = 'hidden';
       }
     });
+
+    // Reset bead to starting position (Node 1 Pink)
+    const firstSeg = ORBIT_SEGMENTS[0];
+    updateBead(firstSeg.startAngleDeg, firstSeg.fromRgb[0], firstSeg.fromRgb[1], firstSeg.fromRgb[2]);
+    if (beadGroupRef.current) {
+      beadGroupRef.current.style.opacity = '1';
+    }
 
     const tl = buildTimeline();
     timelineRef.current = tl;
 
-    const targetEl = stageRef.current;
-    if (!targetEl) return;
-
-    // Check if stage is already in the viewport on page load/refresh
-    const rect = targetEl.getBoundingClientRect();
-    const isVisibleNow = rect.top < window.innerHeight && rect.bottom > 0;
-
-    if (isVisibleNow && !hasStartedRef.current) {
-      hasStartedRef.current = true;
-      const startTimer = setTimeout(() => {
+    // Start playing after a 250ms initialization pause
+    const startTimer = setTimeout(() => {
+      if (!isDisposed) {
         tl.play();
-      }, 350);
-      return () => {
-        clearTimeout(startTimer);
-        tl.kill();
-      };
-    }
-
-    // Otherwise, trigger once scrolled into view
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasStartedRef.current) {
-            hasStartedRef.current = true;
-            tl.play();
-          }
-        });
-      },
-      { threshold: 0.20 }
-    );
-
-    observer.observe(targetEl);
+      }
+    }, 250);
 
     return () => {
-      observer.disconnect();
+      isDisposed = true;
+      clearTimeout(startTimer);
       tl.kill();
     };
-  }, [buildTimeline]);
+  }, [buildTimeline, updateBead]);
 
   // Click handler: user can inspect any feature card at leisure
   const handleCardClick = (stepIndex: number) => {
@@ -389,17 +378,18 @@ export default function VedikaOrbitStage() {
       // If user clicks an icon during autoplay, finish ring drawing and let user inspect
       timelineRef.current?.pause();
       setIsAnimationFinished(true);
-      segmentRefs.current.forEach((el, idx) => {
+      segmentRefs.current.forEach((el) => {
         if (el) {
-          el.style.strokeDashoffset = '0';
+          el.style.strokeDashoffset = '0px';
           el.style.opacity = '1';
           el.style.visibility = 'visible';
         }
-        const aura = auraRefs.current[idx];
-        if (aura) {
-          aura.style.strokeDashoffset = '0';
-          aura.style.opacity = '0.25';
-          aura.style.visibility = 'visible';
+      });
+      auraRefs.current.forEach((el) => {
+        if (el) {
+          el.style.strokeDashoffset = '0px';
+          el.style.opacity = '0.28';
+          el.style.visibility = 'visible';
         }
       });
       setCompletedSteps(new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]));

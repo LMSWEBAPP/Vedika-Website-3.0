@@ -103,12 +103,11 @@ export default function OrbitProgressRing({
           stroke={`url(#${seg.gradientId})`}
           strokeWidth={7}
           strokeLinecap="round"
-          pathLength={100}
-          strokeDasharray="100"
-          strokeDashoffset="100"
+          strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
+          strokeDashoffset={seg.arcLength}
           style={{
-            strokeDasharray: 100,
-            strokeDashoffset: 100,
+            strokeDasharray: `${seg.arcLength}px ${seg.arcLength}px`,
+            strokeDashoffset: `${seg.arcLength}px`,
             opacity: 0,
             visibility: 'hidden',
           }}
@@ -129,12 +128,11 @@ export default function OrbitProgressRing({
           stroke={`url(#${seg.gradientId})`}
           strokeWidth={3.5}
           strokeLinecap="round"
-          pathLength={100}
-          strokeDasharray="100"
-          strokeDashoffset="100"
+          strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
+          strokeDashoffset={seg.arcLength}
           style={{
-            strokeDasharray: 100,
-            strokeDashoffset: 100,
+            strokeDasharray: `${seg.arcLength}px ${seg.arcLength}px`,
+            strokeDashoffset: `${seg.arcLength}px`,
             opacity: 0,
             visibility: 'hidden',
           }}
