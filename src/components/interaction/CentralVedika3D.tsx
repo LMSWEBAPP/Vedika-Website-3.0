@@ -47,16 +47,22 @@ function VedikaRobotModel() {
     return clone;
   }, [scene]);
 
+  // Calibrated alignment offsets to place Vedika in the dead-center of the circular progress ring
+  // Offsets compensate for model bounding-box asymmetry and visual mass of the head
+  const CALIBRATED_OFFSET_X = 0.042; // Shifts right to balance left-right margin to the ring
+  const CALIBRATED_OFFSET_Y = -0.072; // Shifts down to balance top-bottom margin to the ring
+
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
     // Perfectly centered idle breathing oscillation in the dead-center of the ring
-    groupRef.current.position.y = Math.sin(t * 1.3) * 0.018;
+    groupRef.current.position.x = CALIBRATED_OFFSET_X;
+    groupRef.current.position.y = CALIBRATED_OFFSET_Y + Math.sin(t * 1.3) * 0.018;
     groupRef.current.rotation.y = Math.sin(t * 0.9) * 0.16;
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, 0]} scale={[0.66, 0.66, 0.66]}>
+    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.66, 0.66, 0.66]}>
       <primitive object={clonedScene} />
     </group>
   );
