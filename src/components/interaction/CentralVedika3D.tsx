@@ -37,6 +37,13 @@ function VedikaRobotModel() {
         }
       }
     });
+
+    // Auto-center the model to its exact bounding box geometric center
+    const box = new THREE.Box3().setFromObject(clone);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    clone.position.sub(center);
+
     return clone;
   }, [scene]);
 
@@ -44,12 +51,12 @@ function VedikaRobotModel() {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
     // Perfectly centered idle breathing oscillation in the dead-center of the ring
-    groupRef.current.position.y = -0.06 + Math.sin(t * 1.3) * 0.02;
+    groupRef.current.position.y = Math.sin(t * 1.3) * 0.018;
     groupRef.current.rotation.y = Math.sin(t * 0.9) * 0.16;
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.06, 0]} scale={[0.65, 0.65, 0.65]}>
+    <group ref={groupRef} position={[0, 0, 0]} scale={[0.66, 0.66, 0.66]}>
       <primitive object={clonedScene} />
     </group>
   );
