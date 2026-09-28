@@ -198,57 +198,31 @@ export default function PersonaPanelsSection() {
         {/* ============================================================== */}
         <section className="panel-section-slot teacher-content" aria-label="Teacher Dilemmas and Vedika Rectifications">
           <div className="content-header-bar">
-            <div className="teacher-header-flex-row">
-              <div>
-                <div className="content-eyebrow" style={{ color: '#FBBF24' }}>
-                  Teacher Empowerment • AI Co-Pilot
-                </div>
-                <h1 className="content-title">
-                  Eliminate Burnout. Reclaim the Joy of Teaching.
-                </h1>
-              </div>
-
-              {/* Small Carousel Arrows & Dots */}
-              <div className="teacher-carousel-controls" aria-label="Dilemma Carousel Navigation">
-                <button
-                  type="button"
-                  className="teacher-nav-arrow prev"
-                  onClick={() =>
-                    setActiveTeacherIndex(
-                      (prev) => (prev - 1 + teacherDilemmas.length) % teacherDilemmas.length
-                    )
-                  }
-                  aria-label="Previous Dilemma"
-                >
-                  ‹
-                </button>
-                <div className="teacher-dots-group">
-                  {teacherDilemmas.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      className={`teacher-nav-dot ${i === activeTeacherIndex ? 'active' : ''}`}
-                      onClick={() => setActiveTeacherIndex(i)}
-                      aria-label={`Select dilemma ${i + 1}`}
-                    />
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  className="teacher-nav-arrow next"
-                  onClick={() =>
-                    setActiveTeacherIndex((prev) => (prev + 1) % teacherDilemmas.length)
-                  }
-                  aria-label="Next Dilemma"
-                >
-                  ›
-                </button>
-              </div>
+            <div className="content-eyebrow" style={{ color: '#FBBF24' }}>
+              Teacher Empowerment • AI Co-Pilot
             </div>
+            <h1 className="content-title">
+              Eliminate Burnout. Reclaim the Joy of Teaching.
+            </h1>
           </div>
 
-          {/* Centered CoverFlow Carousel */}
+          {/* 3D CoverFlow Stage with Left/Right Arrows on Either Side of Cards */}
           <div className="teacher-dilemmas-stage">
+            {/* Left Carousel Arrow */}
+            <button
+              type="button"
+              className="teacher-stage-arrow prev"
+              onClick={() =>
+                setActiveTeacherIndex(
+                  (prev) => (prev - 1 + teacherDilemmas.length) % teacherDilemmas.length
+                )
+              }
+              aria-label="Previous Dilemma"
+            >
+              ‹
+            </button>
+
+            {/* Centered CoverFlow Deck */}
             <div className="teacher-coverflow-deck">
               {teacherDilemmas.map((item, idx) => {
                 const coverflowClass = getCardCoverflowClass(idx);
@@ -265,7 +239,7 @@ export default function PersonaPanelsSection() {
                     tabIndex={0}
                     aria-label={item.dilemmaTitle}
                   >
-                    {/* SLIDE 1: Traditional Friction (Icon + Heading only, centered as in CodePen) */}
+                    {/* SLIDE 1: Traditional Friction (Top Outer Card) */}
                     <div className="slide slide1">
                       <div className="content">
                         <div className="icon">
@@ -276,7 +250,7 @@ export default function PersonaPanelsSection() {
                       </div>
                     </div>
 
-                    {/* SLIDE 2: Vedika AI Resolution (Smooth unfolding from inside on hover, with tiny happy Vedika bot) */}
+                    {/* SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Unfolding Downward) */}
                     <div className="slide slide2">
                       <div className="content">
                         <div className="bot-and-badge-row">
@@ -299,6 +273,31 @@ export default function PersonaPanelsSection() {
                 );
               })}
             </div>
+
+            {/* Right Carousel Arrow */}
+            <button
+              type="button"
+              className="teacher-stage-arrow next"
+              onClick={() =>
+                setActiveTeacherIndex((prev) => (prev + 1) % teacherDilemmas.length)
+              }
+              aria-label="Next Dilemma"
+            >
+              ›
+            </button>
+          </div>
+
+          {/* Indicator Dots Below Cards */}
+          <div className="teacher-coverflow-dots">
+            {teacherDilemmas.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`teacher-nav-dot ${i === activeTeacherIndex ? 'active' : ''}`}
+                onClick={() => setActiveTeacherIndex(i)}
+                aria-label={`Select dilemma ${i + 1}`}
+              />
+            ))}
           </div>
         </section>
 

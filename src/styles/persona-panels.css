@@ -893,61 +893,80 @@
 }
 
 /* ==========================================================================
-   TEACHER 4-CARD CAROUSEL WITH CODEPEN HOVER SLIDE EFFECT
+   TEACHER 3D COVERFLOW DECK WITH CODEPEN PHYSICAL UNFOLDING TRANSITION
    ========================================================================== */
-.teacher-header-flex-row {
+.teacher-dilemmas-stage {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 8px;
-  gap: 16px;
-}
-
-.teacher-carousel-controls {
-  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-  padding: 4px 10px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  flex-shrink: 0;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  overflow: visible !important;
+  padding: 6px 0 10px 0;
+  margin-top: 4px;
 }
 
-.teacher-nav-arrow {
-  width: 26px;
-  height: 26px;
+/* Flanking Carousel Arrows on Either Side of Cards */
+.teacher-stage-arrow {
+  position: absolute;
+  top: 86px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   color: #FFFFFF;
-  font-size: 1.15rem;
-  line-height: 1;
+  font-size: 26px;
+  font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
   padding: 0 0 2px 0;
+  line-height: 1;
 }
 
-.teacher-nav-arrow:hover {
-  background: rgba(245, 158, 11, 0.28);
-  border-color: rgba(245, 158, 11, 0.6);
+.teacher-stage-arrow:hover {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: rgba(245, 158, 11, 0.7);
   color: #FBBF24;
-  transform: scale(1.08);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
-.teacher-dots-group {
+.teacher-stage-arrow:active {
+  transform: scale(0.96);
+}
+
+.teacher-stage-arrow.prev {
+  left: max(4px, calc(50% - 370px));
+}
+
+.teacher-stage-arrow.next {
+  right: max(4px, calc(50% - 370px));
+}
+
+/* Indicator dots below cards */
+.teacher-coverflow-dots {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  z-index: 20;
+  position: relative;
 }
 
-.teacher-nav-dot {
+.teacher-coverflow-dots .teacher-nav-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -955,28 +974,18 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.teacher-nav-dot.active {
-  width: 18px;
+.teacher-coverflow-dots .teacher-nav-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.teacher-coverflow-dots .teacher-nav-dot.active {
+  width: 22px;
   border-radius: 4px;
   background: #F59E0B;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
-}
-
-.teacher-dilemmas-stage {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  position: relative;
-  overflow: visible !important;
-  padding: 6px 0 16px 0;
-  margin-top: 4px;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
 }
 
 /* ==========================================================================
@@ -986,7 +995,7 @@
   position: relative;
   width: 100%;
   max-width: 780px;
-  height: 420px;
+  height: 415px;
   margin: 0 auto;
   perspective: 1200px;
   transform-style: preserve-3d;
@@ -995,7 +1004,7 @@
   justify-content: center;
 }
 
-/* Base Card */
+/* Base Card Container */
 .teacher-slide-card {
   position: absolute;
   width: 320px;
@@ -1006,9 +1015,9 @@
   margin: auto;
   box-sizing: border-box;
   transition:
-    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.55s ease,
-    filter 0.55s ease,
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.65s ease,
+    filter 0.65s ease,
     z-index 0.1s ease;
 }
 
@@ -1018,11 +1027,7 @@
   opacity: 1;
   filter: blur(0px);
   z-index: 10;
-  cursor: pointer;
-}
-
-.teacher-slide-card.active-center:hover {
-  z-index: 50;
+  cursor: default;
 }
 
 /* 2. Next Right Card */
@@ -1070,12 +1075,16 @@
   width: 320px;
   height: 200px;
   box-sizing: border-box;
-  transition: 0.5s;
 }
 
 /* ==========================================================================
-   SLIDE 1: Traditional Friction (Top slide, shifted down by 100px so it sits
-   squarely in the card space, exactly like CodePen translateY(100px))
+   SLIDE 1: Traditional Friction (Top Outer Card)
+   - Inactive / Default State:
+     Sits at transform: translateY(100px); z-index: 2; border-radius: 20px;
+   - Active Center State (Smoothly sliding up to 0px):
+     transform: translateY(0px);
+     border-radius: 20px 20px 0 0;
+     border-bottom: none;
    ========================================================================== */
 .teacher-slide-card .slide.slide1 {
   position: relative;
@@ -1083,9 +1092,8 @@
   justify-content: center;
   align-items: center;
   z-index: 2;
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s ease;
   transform: translateY(100px);
-  border-radius: 18px;
+  border-radius: 20px;
   background:
     linear-gradient(150deg, rgba(32, 16, 24, 0.98) 0%, rgba(18, 9, 14, 0.99) 100%),
     rgba(15, 23, 42, 0.95);
@@ -1095,17 +1103,39 @@
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.12),
     0 12px 30px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.35s ease,
+    border-color 0.4s ease,
+    box-shadow 0.5s ease;
 }
 
-/* On hover (only on active center card): slide1 smoothly moves up to 0px */
-.teacher-slide-card.active-center:hover .slide.slide1 {
+/* Subtle seamless highlight at the bottom seam when opened */
+.teacher-slide-card.active-center .slide.slide1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(16, 185, 129, 0.3), transparent);
+  pointer-events: none;
+}
+
+/* When in front (active-center): smoothly slides up to 0px, merged bottom corners */
+.teacher-slide-card.active-center .slide.slide1 {
   transform: translateY(0px);
-  border-radius: 18px 18px 0 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px 20px 0 0;
+  border-bottom: none;
   border-color: rgba(248, 113, 113, 0.6);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.16),
     0 16px 36px rgba(0, 0, 0, 0.75);
+  transition:
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    border-radius 0.35s ease 0.1s,
+    border-color 0.4s ease 0.1s,
+    box-shadow 0.5s ease 0.1s;
 }
 
 .teacher-slide-card .slide.slide1 .content {
@@ -1133,8 +1163,8 @@
   transition: transform 0.4s ease;
 }
 
-.teacher-slide-card.active-center:hover .icon {
-  transform: scale(0.92);
+.teacher-slide-card.active-center .icon {
+  transform: scale(0.94);
 }
 
 .teacher-slide-card .friction-icon {
@@ -1160,8 +1190,17 @@
 }
 
 /* ==========================================================================
-   SLIDE 2: Vedika AI Resolution (Bottom slide, shifted up by -100px behind slide1,
-   smoothly slides down out from the inside on hover)
+   SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Sliding Downwards)
+   - Inactive / Default State:
+     Sits at transform: translateY(-100px); z-index: 1; directly behind Slide 1.
+     border-radius: 20px; fully rounded, border-color: transparent, box-shadow: none.
+     Fully opaque (no opacity tricks) and cleanly tucked inside Slide 1 with NO sharp corners.
+   - Active Center State (Smoothly unfolds and slides down from inside to 0px):
+     transform: translateY(0px);
+     border-radius: 0 0 20px 20px;
+     border-top: none;
+     border: 1.5px solid rgba(16, 185, 129, 0.6);
+     The outer card's bottom 2 corners and inner card's top 2 corners merge flush into 1 unified card.
    ========================================================================== */
 .teacher-slide-card .slide.slide2 {
   position: relative;
@@ -1170,20 +1209,24 @@
   align-items: center;
   box-sizing: border-box;
   z-index: 1;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s ease;
   transform: translateY(-100px);
-  border-radius: 0 0 18px 18px;
+  border-radius: 20px;
   background:
     linear-gradient(160deg, rgba(6, 30, 22, 0.99) 0%, rgba(3, 16, 12, 0.99) 100%),
     rgba(8, 20, 16, 0.96);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(16, 185, 129, 0.6);
+  border: 1.5px solid transparent;
   border-top: none;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.35s ease,
+    border-color 0.4s ease,
+    box-shadow 0.5s ease;
 }
 
-/* Glowing bottom accent line (matching CodePen ::after) */
+/* Glowing bottom accent line */
 .teacher-slide-card .slide.slide2::after {
   content: "";
   position: absolute;
@@ -1195,14 +1238,29 @@
   background: #10B981;
   border-radius: 2px;
   box-shadow: 0 0 12px #10B981;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.2s;
 }
 
-/* On hover (only on active center card): slide2 smoothly slides down to 0px */
-.teacher-slide-card.active-center:hover .slide.slide2 {
+/* When in front (active-center): smoothly glides down out from the inside to 0px */
+.teacher-slide-card.active-center .slide.slide2 {
   transform: translateY(0px);
+  border-radius: 0 0 20px 20px;
+  border-top: none;
+  border: 1.5px solid rgba(16, 185, 129, 0.6);
+  border-top: none;
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.85),
     0 0 28px rgba(16, 185, 129, 0.25);
+  transition:
+    transform 0.88s cubic-bezier(0.16, 1, 0.3, 1) 0.12s,
+    border-radius 0.35s ease 0.12s,
+    border-color 0.4s ease 0.12s,
+    box-shadow 0.6s ease 0.12s;
+}
+
+.teacher-slide-card.active-center .slide.slide2::after {
+  opacity: 1;
 }
 
 .teacher-slide-card .slide.slide2 .content {
@@ -1297,6 +1355,12 @@
   }
   .teacher-slide-card .slide {
     width: 290px;
+  }
+  .teacher-stage-arrow.prev {
+    left: 2px;
+  }
+  .teacher-stage-arrow.next {
+    right: 2px;
   }
 }
 
