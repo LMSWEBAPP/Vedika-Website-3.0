@@ -7,21 +7,28 @@
   padding: 0;
 }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
-  min-height: 100vh;
   background-color: var(--bg-deepest);
   color: var(--text-primary);
   font-family: var(--font-editorial);
-  overflow-x: hidden;
   transition: var(--transition-theme);
   position: relative;
+  touch-action: none;
 }
 
 a {

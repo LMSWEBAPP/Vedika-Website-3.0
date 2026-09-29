@@ -3,7 +3,7 @@
 import React, { useRef, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useInteraction } from '@/hooks/useInteraction';
+import { useInteraction, globalScrollRef } from '@/hooks/useInteraction';
 import {
   MathLab3D,
   PhysicsLab3D,
@@ -125,7 +125,7 @@ export function SphericalParticleCage() {
   const iconGroupRefs = useRef<(THREE.Group | null)[]>([]);
   const transitionTRef = useRef<number>(0);
 
-  const { scrollProgress, isLabsExpanded } = useInteraction();
+  const { isLabsExpanded } = useInteraction();
   const { size } = useThree();
   const isMobile = size.width < 768;
 
@@ -190,6 +190,7 @@ export function SphericalParticleCage() {
 
   useFrame((state, delta) => {
     if (!mainGroupRef.current) return;
+    const scrollProgress = globalScrollRef.current;
 
     const time = state.clock.getElapsedTime();
 

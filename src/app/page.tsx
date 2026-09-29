@@ -26,10 +26,12 @@ export default function HomePage() {
   useEffect(() => {
     let animId: number;
     let accumulatedDelta = 0;
-    let deltaResetTimer: NodeJS.Timeout;
+    let deltaResetTimer: NodeJS.Timeout | null = null;
+    let wheelSilenceTimer: NodeJS.Timeout | null = null;
     let isTransitioning = false;
     let transitionStartTime = 0;
-    let wheelSilenceTimer: NodeJS.Timeout;
+    let lastWheelTime = 0;
+    let lastReactProgress = 0;
 
     const pageCount = 5; // Pages 0 to 4 (5 pages total)
 
@@ -42,64 +44,77 @@ export default function HomePage() {
       targetProgressRef.current = targetPage;
       isTransitioning = true;
       transitionStartTime = Date.now();
+      lastWheelTime = Date.now();
       accumulatedDelta = 0;
     };
 
-    // 1. Raw Scroll Tracker: syncs scroll position if user scrolls container
-    const handleScroll = () => {
-      const pageHeight = window.innerHeight || 800;
-      const currentScroll = window.scrollY || window.pageYOffset || 0;
-      const rawProgress = Math.min(pageCount - 1, Math.max(0, currentScroll / pageHeight));
-      currentPageRef.current = Math.round(rawProgress);
-    };
-
-    // 2. Smooth 60fps Dampening Loop: glides scrollProgress swiftly and seamlessly
+    // 1. Smooth Dampening Loop: glides scrollProgress swiftly and seamlessly
     const animate = () => {
       const target = targetProgressRef.current;
       const current = smoothProgressRef.current;
       const diff = target - current;
 
-      if (Math.abs(diff) < 0.0005) {
+      if (Math.abs(diff) < 0.0008) {
         smoothProgressRef.current = target;
-        // Release transition lock only once animation is settled AND minimum display time elapsed
-        if (isTransitioning && Date.now() - transitionStartTime > 550) {
+        // Check if transition lock can be released:
+        // Requires: animation reached target, minimum 650ms elapsed, AND wheel silent for > 200ms
+        if (
+          isTransitioning &&
+          Date.now() - transitionStartTime > 650 &&
+          Date.now() - lastWheelTime > 200
+        ) {
           isTransitioning = false;
+          accumulatedDelta = 0;
         }
       } else {
-        // Silky 60fps exponential ease (smoothly glides and naturally decelerates in ~500ms)
-        smoothProgressRef.current = current + diff * 0.11;
+        // Natural silky ease: smooth 0.09 factor gives fluid, elegant transit with no jerk
+        smoothProgressRef.current = current + diff * 0.09;
       }
 
+      // High-frequency WebGL sync for 60/120fps model motion
       globalScrollRef.current = smoothProgressRef.current;
-      setScrollProgress(smoothProgressRef.current);
+
+      // Throttle React DOM re-renders to only significant visual changes (>= 0.015 or settled)
+      const diffFromLast = Math.abs(smoothProgressRef.current - lastReactProgress);
+      if (diffFromLast >= 0.015 || Math.abs(diff) < 0.0008) {
+        lastReactProgress = smoothProgressRef.current;
+        setScrollProgress(smoothProgressRef.current);
+      }
+
       animId = requestAnimationFrame(animate);
     };
 
-    // 3. Wheel Controller: Strictly 1 page per deliberate gesture (prevents runaway inertia)
+    // 2. Wheel / Touchpad Controller: Strictly 1 page per deliberate gesture (absorbs inertia)
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
+      const now = Date.now();
+      lastWheelTime = now;
 
-      // If an active transition is gliding, absorb all gesture inertia completely
+      // If a transition is in progress, ABSORB all decaying inertia events from the mousepad!
       if (isTransitioning) {
-        clearTimeout(wheelSilenceTimer);
+        if (wheelSilenceTimer) clearTimeout(wheelSilenceTimer);
         wheelSilenceTimer = setTimeout(() => {
-          if (Date.now() - transitionStartTime > 550) {
+          // Only unlock when trackpad momentum is 100% silent and minimum page duration elapsed
+          if (
+            Date.now() - transitionStartTime > 650 &&
+            Math.abs(targetProgressRef.current - smoothProgressRef.current) < 0.01
+          ) {
             isTransitioning = false;
             accumulatedDelta = 0;
           }
-        }, 120);
+        }, 220);
         return;
       }
 
       accumulatedDelta += e.deltaY;
 
-      clearTimeout(deltaResetTimer);
+      if (deltaResetTimer) clearTimeout(deltaResetTimer);
       deltaResetTimer = setTimeout(() => {
         accumulatedDelta = 0;
-      }, 120);
+      }, 140);
 
-      // Deliberate intent threshold: 42px
-      const threshold = 42;
+      // Deliberate intent threshold: 50px
+      const threshold = 50;
 
       if (accumulatedDelta >= threshold) {
         accumulatedDelta = 0;
@@ -110,7 +125,7 @@ export default function HomePage() {
       }
     };
 
-    // 4. Keyboard Arrow / Page Keys Navigation: strictly 1 page per keypress
+    // 3. Keyboard Arrow / Page Keys Navigation: strictly 1 page per keypress
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
         e.preventDefault();
@@ -123,7 +138,7 @@ export default function HomePage() {
       }
     };
 
-    // 5. Touch Navigation for mobile / touchpads
+    // 4. Touch Navigation for mobile / touchpads
     let touchStartY = 0;
     let touchStartTime = 0;
 
@@ -140,7 +155,7 @@ export default function HomePage() {
       const deltaY = touchStartY - touchEndY;
       const deltaTime = Date.now() - touchStartTime;
 
-      if (Math.abs(deltaY) > 45 && deltaTime < 600) {
+      if (Math.abs(deltaY) > 50 && deltaTime < 600) {
         if (deltaY > 0) {
           goToPage(currentPageRef.current + 1);
         } else {
@@ -149,7 +164,6 @@ export default function HomePage() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
@@ -158,14 +172,13 @@ export default function HomePage() {
     animId = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
       cancelAnimationFrame(animId);
-      clearTimeout(deltaResetTimer);
-      clearTimeout(wheelSilenceTimer);
+      if (deltaResetTimer) clearTimeout(deltaResetTimer);
+      if (wheelSilenceTimer) clearTimeout(wheelSilenceTimer);
     };
   }, [setScrollProgress]);
 
@@ -235,32 +248,13 @@ export default function HomePage() {
     <div
       style={{
         position: 'relative',
-        width: '100%',
-        minHeight: '500vh',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
         backgroundColor: bgStyle,
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Scroll Snap Track for native browser physics protection */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '500vh',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      >
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
-        <div style={{ height: '100vh', scrollSnapAlign: 'start', scrollSnapStop: 'always' }} />
-      </div>
-
       {/* Persistent Minimal Navbar with adaptive color contrast */}
       <Navbar />
 

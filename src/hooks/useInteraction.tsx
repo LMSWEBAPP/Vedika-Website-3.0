@@ -34,10 +34,12 @@ export function InteractionProvider({ children }: { children: ReactNode }) {
   const [interactionState, setInteractionState] = useState<InteractionState>('IDLE');
   const [scrollProgress, setScrollProgressState] = useState(0);
 
-  const setScrollProgress = (val: number) => {
+  const setScrollProgress = React.useCallback((val: number) => {
     globalScrollRef.current = val;
-    setScrollProgressState(val);
-  };
+    React.startTransition(() => {
+      setScrollProgressState(val);
+    });
+  }, []);
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [ttsInput, setTtsInput] = useState(

@@ -6,13 +6,14 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useTheme } from '@/hooks/useTheme';
 
 import { useModelTuner } from '@/hooks/useModelTuner';
-import { useInteraction } from '@/hooks/useInteraction';
+import { globalScrollRef } from '@/hooks/useInteraction';
+
+const _cTempTargetColor = new THREE.Color();
 
 export function VedikaEffects() {
   const { theme } = useTheme();
   const { size } = useThree();
   const { values } = useModelTuner();
-  const { scrollProgress } = useInteraction();
   const meshRef = useRef<THREE.Mesh | null>(null);
 
   const isMobile = size.width < 768;
@@ -50,10 +51,11 @@ export function VedikaEffects() {
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
+    const scrollProgress = globalScrollRef.current;
     const mat = meshRef.current.material as THREE.MeshBasicMaterial;
     if (mat) {
-      const targetColor = new THREE.Color(theme.lighting.envGlowColor);
-      mat.color.lerp(targetColor, Math.min(delta * 3, 0.1));
+      _cTempTargetColor.set(theme.lighting.envGlowColor);
+      mat.color.lerp(_cTempTargetColor, Math.min(delta * 3, 0.1));
 
       // Strictly fade hero head glow to 0 past Page 1 so no light bleeds onto Page 2 or Page 3
       const targetGlowOpacity = Math.max(0, 1 - scrollProgress * 2.0) * theme.lighting.envGlowIntensity;
