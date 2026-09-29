@@ -7,136 +7,162 @@ import { HeroScene } from '@/components/hero/HeroScene';
 import { HeroContent } from '@/components/hero/HeroContent';
 import { InteractionSection } from '@/components/interaction/InteractionSection';
 import { MultimodalWaveStream } from '@/components/interaction/MultimodalWaveStream';
-import { TubesWaveStream } from '@/components/interaction/TubesWaveStream';
 import { ExplorationSection } from '@/components/interaction/ExplorationSection';
 import { ParticleSphereSection } from '@/components/interaction/ParticleSphereSection';
 import { ProblemSolutionSection } from '@/components/interaction/ProblemSolutionSection';
 // ModelTuner removed
-import { useInteraction } from '@/hooks/useInteraction';
+import { useInteraction, globalScrollRef } from '@/hooks/useInteraction';
 
 export default function HomePage() {
   const { scrollProgress, setScrollProgress } = useInteraction();
   const currentPageRef = useRef(0);
-  const isLockedRef = useRef(false);
   const targetProgressRef = useRef(0);
   const smoothProgressRef = useRef(0);
 
   // =========================================================================
   // =========================================================================
-  // PAGE SCROLL ENGINE: Precision 1-Step-Per-Gesture Engine with Inertia Lock
+  // PAGE SCROLL ENGINE: Single-Page Intentional Navigation Controller
   // =========================================================================
   useEffect(() => {
     let animId: number;
     let accumulatedDelta = 0;
     let deltaResetTimer: NodeJS.Timeout;
-    let wheelSilenceTimer: NodeJS.Timeout;
+    let isTransitioning = false;
     let transitionStartTime = 0;
+    let wheelSilenceTimer: NodeJS.Timeout;
 
     const pageCount = 5; // Pages 0 to 4 (5 pages total)
 
-    // Navigate to a specific page safely
+    // Navigate to a specific page safely — strictly 1 page at a time
     const goToPage = (pageIdx: number) => {
-      const pageHeight = window.innerHeight || 800;
       const targetPage = Math.min(pageCount - 1, Math.max(0, pageIdx));
-      if (targetPage === currentPageRef.current && isLockedRef.current) return;
+      if (targetPage === currentPageRef.current && targetProgressRef.current === targetPage) return;
 
       currentPageRef.current = targetPage;
       targetProgressRef.current = targetPage;
-      isLockedRef.current = true;
+      isTransitioning = true;
       transitionStartTime = Date.now();
       accumulatedDelta = 0;
-
-      window.scrollTo({
-        top: targetPage * pageHeight,
-        behavior: 'smooth',
-      });
     };
 
-    // 1. Raw Scroll Tracker: calculates normalized progress (0 = P1 ... 5 = P6)
+    // 1. Raw Scroll Tracker: syncs scroll position if user scrolls container
     const handleScroll = () => {
       const pageHeight = window.innerHeight || 800;
       const currentScroll = window.scrollY || window.pageYOffset || 0;
       const rawProgress = Math.min(pageCount - 1, Math.max(0, currentScroll / pageHeight));
-      targetProgressRef.current = rawProgress;
-
-      // Only update current page anchor when NOT in an active programmatic transition
-      if (!isLockedRef.current) {
-        currentPageRef.current = Math.round(rawProgress);
-      }
+      currentPageRef.current = Math.round(rawProgress);
     };
 
-    // 2. Smooth 60fps Dampening Loop: glides scrollProgress like silk with momentum
+    // 2. Smooth 60fps Dampening Loop: glides scrollProgress swiftly and seamlessly
     const animate = () => {
       const target = targetProgressRef.current;
       const current = smoothProgressRef.current;
+      const diff = target - current;
 
-      const next = THREE.MathUtils.lerp(current, target, 0.09);
-      if (Math.abs(next - target) < 0.0005) {
+      if (Math.abs(diff) < 0.0005) {
         smoothProgressRef.current = target;
+        // Release transition lock only once animation is settled AND minimum display time elapsed
+        if (isTransitioning && Date.now() - transitionStartTime > 550) {
+          isTransitioning = false;
+        }
       } else {
-        smoothProgressRef.current = next;
+        // Silky 60fps exponential ease (smoothly glides and naturally decelerates in ~500ms)
+        smoothProgressRef.current = current + diff * 0.11;
       }
 
+      globalScrollRef.current = smoothProgressRef.current;
       setScrollProgress(smoothProgressRef.current);
       animId = requestAnimationFrame(animate);
     };
 
-    // 3. Wheel Controller: Strictly 1 page transition per deliberate gesture
+    // 3. Wheel Controller: Strictly 1 page per deliberate gesture (prevents runaway inertia)
     const handleWheel = (e: WheelEvent) => {
-      // Prevent uncontrolled browser native scroll to guarantee exact 1-page stepping
       e.preventDefault();
 
-      // If transition lock is active:
-      if (isLockedRef.current) {
-        // Any incoming trackpad inertia/momentum keeps the lock active
+      // If an active transition is gliding, absorb all gesture inertia completely
+      if (isTransitioning) {
         clearTimeout(wheelSilenceTimer);
         wheelSilenceTimer = setTimeout(() => {
-          // Only unlock when wheel has been completely silent for 180ms AND at least 750ms have elapsed
-          if (Date.now() - transitionStartTime > 750) {
-            isLockedRef.current = false;
+          if (Date.now() - transitionStartTime > 550) {
+            isTransitioning = false;
             accumulatedDelta = 0;
           }
-        }, 180);
+        }, 120);
         return;
       }
 
       accumulatedDelta += e.deltaY;
+
       clearTimeout(deltaResetTimer);
       deltaResetTimer = setTimeout(() => {
         accumulatedDelta = 0;
-      }, 150);
+      }, 120);
 
-      const threshold = 35; // Deliberate threshold for both trackpads and mouse wheels
+      // Deliberate intent threshold: 42px
+      const threshold = 42;
 
       if (accumulatedDelta >= threshold) {
+        accumulatedDelta = 0;
         goToPage(currentPageRef.current + 1);
       } else if (accumulatedDelta <= -threshold) {
+        accumulatedDelta = 0;
         goToPage(currentPageRef.current - 1);
       }
     };
 
-    // 4. Keyboard Arrow / Page Keys Navigation
+    // 4. Keyboard Arrow / Page Keys Navigation: strictly 1 page per keypress
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) {
         e.preventDefault();
+        if (isTransitioning) return;
         goToPage(currentPageRef.current + 1);
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) {
         e.preventDefault();
+        if (isTransitioning) return;
         goToPage(currentPageRef.current - 1);
+      }
+    };
+
+    // 5. Touch Navigation for mobile / touchpads
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isTransitioning || e.changedTouches.length === 0) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+      const deltaTime = Date.now() - touchStartTime;
+
+      if (Math.abs(deltaY) > 45 && deltaTime < 600) {
+        if (deltaY > 0) {
+          goToPage(currentPageRef.current + 1);
+        } else {
+          goToPage(currentPageRef.current - 1);
+        }
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
-    handleScroll();
     animId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
       cancelAnimationFrame(animId);
       clearTimeout(deltaResetTimer);
       clearTimeout(wheelSilenceTimer);
@@ -145,25 +171,22 @@ export default function HomePage() {
 
   const handleExploreClick = () => {
     currentPageRef.current = 1;
-    window.scrollTo({
-      top: window.innerHeight,
-      behavior: 'smooth',
-    });
+    targetProgressRef.current = 1;
   };
 
   // =========================================================================
   // LAYER OPACITIES & TIMING
   // =========================================================================
-  // Page 2: Peaks at scrollProgress = 1.0, cleanly clears out by 1.25
+  // Page 2: Peaks when Vedika arrives in the middle at scrollProgress = 1.0
   const p2WaveOpacity =
     scrollProgress <= 1.0
-      ? Math.max(0, (scrollProgress - 0.25) * 1.4)
-      : Math.max(0, 1 - (scrollProgress - 1.0) * 4.0);
+      ? Math.max(0, (scrollProgress - 0.65) * 2.85)
+      : Math.max(0, 1 - (scrollProgress - 1.05) * 4.0);
 
   const p2UiOpacity =
     scrollProgress <= 1.0
-      ? Math.max(0, (scrollProgress - 0.3) * 1.5)
-      : Math.max(0, 1 - (scrollProgress - 1.0) * 4.5);
+      ? Math.max(0, (scrollProgress - 0.55) * 2.25)
+      : Math.max(0, 1 - (scrollProgress - 1.05) * 4.5);
 
   // Page 3: Strictly ZERO waves and ZERO text until Vedika finishes transit at scrollProgress >= 1.65
   // In reverse also, waves and UI stay ZERO until Vedika arrives at scrollProgress <= 2.08
@@ -259,23 +282,6 @@ export default function HomePage() {
         <MultimodalWaveStream />
       </div>
 
-      {/* PAGE 3 WAVES LAYER: Distinct Multi-Amplitude Volumetric Ribbons */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 4,
-          pointerEvents: 'none',
-          opacity: p3WaveOpacity,
-          transition: 'opacity 0.2s ease-out',
-        }}
-      >
-        <TubesWaveStream />
-      </div>
 
       {/* Persistent Single 3D WebGL Canvas Layer (Vedika & Lighting) */}
       <div
@@ -354,7 +360,7 @@ export default function HomePage() {
             opacity: p3UiOpacity,
             transform: `translate3d(0, ${(1 - p3Ease) * 28}px, 0)`,
             transition: 'opacity 0.2s ease-out, transform 0.2s ease-out',
-            pointerEvents: scrollProgress >= 1.8 && scrollProgress <= 2.2 ? 'auto' : 'none',
+            pointerEvents: scrollProgress >= 1.65 && scrollProgress <= 2.25 ? 'auto' : 'none',
             visibility: scrollProgress >= 1.6 && scrollProgress <= 2.35 ? 'visible' : 'hidden',
           }}
         >

@@ -13,7 +13,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'Vedika — AI Tutor | Learning, but more human',
+  title: 'VEDIKA — Your Personal AI Tutor',
   description:
     'Vedika brings intelligent guidance, personalized explanations, and a more natural learning experience into one place.',
   keywords: [

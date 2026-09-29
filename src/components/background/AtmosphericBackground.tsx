@@ -114,16 +114,17 @@ export function AtmosphericBackground() {
       {/* Layer 6: Atmospheric Particles */}
       <Particles />
 
-      {/* Layer 7: Pure Studio White Stage for Page 2 */}
+      {/* Layer 7: Warm Luminous Ivory / Champagne Cream Stage for Page 2 */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: '#FFFFFF',
+          background:
+            'radial-gradient(circle at 50% 28%, rgba(254, 243, 199, 0.48) 0%, rgba(253, 242, 248, 0.22) 42%, transparent 75%), radial-gradient(circle at 18% 52%, rgba(192, 132, 252, 0.16) 0%, transparent 48%), radial-gradient(circle at 82% 52%, rgba(245, 158, 11, 0.16) 0%, transparent 48%), #FAF8F5',
           opacity: whiteOpacity,
           zIndex: 8,
           pointerEvents: 'none',
-          transition: 'opacity 0.2s ease-out',
+          transition: 'opacity 0.25s ease-out',
         }}
       />
 

@@ -1,0 +1,89 @@
+/* ==========================================================================
+   VEDIKA KNOWLEDGE WAVES - SCI-FI AI AURORA STREAM VISUALIZATION
+   Dedicated Scoped Stylesheet for KnowledgeWaves Component
+   ========================================================================== */
+
+.vedika-knowledge-waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+}
+
+.vedika-knowledge-waves-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  transform: translateZ(0);
+  will-change: contents;
+}
+
+/* Layer 1: Atmospheric Aurora Bloom across the entire Ribbon Width */
+.vedika-wave-aurora {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Layer 2: Volumetric Ribbon Body with Dynamic Varied Width */
+.vedika-wave-ribbon-body {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Layer 3: Soft Central Energy Spine */
+.vedika-wave-spine {
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+  mix-blend-mode: screen;
+}
+
+/* Information Packet Particles & Elongated Streaks */
+.vedika-wave-particle {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.vedika-wave-streak {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Parallax Depth Groups */
+.wave-layer-bg,
+.wave-layer-mid,
+.wave-layer-fg,
+.wave-layer-particles {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.12s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .wave-layer-bg {
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 640px) {
+  .vedika-wave-aurora {
+    filter: blur(14px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-layer-bg,
+  .wave-layer-mid,
+  .wave-layer-fg,
+  .wave-layer-particles {
+    transition: none !important;
+    transform: none !important;
+  }
+}

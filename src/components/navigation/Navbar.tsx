@@ -8,11 +8,11 @@ export function Navbar() {
   const { theme } = useTheme();
   const { scrollProgress } = useInteraction();
 
-  // On Page 2 and Page 4, background is pure white, so text must be dark slate.
+  // On Page 2 and Page 4, background is light/ivory, so text is dark slate.
   // On Page 1, Page 3, and Page 5, background is dark/pitch black, so text is light.
   const isLight =
-    (scrollProgress >= 0.5 && scrollProgress <= 1.45) ||
-    (scrollProgress >= 2.5 && scrollProgress <= 3.45);
+    (scrollProgress >= 0.45 && scrollProgress <= 1.45) ||
+    (scrollProgress >= 2.45 && scrollProgress <= 3.45);
 
   return (
     <header
@@ -36,7 +36,7 @@ export function Navbar() {
           padding: '1.75rem clamp(1.5rem, 5vw, 4rem)',
         }}
       >
-        {/* Only VEDIKA in the place of logo */}
+        {/* Only VEDIKA in the navbar */}
         <a
           href="/"
           aria-label="Vedika AI Tutor Home"

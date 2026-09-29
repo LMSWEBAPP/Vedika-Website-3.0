@@ -94,10 +94,10 @@
 }
 
 .role-tab-btn.active.admin {
-  background: rgba(16, 185, 129, 0.22);
-  border-color: rgba(16, 185, 129, 0.55);
-  color: #D1FAE5;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+  background: rgba(212, 175, 55, 0.22);
+  border-color: rgba(212, 175, 55, 0.55);
+  color: #FEF3C7;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
 }
 
 /* Master Asymmetric Split Screen (70% / 30%) */
@@ -148,85 +148,180 @@
 .persona-split-container.mode-student .teacher-content,
 .persona-split-container.mode-student .admin-content,
 .persona-split-container.mode-student .admin-side {
-  flex: 0 0 0% !important;
-  max-width: 0px !important;
-  width: 0px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
 /* ==========================================================================
-   MODE 2: TEACHER ACTIVE (30% Left / 70% Right)
+   MODE 2: TEACHER ACTIVE (Symmetrical Centered 2-Panel Composition)
+   - Distance 1 (Screen Left to Teacher Circle) == Distance 2 (Screen Right to Carousel)
+   - Guaranteed visible spacing between carousel arrows and cards
    ========================================================================== */
+.persona-split-container.mode-teacher {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(40px, 5.5vw, 90px);
+  width: 100% !important;
+  padding: 0 clamp(20px, 3.5vw, 60px);
+  box-sizing: border-box;
+}
+
 .persona-split-container.mode-teacher .teacher-side {
-  flex: 3 !important;
-  max-width: 28% !important;
+  flex: 0 0 340px !important;
+  width: 340px !important;
+  max-width: 340px !important;
+  height: 100% !important;
+  max-height: calc(100vh - 86px);
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 10px 16px 18px;
+  padding: 6px 0 14px 0 !important;
   background: transparent !important;
   border: none !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.persona-split-container.mode-teacher .teacher-side .persona-sidebar-inner {
+  width: 100%;
+  max-width: 340px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .persona-split-container.mode-teacher .teacher-content {
-  flex: 7 !important;
-  max-width: 72% !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: calc(100vh - 86px);
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
+  padding: 6px 0 14px 0 !important;
+  box-sizing: border-box;
   overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.persona-split-container.mode-teacher .content-header-bar {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 6px auto;
+  text-align: left;
+}
+
+.persona-split-container.mode-teacher .teacher-dilemmas-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  width: 100%;
+  position: relative;
+  overflow: visible !important;
+  padding: 0;
+  margin: auto 0;
+}
+
+.persona-split-container.mode-teacher .teacher-coverflow-dots {
+  margin-top: 6px;
+  margin-bottom: 2px;
 }
 
 .persona-split-container.mode-teacher .student-content,
 .persona-split-container.mode-teacher .student-side,
 .persona-split-container.mode-teacher .admin-content,
 .persona-split-container.mode-teacher .admin-side {
-  flex: 0 0 0% !important;
-  max-width: 0px !important;
-  width: 0px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
 /* ==========================================================================
-   MODE 3: ADMIN ACTIVE (70% Left / 30% Right)
+   MODE 3: ADMIN ACTIVE (Symmetrical Constellation around Central Vedika)
    ========================================================================== */
-.persona-split-container.mode-admin .admin-content {
-  flex: 7 !important;
-  max-width: 72% !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  padding: 12px 28px 18px clamp(20px, 3.5vw, 44px);
+.persona-split-container.mode-admin {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: clamp(24px, 3.5vw, 44px);
+  width: 100% !important;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .persona-split-container.mode-admin .admin-side {
-  flex: 3 !important;
-  max-width: 28% !important;
+  flex: 0 0 290px !important;
+  width: 290px !important;
+  max-width: 290px !important;
+  order: 1 !important;
+  height: 100% !important;
+  max-height: calc(100vh - 86px);
   opacity: 1 !important;
   pointer-events: auto !important;
-  padding: 10px 16px 18px;
+  padding: 6px 0 12px 0 !important;
   background: transparent !important;
   border: none !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  overflow: visible !important;
+}
+
+.persona-split-container.mode-admin .admin-side .persona-sidebar-inner {
+  width: 100%;
+  max-width: 290px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  overflow: visible !important;
+}
+
+.persona-split-container.mode-admin .admin-content {
+  flex: 1 1 0 !important;
+  width: auto !important;
+  max-width: 900px !important;
+  order: 2 !important;
+  height: 100% !important;
+  max-height: calc(100vh - 86px);
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  padding: 4px 0 8px 0 !important;
+  box-sizing: border-box;
+  overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 
 .persona-split-container.mode-admin .student-content,
 .persona-split-container.mode-admin .student-side,
 .persona-split-container.mode-admin .teacher-side,
 .persona-split-container.mode-admin .teacher-content {
-  flex: 0 0 0% !important;
-  max-width: 0px !important;
-  width: 0px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
 /* ==========================================================================
@@ -303,6 +398,7 @@
   width: 100%;
   margin: 4px 0;
   z-index: 2;
+  overflow: visible !important;
 }
 
 .persona-ambient-halo {
@@ -327,9 +423,17 @@
 }
 
 .persona-ambient-halo.admin {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.05) 55%, transparent 75%);
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  box-shadow: 0 0 40px rgba(16, 185, 129, 0.18);
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #091913;
+  border: 1.5px solid rgba(16, 185, 129, 0.45);
+  box-shadow: none !important;
+  animation: none !important;
+  border-radius: 50%;
 }
 
 /* Sidebar Navigation Buttons */
@@ -379,13 +483,16 @@
 }
 
 .persona-primary-btn.admin-btn {
-  background: linear-gradient(135deg, #059669 0%, #10B981 100%);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+  background: linear-gradient(135deg, #D4AF37 0%, #B45309 100%);
+  color: #1A1102;
+  font-weight: 800;
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 
 .persona-primary-btn.admin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.65);
+  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.55);
 }
 
 .persona-secondary-btn {
@@ -458,6 +565,7 @@
 .ecosystem-main-title .highlight-gradient {
   background: linear-gradient(135deg, #EC4899 0%, #A855F7 50%, #38BDF8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -818,78 +926,386 @@
   cursor: not-allowed;
 }
 
-.slide-cards-duo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
-  height: 100%;
-  align-items: stretch;
+/* ==========================================================================
+   ADMIN CONSTELLATION ECOSYSTEM (AROUND CENTRAL FIXED VEDIKA)
+   - Left Column: 3D Admin Bot + Benefits Card
+   - Right Column:
+       • Header Row (Titles on left, Role switcher on right)
+       • Constellation Stage (Fixed Vedika at center + 4 cards with circuit lines)
+       • Metrics Strip
+       • Footer Bar (Tagline + Dots + Prev/Next buttons)
+   ========================================================================== */
+
+/* ── Admin Character Circular Frame (Left Column) ── */
+.admin-character-circle-frame {
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: #0F0E09;
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden !important;
+  box-sizing: border-box;
+  margin: 0 auto;
+  flex-shrink: 0;
 }
 
-.persona-feature-card {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 20px 22px;
+/* ── Admin Content Header Row (Right Column) ── */
+.admin-content-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.admin-header-titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-headline-title {
+  font-size: clamp(1.30rem, 1.8vw, 1.65rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 2px 0 0 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.admin-highlight-word {
+  color: #D4AF37;
+  display: inline-block;
+}
+
+.admin-headline-subtitle {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: #94A3B8;
+  max-width: 520px;
+  margin: 0;
+}
+
+.admin-header-tabs-wrap {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── Central Constellation Stage ── */
+.admin-constellation-stage {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 410px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── FIXED CENTRAL VEDIKA ANCHOR (Locked in position, golden gradient background rings) ── */
+.admin-vedika-center-anchor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  height: 320px;
+}
+
+/* Concentric Golden Gradient Background Rings matching reference image */
+.admin-vedika-bg-rings-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* ── Orbiting Number Badges around the Golden Ring ── */
+.admin-orbit-badges-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.admin-orbit-badge {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0B0F19;
+  border: 2px solid var(--badge-color);
+  color: var(--badge-color);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 14px var(--badge-glow);
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.admin-orbit-badge:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 20px var(--badge-color);
+}
+
+.admin-orbit-badge.badge-pos-top-left {
+  top: 76px;
+  left: 68px;
+}
+
+.admin-orbit-badge.badge-pos-top-right {
+  top: 76px;
+  left: 216px;
+}
+
+.admin-orbit-badge.badge-pos-bottom-left {
+  top: 208px;
+  left: 68px;
+}
+
+.admin-orbit-badge.badge-pos-bottom-right {
+  top: 208px;
+  left: 216px;
+}
+
+.admin-vedika-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.admin-vedika-bot-img {
+  width: 125px;
+  height: 125px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+  filter: none;
+}
+
+/* ── 4 CARDS GRID (All boxes identical equal size, no spill out) ── */
+.admin-constellation-cards-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 290px 290px;
+  grid-template-rows: 185px 185px;
+  justify-content: space-between;
+  align-content: space-between;
+  z-index: 5;
+  box-sizing: border-box;
+  animation: adminCardsFadeIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-constellation-card {
+  width: 290px;
+  height: 185px;
+  min-height: 185px;
+  max-height: 185px;
+  background: var(--card-bg, #0F172A);
+  border: 1.5px solid var(--card-border, #1E293B);
+  border-radius: 12px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  overflow: hidden;
 }
 
-.persona-feature-card:hover {
-  background: rgba(22, 32, 54, 0.8);
+.admin-constellation-card:hover {
   transform: translateY(-2px);
+  border-color: var(--card-theme);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
 }
 
-.persona-feature-card.admin:hover {
-  border-color: rgba(16, 185, 129, 0.45);
-  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.15);
+.admin-card-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  overflow: hidden;
 }
 
-.card-icon-pill {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+.admin-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 2px;
+  height: 24px;
+}
+
+.admin-card-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.20rem;
-  margin-bottom: 10px;
+  transition: transform 0.25s ease;
 }
 
-.card-icon-pill.admin {
-  background: rgba(16, 185, 129, 0.18);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+.admin-constellation-card:hover .admin-card-icon {
+  transform: scale(1.1);
 }
 
-.card-headline {
-  font-size: 1.10rem;
+.admin-card-title {
+  font-size: 0.90rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0 0 6px 0;
+  margin: 4px 0 2px 0;
+  line-height: 1.25;
 }
 
-.card-desc {
-  font-size: 0.86rem;
-  line-height: 1.55;
-  color: var(--text-secondary-muted);
-  margin: 0;
-  flex: 1;
-}
-
-.card-badge-tag {
-  align-self: flex-start;
+.admin-card-desc {
   font-size: 0.72rem;
+  color: #94A3B8;
+  line-height: 1.38;
+  margin: 0 0 6px 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.admin-card-tags-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.admin-card-tag-pill {
+  font-size: 0.65rem;
   font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-secondary-muted);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 12px;
+  padding: 2.5px 7px;
+  border-radius: 4px;
+  background: var(--card-badge-bg);
+  border: 1px solid var(--card-border);
+  color: #E2E8F0;
+  white-space: nowrap;
+}
+
+/* ── Bottom Footer Controls Bar ── */
+.admin-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+  height: 32px;
+  min-height: 32px;
+  margin: 0 auto;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.admin-footer-tagline {
+  font-size: 0.68rem;
+  color: #64748B;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.admin-footer-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.admin-dots-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.admin-nav-dot.active {
+  width: 20px;
+  border-radius: 4px;
+  background: #D4AF37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+.admin-carousel-btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-carousel-btn {
+  padding: 5px 14px;
+  border-radius: 7px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #E2E8F0;
+}
+
+.admin-carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.admin-carousel-btn.next {
+  background: #D4AF37;
+  border-color: #F59E0B;
+  color: #1A1202;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
+}
+
+.admin-carousel-btn.next:hover {
+  background: #F59E0B;
+}
+
+.admin-carousel-btn.next:hover {
+  background: #10B981;
 }
 
 /* ==========================================================================
@@ -911,48 +1327,47 @@
 
 /* Flanking Carousel Arrows on Either Side of Cards */
 .teacher-stage-arrow {
-  position: absolute;
-  top: 86px;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
   z-index: 50;
   width: 44px;
   height: 44px;
+  flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #FFFFFF;
-  font-size: 26px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 38px;
   font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   padding: 0 0 2px 0;
   line-height: 1;
 }
 
 .teacher-stage-arrow:hover {
-  background: rgba(245, 158, 11, 0.25);
-  border-color: rgba(245, 158, 11, 0.7);
-  color: #FBBF24;
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), 0 8px 24px rgba(0, 0, 0, 0.6);
+  background: transparent;
+  color: #F59E0B;
+  transform: scale(1.22) !important;
 }
 
 .teacher-stage-arrow:active {
-  transform: scale(0.96);
+  transform: scale(0.92) !important;
 }
 
 .teacher-stage-arrow.prev {
-  left: max(4px, calc(50% - 370px));
+  left: auto !important;
 }
 
 .teacher-stage-arrow.next {
-  right: max(4px, calc(50% - 370px));
+  right: auto !important;
 }
 
 /* Indicator dots below cards */
@@ -993,38 +1408,38 @@
    ========================================================================== */
 .teacher-coverflow-deck {
   position: relative;
-  width: 100%;
-  max-width: 780px;
-  height: 415px;
-  margin: 0 auto;
+  width: 500px;
+  max-width: 500px;
+  height: 430px;
+  flex-shrink: 0;
+  margin: 0;
   perspective: 1200px;
-  transform-style: preserve-3d;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  overflow: visible;
 }
 
-/* Base Card Container */
+/* Base Card Container — matches the 400px natural height of two 200px slides.
+   Coverflow transforms (translateX, scale) live here only. */
 .teacher-slide-card {
   position: absolute;
-  width: 320px;
+  width: 500px;
   height: 400px;
   left: 0;
   right: 0;
-  top: 6px;
+  top: 10px;
   margin: auto;
   box-sizing: border-box;
   cursor: pointer;
+  overflow: visible;
 
-  /* Outer card should NOT animate during the unfolding */
   transition:
     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
     filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 
-  transform-style: preserve-3d;
   will-change: transform;
-  isolation: isolate;
 }
 
 /* 1. Center Active Card (Always Centered at translateX(0)) */
@@ -1036,15 +1451,29 @@
   cursor: pointer;
 }
 
+/* Extend hover-capture zone to 400px so that slide2 (which overflows
+   the 200px card box) still keeps hover state active when the mouse
+   follows slide2 downward — prevents the flicker/snap-back issue. */
+.teacher-slide-card.active-center::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  z-index: 0; /* sits below both slides */
+  pointer-events: auto;
+}
+
 .teacher-slide-card.active-center:hover,
 .teacher-slide-card.active-center:focus-within,
 .teacher-slide-card.active-center.is-hovered {
   z-index: 50;
 }
 
-/* 2. Next Right Card */
+/* 2. Next Right Card — Subtle Peek, No Zoom on Hover */
 .teacher-slide-card.next-right {
-  transform: translateX(46%) scale(0.82);
+  transform: translateX(10%) scale(0.88);
   opacity: 0.42;
   filter: blur(2.5px);
   z-index: 2;
@@ -1052,14 +1481,14 @@
 }
 
 .teacher-slide-card.next-right:hover {
-  opacity: 0.75;
-  filter: blur(0.5px);
-  transform: translateX(46%) scale(0.86);
+  opacity: 0.62;
+  filter: blur(1.5px);
+  transform: translateX(10%) scale(0.88);
 }
 
-/* 3. Prev Left Card */
+/* 3. Prev Left Card — Subtle Peek, No Zoom on Hover */
 .teacher-slide-card.prev-left {
-  transform: translateX(-46%) scale(0.82);
+  transform: translateX(-10%) scale(0.88);
   opacity: 0.42;
   filter: blur(2.5px);
   z-index: 2;
@@ -1067,9 +1496,9 @@
 }
 
 .teacher-slide-card.prev-left:hover {
-  opacity: 0.75;
-  filter: blur(0.5px);
-  transform: translateX(-46%) scale(0.86);
+  opacity: 0.62;
+  filter: blur(1.5px);
+  transform: translateX(-10%) scale(0.88);
 }
 
 /* 4. Far Back Card */
@@ -1082,112 +1511,101 @@
 }
 
 /* ==========================================================================
-   ISOLATED 400px UNFOLDING WRAPPER (Exact CodePen Architecture)
+   UNFOLDING WRAPPER — Exact CodePen Architecture
+   position:relative so the two 200px slides stack naturally = 400px total.
+   No overflow:hidden — let the transforms show both slides.
    ========================================================================== */
 .teacher-unfold-wrapper {
   position: relative;
-  width: 320px;
-  height: 400px;
-  overflow: visible;
+  width: 500px;
+  max-width: 100%;
+  /* Height is automatic: two 200px slides in flow = 400px */
 }
 
-/* Individual Slides: Absolutely positioned relative to the wrapper */
+/* Both slides are position:relative and stack in normal flow */
 .teacher-unfold-wrapper .slide {
-  position: absolute;
-  left: 0;
-  width: 320px;
+  position: relative;
+  width: 500px;
+  max-width: 100%;
   height: 200px;
   box-sizing: border-box;
-}
-
-.teacher-unfold-wrapper .slide.slide1,
-.teacher-unfold-wrapper .slide.slide2 {
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ==========================================================================
-   SLIDE 1: Traditional Friction (Top Outer Card)
-   - Initial: top: 0, translateY(100px) -> sits at center Y = 100px..300px
-   - Hover:   translateY(0)             -> moves UP to Y = 0px..200px
+   SLIDE 1: Traditional Friction
+   CodePen default: transform: translateY(100px)  → shifts DOWN 100px
+   CodePen hover:   transform: translateY(0)       → moves UP to natural position
+   Controlled via JS ref (same as CodePen :hover but through React)
    ========================================================================== */
 .teacher-unfold-wrapper .slide.slide1 {
-  top: 0;
   z-index: 2;
   transform: translateY(100px);
-  transition:
-    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-radius 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.7s ease;
-  border-radius: 20px;
-  background:
-    linear-gradient(150deg, #22121b 0%, #12090e 100%),
-    #0f172a;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(248, 113, 113, 0.38);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  will-change: transform;
+  border-radius: 0;
+  background: #1c0a0a;
+  border: 1.5px solid rgba(180, 60, 60, 0.42);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.12),
-    0 12px 30px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgba(255, 100, 100, 0.07),
+    0 6px 18px rgba(0, 0, 0, 0.55),
+    0 2px 5px rgba(0, 0, 0, 0.40);
 }
 
-/* Subtle seamless highlight at the bottom seam when opened on hover */
+/* Seam line between slides */
 .teacher-unfold-wrapper .slide.slide1::after {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 16px;
-  right: 16px;
+  left: 5%;
+  right: 5%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), rgba(16, 185, 129, 0.3), transparent);
+  background: rgba(180, 60, 60, 0.20);
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
 
-/* CodePen: .card:hover .slide.slide1 { transform: translateY(0); } */
+/* =====================================================================
+   OPEN STATE
+   ===================================================================== */
 .teacher-slide-card.active-center:hover .slide.slide1,
 .teacher-slide-card.active-center:focus-within .slide.slide1,
-.teacher-slide-card.active-center.is-hovered .slide.slide1 {
+.teacher-slide-card.active-center.is-hovered .slide.slide1,
+.teacher-unfold-wrapper.is-open .slide.slide1 {
   transform: translateY(0);
-  border-radius: 20px 20px 0 0;
-  border-bottom: none;
-  border-color: rgba(248, 113, 113, 0.6);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.16),
-    0 16px 36px rgba(0, 0, 0, 0.75);
+  border-color: rgba(220, 80, 80, 0.55);
 }
 
-.teacher-slide-card.active-center:hover .slide.slide1::after,
-.teacher-slide-card.active-center:focus-within .slide.slide1::after,
-.teacher-slide-card.active-center.is-hovered .slide.slide1::after {
-  opacity: 1;
+.teacher-slide-card.active-center:hover .slide.slide2,
+.teacher-slide-card.active-center:focus-within .slide.slide2,
+.teacher-slide-card.active-center.is-hovered .slide.slide2,
+.teacher-unfold-wrapper.is-open .slide.slide2 {
+  transform: translateY(0);
+  border-color: rgba(16, 185, 129, 0.50);
 }
 
 .teacher-unfold-wrapper .slide.slide1 .content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 18px 20px;
+  text-align: left;
+  padding: 0;
   height: 100%;
+  width: 100%;
   box-sizing: border-box;
-  gap: 10px;
+  gap: 0;
 }
 
 .teacher-unfold-wrapper .icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 16px;
-  background: rgba(248, 113, 113, 0.16);
-  border: 1.5px solid rgba(248, 113, 113, 0.4);
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: rgba(200, 60, 60, 0.16);
+  border: 1.5px solid rgba(200, 60, 60, 0.32);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px rgba(248, 113, 113, 0.25);
   transition: transform 0.5s ease;
 }
 
@@ -1220,81 +1638,135 @@
 }
 
 /* ==========================================================================
-   SLIDE 2: Vedika AI Resolution (Inner Card Smoothly Sliding Downwards)
-   - Initial: top: 200px, translateY(-100px) -> sits at center Y = 100px..300px
-   - Hover:   translateY(0)                  -> moves DOWN to Y = 200px..400px
+   SLIDE 2: Vedika AI Resolution
+   CodePen default: transform: translateY(-100px) → shifts UP 100px (overlaps slide1)
+   CodePen hover:   transform: translateY(0)       → drops DOWN to natural position
+   Controlled via JS ref — CSS defines the default and transition duration.
    ========================================================================== */
 .teacher-unfold-wrapper .slide.slide2 {
-  top: 200px;
   z-index: 1;
   transform: translateY(-100px);
-  transition:
-    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-radius 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.8s ease;
-  border-radius: 20px;
-  background:
-    linear-gradient(160deg, #061e16 0%, #03100c 100%),
-    #081410;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid transparent;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+  will-change: transform;
+  border-radius: 0;
+  background: #061a0f;
+  border: 1.5px solid rgba(16, 185, 129, 0.38);
   border-top: none;
-  box-shadow: none;
-}
-
-/* Glowing bottom accent line (matching CodePen ::after) */
-.teacher-unfold-wrapper .slide.slide2::after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 4px;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #10B981;
-  border-radius: 2px;
-  box-shadow: 0 0 12px #10B981;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-/* CodePen: .card:hover .slide.slide2 { transform: translateY(0); } */
-.teacher-slide-card.active-center:hover .slide.slide2,
-.teacher-slide-card.active-center:focus-within .slide.slide2,
-.teacher-slide-card.active-center.is-hovered .slide.slide2 {
-  transform: translateY(0);
-  border-radius: 0 0 20px 20px;
-  border-top: none;
-  border-color: rgba(16, 185, 129, 0.6);
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.6),
-    0 0 28px rgba(16, 185, 129, 0.25);
+    inset 0 1px 0 rgba(16, 185, 129, 0.07),
+    0 10px 24px rgba(0, 0, 0, 0.60),
+    0 3px 6px rgba(0, 0, 0, 0.40);
 }
 
-.teacher-slide-card.active-center:hover .slide.slide2::after,
-.teacher-slide-card.active-center:focus-within .slide.slide2::after,
-.teacher-slide-card.active-center.is-hovered .slide.slide2::after {
-  opacity: 1;
+/* Remove old glowing bottom bar */
+.teacher-unfold-wrapper .slide.slide2::after {
+  display: none;
 }
 
 .teacher-unfold-wrapper .slide.slide2 .content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 16px 20px 22px;
+  text-align: left;
+  padding: 0;
   height: 100%;
+  width: 100%;
   box-sizing: border-box;
-  gap: 7px;
+  gap: 0;
 }
 
-.teacher-unfold-wrapper .bot-and-badge-row {
+/* ── Slide 1 Horizontal Layout ── */
+.sl1-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.sl1-divider {
+  width: 1px;
+  height: 60%;
+  background: rgba(180, 60, 60, 0.35);
+  flex-shrink: 0;
+}
+
+.sl1-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 22px;
+  gap: 5px;
+  flex: 1;
+}
+
+.teacher-unfold-wrapper .friction-desc {
+  font-size: 0.76rem;
+  color: rgba(252, 165, 165, 0.70);
+  line-height: 1.45;
+  margin: 2px 0 0 0;
+}
+
+/* ── Slide 2 Horizontal Layout ── */
+.sl2-bot-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 115px;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 8px 0 8px 8px;
+}
+
+.vedika-resolution-bot {
+  width: 88px;
+  height: auto;
+  object-fit: contain;
+  animation: happyBotFloat 3s ease-in-out infinite;
+}
+
+.sl2-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 18px;
+  gap: 2px;
+  flex: 1;
+}
+
+/* Bullet list */
+.resolution-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.resolution-bullet-item {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 0.75rem;
+  color: #A7F3D0;
+  line-height: 1.3;
+}
+
+.bullet-icon-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .tiny-vedika-avatar {
@@ -1315,27 +1787,38 @@
 }
 
 .resolution-badge-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  font-size: 0.68rem;
+  gap: 6px;
+  font-size: 0.60rem;
   font-weight: 700;
   color: #34D399;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 3px 8px;
-  border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.16);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  letter-spacing: 0.10em;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 3px;
+}
+
+.resolution-badge-pill::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  background: #34D399;
+  border-radius: 1px;
+  flex-shrink: 0;
 }
 
 .resolution-title {
-  font-size: 0.96rem;
+  font-size: 1.08rem;
   font-weight: 800;
-  line-height: 1.25;
-  color: #A7F3D0;
+  line-height: 1.22;
+  color: #ECFDF5;
   margin: 0;
   letter-spacing: -0.01em;
-  text-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
 }
 
 .resolution-desc {
@@ -1364,13 +1847,26 @@
 /* Responsive adjustment for narrower screens */
 @media (max-width: 768px) {
   .teacher-coverflow-deck {
-    height: 440px;
+    height: 220px;
+    overflow: visible;
   }
   .teacher-slide-card {
-    width: 290px;
+    width: 320px;
   }
-  .teacher-slide-card .slide {
-    width: 290px;
+  .teacher-unfold-wrapper {
+    width: 320px;
+  }
+  .teacher-unfold-wrapper .slide {
+    width: 320px;
+  }
+  .sl1-icon-col {
+    width: 70px;
+  }
+  .sl2-bot-col {
+    width: 80px;
+  }
+  .vedika-resolution-bot {
+    width: 64px;
   }
   .teacher-stage-arrow.prev {
     left: 2px;

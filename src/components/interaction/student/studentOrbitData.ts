@@ -128,11 +128,11 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
   },
 ];
 
-/** Progress ring radius (135px, diameter 270px) and spacious canvas dimensions */
-export const PROGRESS_R = 135;
-export const ICON_R = 195;
-export const ORBIT_SIZE = 380;
-export const ORBIT_CENTER = 190;
+/** Progress ring radius (125px, diameter 250px) and spacious 600x600 canvas */
+export const PROGRESS_R = 125;
+export const ICON_R = 175;
+export const ORBIT_SIZE = 600;
+export const ORBIT_CENTER = 300;
 
 /**
  * Progress ring bead angle (degrees) for each active step.
@@ -140,14 +140,14 @@ export const ORBIT_CENTER = 190;
  */
 export const BEAD_ANGLES: Record<number, number> = {
   1: 270,
-  2: 331,
+  2: 330,
   3: 360,
-  4: 29,
-  5: 66,
-  6: 114,
-  7: 151,
+  4: 30,
+  5: 65,
+  6: 115,
+  7: 150,
   8: 180,
-  9: 209,
+  9: 210,
 };
 
 export interface OrbitSegmentData {
@@ -176,14 +176,14 @@ function parseRgbString(rgbStr: string): [number, number, number] {
 }
 
 /**
- * Pre-computes the 9 continuous arc segments on the spacious progress ring (R=135).
+ * Pre-computes the 9 continuous arc segments on the progress ring (R=125).
  */
 export function buildOrbitSegments(): OrbitSegmentData[] {
   const R = PROGRESS_R;
   const C = ORBIT_CENTER;
   const count = STUDENT_ORBIT_FEATURES.length; // 9
 
-  const featureAngles = [270, 331, 360, 29, 66, 114, 151, 180, 209];
+  const featureAngles = [270, 330, 360, 30, 65, 115, 150, 180, 210];
 
   const segments: OrbitSegmentData[] = [];
 
@@ -235,67 +235,151 @@ export function buildOrbitSegments(): OrbitSegmentData[] {
 export const ORBIT_SEGMENTS: OrbitSegmentData[] = buildOrbitSegments();
 
 export interface NodePositionData {
+  cardX: number;
+  cardY: number;
+  nodeAngleDeg: number;
+  connectorD: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
   iconCx: number;
   iconCy: number;
   cardCss: React.CSSProperties;
 }
 
 /**
- * 5 Spacious, perfectly equalized vertical tiers:
- *   Level 1: Y = -190 (Node 1)
- *   Level 2: Y = -95  (Nodes 2 & 9)   [gap = 95px]
- *   Level 3: Y = 0    (Nodes 3 & 8)   [gap = 95px]
- *   Level 4: Y = +95  (Nodes 4 & 7)   [gap = 95px]
- *   Level 5: Y = +185 (Nodes 5 & 6)   [gap = 90px]
+ * 9 Card Positions & Gradient Connector Coordinates matching reference image:
+ *   Node 1: Top Center (0, -195)
+ *   Node 2: Upper Right (265, -110)
+ *   Node 3: Middle Right (285, 0)
+ *   Node 4: Lower Right (265, 110)
+ *   Node 5: Bottom Right (145, 205)
+ *   Node 6: Bottom Left (-145, 205)
+ *   Node 7: Lower Left (-265, 110)
+ *   Node 8: Middle Left (-285, 0)
+ *   Node 9: Upper Left (-265, -110)
  */
 export const NODE_POSITIONS: Record<number, NodePositionData> = {
   1: {
+    cardX: 0,
+    cardY: -195,
+    nodeAngleDeg: 270,
+    connectorD: 'M 300 175 L 300 132',
+    x1: 300,
+    y1: 175,
+    x2: 300,
+    y2: 132,
     iconCx: 0,
-    iconCy: -190,
+    iconCy: -195,
     cardCss: {},
   },
   2: {
-    iconCx: 175,
-    iconCy: -95,
+    cardX: 265,
+    cardY: -110,
+    nodeAngleDeg: 330,
+    connectorD: 'M 408.25 237.5 L 434 190',
+    x1: 408.25,
+    y1: 237.5,
+    x2: 434,
+    y2: 190,
+    iconCx: 265,
+    iconCy: -110,
     cardCss: {},
   },
   3: {
-    iconCx: 205,
+    cardX: 285,
+    cardY: 0,
+    nodeAngleDeg: 0,
+    connectorD: 'M 425 300 L 454 300',
+    x1: 425,
+    y1: 300,
+    x2: 454,
+    y2: 300,
+    iconCx: 285,
     iconCy: 0,
     cardCss: {},
   },
   4: {
-    iconCx: 175,
-    iconCy: 95,
+    cardX: 265,
+    cardY: 110,
+    nodeAngleDeg: 30,
+    connectorD: 'M 408.25 362.5 L 434 410',
+    x1: 408.25,
+    y1: 362.5,
+    x2: 434,
+    y2: 410,
+    iconCx: 265,
+    iconCy: 110,
     cardCss: {},
   },
   5: {
-    iconCx: 85,
-    iconCy: 185,
+    cardX: 145,
+    cardY: 205,
+    nodeAngleDeg: 65,
+    connectorD: 'M 352.8 413.3 L 385 478',
+    x1: 352.8,
+    y1: 413.3,
+    x2: 385,
+    y2: 478,
+    iconCx: 145,
+    iconCy: 205,
     cardCss: {},
   },
   6: {
-    iconCx: -85,
-    iconCy: 185,
+    cardX: -145,
+    cardY: 205,
+    nodeAngleDeg: 115,
+    connectorD: 'M 247.2 413.3 L 215 478',
+    x1: 247.2,
+    y1: 413.3,
+    x2: 215,
+    y2: 478,
+    iconCx: -145,
+    iconCy: 205,
     cardCss: {},
   },
   7: {
-    iconCx: -175,
-    iconCy: 95,
+    cardX: -265,
+    cardY: 110,
+    nodeAngleDeg: 150,
+    connectorD: 'M 191.75 362.5 L 166 410',
+    x1: 191.75,
+    y1: 362.5,
+    x2: 166,
+    y2: 410,
+    iconCx: -265,
+    iconCy: 110,
     cardCss: {},
   },
   8: {
-    iconCx: -205,
+    cardX: -285,
+    cardY: 0,
+    nodeAngleDeg: 180,
+    connectorD: 'M 175 300 L 146 300',
+    x1: 175,
+    y1: 300,
+    x2: 146,
+    y2: 300,
+    iconCx: -285,
     iconCy: 0,
     cardCss: {},
   },
   9: {
-    iconCx: -175,
-    iconCy: -95,
+    cardX: -265,
+    cardY: -110,
+    nodeAngleDeg: 210,
+    connectorD: 'M 191.75 237.5 L 166 190',
+    x1: 191.75,
+    y1: 237.5,
+    x2: 166,
+    y2: 190,
+    iconCx: -265,
+    iconCy: -110,
     cardCss: {},
   },
 };
 
-/** Initial bead position (Node 1, top center, 270°, on R=135) */
+/** Initial bead position (Node 1, top center, 270°, on R=125, C=300) */
 export const BEAD_START_X = ORBIT_CENTER;
-export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 190 - 135 = 55
+export const BEAD_START_Y = ORBIT_CENTER - PROGRESS_R; // 300 - 125 = 175

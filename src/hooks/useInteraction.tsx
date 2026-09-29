@@ -5,6 +5,9 @@ import React, { createContext, useContext, useState, useRef, ReactNode } from 'r
 export type InteractionMode = 'STT' | 'TTS';
 export type InteractionState = 'IDLE' | 'LISTENING' | 'PROCESSING' | 'SPEAKING' | 'ERROR';
 
+// Global high-frequency scroll ref for 60/120fps WebGL and Canvas sync without React re-render overhead
+export const globalScrollRef = { current: 0 };
+
 interface InteractionContextType {
   activeMode: InteractionMode;
   setActiveMode: (mode: InteractionMode) => void;
@@ -29,7 +32,12 @@ const InteractionContext = createContext<InteractionContextType | undefined>(und
 export function InteractionProvider({ children }: { children: ReactNode }) {
   const [activeMode, setActiveMode] = useState<InteractionMode>('STT');
   const [interactionState, setInteractionState] = useState<InteractionState>('IDLE');
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollProgress, setScrollProgressState] = useState(0);
+
+  const setScrollProgress = (val: number) => {
+    globalScrollRef.current = val;
+    setScrollProgressState(val);
+  };
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
   const [ttsInput, setTtsInput] = useState(

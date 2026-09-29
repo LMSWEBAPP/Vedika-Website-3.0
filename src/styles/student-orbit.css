@@ -1,17 +1,12 @@
 /* ==========================================================================
-   VEDIKA STUDENT ORBIT SYSTEM
+   VEDIKA STUDENT ORBIT SYSTEM (EXACT REFERENCE DESIGN)
    ─────────────────────────────────────────────────────────────────────────
-   Architecture:
-     • .vedika-orbit-stage-clean    — full stage container
-     • .vedika-center-pod-clean     — center Vedika bot + progress ring (spacious R=135)
-     • .orbit-unified-bar           — SINGLE unified bar containing icon + expanding point
-                                      - Zero transform reflow glitch: anchored with fixed width
-                                      - Smooth clip-path expansion unrolls directly from the icon
-                                      - Right side (1, 2, 3, 4, 5): icon on left, text align-left
-                                      - Left side (6, 7, 8, 9): icon on right, text align-right
-                                      - Icon side is fully curved (23px) to match circular icon
-                                      - Text side has normal crisp card corners (8px)
-                                      - Spacious 5-tier vertical spacing
+   Features:
+     • Central 3D Vedika Bot with glowing blue holographic pedestal
+     • Continuous multi-color rainbow gradient orbit ring (R=125)
+     • 9 glowing orbit node dots on the ring with neon connector lines
+     • 9 capsule pill cards with circular icon badge on left,
+       uppercase eyebrow, bold white title, and watermark illustration on right
    ========================================================================== */
 
 /* ==========================================================================
@@ -20,8 +15,9 @@
 .vedika-orbit-stage-clean {
   position: relative;
   width: 100%;
-  flex: 1;
-  min-height: 540px;
+  max-width: 960px;
+  height: 560px;
+  min-height: 560px;
   max-height: calc(100vh - 80px);
   overflow: visible !important;
   display: flex;
@@ -29,19 +25,20 @@
   justify-content: center;
   outline: none;
   box-sizing: border-box;
-  transform: translateY(-16px);
+  margin: 0 auto;
   transition: opacity 0.6s ease-out;
 }
 
 /* ==========================================================================
-   2. CENTER: VEDIKA BOT + PROGRESS RING (Spacious R=135, D=270)
+   2. CENTER: VEDIKA BOT + PROGRESS RING (R=125, D=250, Canvas=600)
    ========================================================================== */
 .vedika-center-pod-clean {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 380px;
-  height: 380px;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,10 +59,6 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-.vedika-ambient-aura {
-  display: none !important;
-}
-
 .vedika-ring-wrap {
   position: absolute;
   inset: 0;
@@ -78,9 +71,10 @@
 
 .vedika-central-progress-svg {
   overflow: visible;
+  pointer-events: none;
 }
 
-/* Central 3D Bot Canvas Container: perfectly centered in the 270px ring */
+/* Central 3D Bot Canvas Container: centered in the ring */
 .vedika-robot-canvas-box {
   position: absolute;
   top: 50%;
@@ -95,6 +89,134 @@
   z-index: 4;
 }
 
+/* ── Futuristic Hologram Stage Pedestal beneath Vedika (Fully inside the orbit ring) ── */
+.vedika-hologram-pedestal {
+  position: absolute;
+  top: calc(50% + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 124px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Translucent upward holographic projection cone matching the reference image */
+.hologram-projection-cone {
+  position: absolute;
+  bottom: 10px;
+  width: 104px;
+  height: 52px;
+  clip-path: polygon(18% 0%, 82% 0%, 100% 100%, 0% 100%);
+  background: linear-gradient(
+    to top,
+    rgba(99, 102, 241, 0.32) 0%,
+    rgba(139, 92, 246, 0.14) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Upward light beam edge highlights */
+.hologram-projection-cone::before,
+.hologram-projection-cone::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: linear-gradient(to top, rgba(168, 85, 247, 0.7) 0%, rgba(139, 92, 246, 0.25) 60%, transparent 100%);
+  filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.85));
+}
+.hologram-projection-cone::before {
+  left: 0;
+  transform: rotate(-10deg);
+  transform-origin: bottom left;
+}
+.hologram-projection-cone::after {
+  right: 0;
+  transform: rotate(10deg);
+  transform-origin: bottom right;
+}
+
+/* Outer circular stage disc (fully framed within the ring) */
+.hologram-disc-outer {
+  position: absolute;
+  bottom: 0;
+  width: 114px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(28, 14, 58, 0.95) 0%,
+    rgba(14, 7, 32, 0.98) 70%,
+    rgba(8, 4, 18, 0.99) 100%
+  );
+  border: 1.8px solid rgba(168, 85, 247, 0.85);
+  box-shadow:
+    0 0 15px rgba(168, 85, 247, 0.75),
+    0 0 25px rgba(124, 58, 237, 0.4),
+    inset 0 0 10px rgba(147, 51, 234, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner concentric metallic/glowing ring */
+.hologram-disc-inner {
+  position: relative;
+  width: 74px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.2px solid rgba(147, 51, 234, 0.75);
+  box-shadow:
+    0 0 8px rgba(139, 92, 246, 0.6),
+    inset 0 0 6px rgba(124, 58, 237, 0.5);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 10, 45, 0.9) 0%,
+    rgba(10, 5, 25, 0.95) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Intense luminous cyan/blue spotlight core right beneath the robot's feet */
+.hologram-flare-core {
+  width: 32px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    #ffffff 0%,
+    #38bdf8 30%,
+    #0284c7 65%,
+    rgba(2, 132, 199, 0) 100%
+  );
+  box-shadow:
+    0 0 12px 3px #00b4d8,
+    0 0 24px 6px rgba(2, 132, 199, 0.7),
+    0 0 38px 10px rgba(56, 189, 248, 0.4);
+  filter: drop-shadow(0 0 5px #ffffff);
+}
+
+/* Ambient ground aura under the entire stage */
+.hologram-glow-floor {
+  position: absolute;
+  bottom: -4px;
+  width: 128px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(147, 51, 234, 0.4) 0%, transparent 75%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
 /* ==========================================================================
    3. NODES LAYER
    ========================================================================== */
@@ -106,14 +228,20 @@
 }
 
 /* ==========================================================================
-   4. UNIFIED SINGLE BAR (.orbit-unified-bar)
-   Anchored in fixed position with constant width to guarantee zero transform
-   shift or jumping. Uses smooth clip-path to unroll from the stationary icon.
+   4. CAPSULE PILL CARD (.orbit-capsule-card)
+   Identical to reference image:
+     • Pill capsule shape (height: 54px, width: 236px)
+     • Translucent dark glassmorphism
+     • Glowing theme border and aura
+     • Left: Circular glowing icon pill badge
+     • Middle: Upper uppercase eyebrow + bold white title
+     • Right: Faint watermark illustration
    ========================================================================== */
-.orbit-unified-bar {
+.orbit-capsule-card {
   position: absolute;
-  width: 220px;
-  height: 46px;
+  width: 260px;
+  height: 54px;
+  border-radius: 9999px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -122,263 +250,148 @@
   cursor: pointer;
   z-index: 20;
   outline: none;
+  padding: 0 10px 0 5px;
 
-  /* Premium glassmorphism with crisp accent border & NO blurry glow bleed */
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
-    rgba(8, 14, 30, 0.94);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.50);
+  /* Premium glassmorphism matching reference image */
+  background: rgba(8, 12, 24, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid var(--card-accent);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.16),
-    0 6px 20px rgba(0, 0, 0, 0.85);
+    0 0 16px rgba(var(--card-accent-rgb), 0.35),
+    inset 0 0 12px rgba(var(--card-accent-rgb), 0.08);
 
   transition:
-    clip-path 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.25s ease,
-    background 0.25s ease,
     box-shadow 0.25s ease,
-    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.32s ease;
+    opacity 0.35s ease;
 }
 
-/* Unrevealed: completely hidden before its sequential turn */
-.orbit-unified-bar.is-hidden {
+/* Visibility during sequential tour: hidden by default until its ring step arrives */
+.orbit-capsule-card.is-hidden {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.85) !important;
 }
 
-/* Revealed: visible on stage */
-.orbit-unified-bar.is-visible {
+.orbit-capsule-card.is-visible {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
+  transform: translate(-50%, -50%) scale(1) !important;
+}
+
+/* Hover state */
+.orbit-capsule-card:hover {
+  transform: translate(-50%, -50%) scale(1.04) !important;
+  box-shadow:
+    0 0 24px rgba(var(--card-accent-rgb), 0.65),
+    inset 0 0 14px rgba(var(--card-accent-rgb), 0.15);
 }
 
 /* Active node (spotlight) */
-.orbit-unified-bar.is-active {
+.orbit-capsule-card.is-active {
   border-color: #FFFFFF;
   border-width: 1.8px;
   box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.95);
+    0 0 28px rgba(var(--card-accent-rgb), 0.85),
+    inset 0 0 16px rgba(var(--card-accent-rgb), 0.2);
   z-index: 35;
 }
 
-/* Completed node */
-.orbit-unified-bar.is-completed {
-  border-color: rgba(var(--card-accent-rgb), 0.65);
-}
-
-.orbit-unified-bar:hover {
-  border-color: var(--card-accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.90);
-}
-
 /* ==========================================================================
-   5. DIRECTION SPECIFIC FIXED ANCHORS & PURE CLIP-PATH EXPANSION
-   Zero transform jumps: icon stays 100% stationary at (0, 0)
+   5. CARD INNER ELEMENTS
    ========================================================================== */
 
-/* ── RIGHT DIRECTION (Nodes 2, 3, 4, 5) ──
-   Icon on LEFT at (-19px to +19px). Left side curved (23px), right normal (8px).
-   Unrolls smoothly to the RIGHT without moving the icon.
-*/
-.orbit-unified-bar.dir-right {
-  transform: translate(-19px, -50%);
-  border-radius: 23px 8px 8px 23px;
-}
-
-.orbit-unified-bar.dir-right.is-compact {
-  clip-path: inset(0 calc(100% - 38px) 0 0 round 23px);
-}
-
-.orbit-unified-bar.dir-right.is-expanded {
-  clip-path: inset(0 0 0 0 round 23px 8px 8px 23px);
-}
-
-/* ── LEFT DIRECTION (Nodes 6, 7, 8, 9) ──
-   Icon on RIGHT at (-19px to +19px). Right side curved (23px), left normal (8px).
-   Unrolls smoothly to the LEFT without moving the icon. ZERO REFLECTION GLITCH.
-*/
-.orbit-unified-bar.dir-left {
-  transform: translate(-201px, -50%); /* -220px + 19px = -201px, so right edge is at +19px */
-  border-radius: 8px 23px 23px 8px;
-}
-
-.orbit-unified-bar.dir-left.is-compact {
-  clip-path: inset(0 0 0 calc(100% - 38px) round 23px);
-}
-
-.orbit-unified-bar.dir-left.is-expanded {
-  clip-path: inset(0 0 0 0 round 8px 23px 23px 8px);
-}
-
-/* ── TOP DIRECTION (Node 1) ──
-   Icon on LEFT, centered horizontally above robot.
-*/
-.orbit-unified-bar.dir-top {
-  transform: translate(-50%, -50%);
-  border-radius: 23px 8px 8px 23px;
-}
-
-.orbit-unified-bar.dir-top.is-compact {
-  clip-path: inset(0 calc(50% - 19px) 0 calc(50% - 19px) round 19px);
-}
-
-.orbit-unified-bar.dir-top.is-expanded {
-  clip-path: inset(0 0 0 0 round 23px 8px 8px 23px);
-}
-
-/* ==========================================================================
-   6. INNER ELEMENTS: ICON BOX & EXPANDABLE CONTENT BOX
-   ========================================================================== */
-.bar-icon-box {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
+/* ── 1. Circular Glowing Icon Pill Badge on Left ── */
+.card-icon-badge {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--card-accent);
+  background: rgba(var(--card-accent-rgb), 0.14);
+  border: 2px solid var(--card-accent);
+  box-shadow: 0 0 12px rgba(var(--card-accent-rgb), 0.55);
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
-.orbit-unified-bar.is-completed .bar-icon-box {
-  color: var(--card-accent);
-  background: rgba(var(--card-accent-rgb), 0.16);
+.orbit-capsule-card:hover .card-icon-badge {
+  transform: scale(1.08);
+  box-shadow: 0 0 18px rgba(var(--card-accent-rgb), 0.8);
 }
 
-.orbit-unified-bar.is-active .bar-icon-box {
+.orbit-capsule-card.is-active .card-icon-badge {
   color: #FFFFFF;
   background: rgba(var(--card-accent-rgb), 0.35);
+  box-shadow: 0 0 20px rgba(var(--card-accent-rgb), 0.95);
 }
 
-.bar-content-box {
+/* ── 2. Text Column: Eyebrow + Bold Title ── */
+.card-text-col {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: 10px;
+  margin-right: 6px;
+  overflow: hidden;
 }
 
-/* Directional alignment & padding */
-.orbit-unified-bar.align-left .bar-content-box {
-  padding: 0 14px 0 4px;
-  text-align: left;
-  align-items: flex-start;
-}
-
-.orbit-unified-bar.align-right .bar-content-box {
-  padding: 0 4px 0 14px;
-  text-align: right;
-  align-items: flex-end;
-}
-
-/* Content opacity transition */
-.orbit-unified-bar.is-compact .bar-content-box {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease;
-}
-
-.orbit-unified-bar.is-expanded .bar-content-box {
-  opacity: 1;
-  pointer-events: auto;
-  transition: opacity 0.28s ease 0.08s;
-}
-
-/* ==========================================================================
-   7. TYPOGRAPHY (NO numbers, crisp alignment)
-   ========================================================================== */
-.drawer-header-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 2px;
-  line-height: 1;
-  width: 100%;
-}
-
-.orbit-unified-bar.align-left .drawer-header-row {
-  justify-content: flex-start;
-}
-
-.orbit-unified-bar.align-right .drawer-header-row {
-  justify-content: flex-end;
-}
-
-.drawer-short-tag {
+.card-eyebrow {
   font-size: 0.58rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   color: var(--card-accent);
   text-shadow: 0 0 8px rgba(var(--card-accent-rgb), 0.55);
   white-space: nowrap;
+  line-height: 1.1;
+  margin-bottom: 2px;
 }
 
-.drawer-title-text {
-  font-size: 0.80rem;
+.card-title {
+  font-size: 0.84rem;
   font-weight: 700;
   color: #FFFFFF;
-  margin: 0 0 1px 0;
+  margin: 0;
   line-height: 1.2;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%;
 }
 
-.orbit-unified-bar.align-left .drawer-title-text {
-  text-align: left;
+/* ── 3. Faint Watermark Illustration on Right ── */
+.card-watermark {
+  opacity: 0.22;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  transition: opacity 0.25s ease;
 }
 
-.orbit-unified-bar.align-right .drawer-title-text {
-  text-align: right;
-}
-
-.drawer-desc-text {
-  font-size: 0.62rem;
-  line-height: 1.3;
-  color: #94A3B8;
-  margin: 0;
-  font-weight: 400;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  transition: color 0.3s ease;
-  width: 100%;
-}
-
-.orbit-unified-bar.align-left .drawer-desc-text {
-  text-align: left;
-}
-
-.orbit-unified-bar.align-right .drawer-desc-text {
-  text-align: right;
-}
-
-.orbit-unified-bar.is-active .drawer-desc-text {
-  color: #F1F5F9;
+.orbit-capsule-card:hover .card-watermark {
+  opacity: 0.45;
 }
 
 /* Shimmer sweep */
-.drawer-shimmer-sweep {
+.card-shimmer-sweep {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--card-accent-rgb), 0.18) 50%,
+    rgba(var(--card-accent-rgb), 0.22) 50%,
     transparent 100%
   );
   opacity: 0;
@@ -386,71 +399,83 @@
   transition: opacity 0.35s ease;
 }
 
-.orbit-unified-bar.is-active .drawer-shimmer-sweep {
+.orbit-capsule-card.is-active .card-shimmer-sweep {
   opacity: 1;
 }
 
 /* ==========================================================================
-   8. PROGRESS RING ELEMENTS & ENERGY BEAD
+   6. PROGRESS RING ELEMENTS & ENERGY BEAD
    ========================================================================== */
-.orbit-segment-arc,
-.orbit-segment-aura {
+.orbit-segment-base {
   pointer-events: none;
   vector-effect: non-scaling-stroke;
+}
+
+.orbit-segment-arc {
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.orbit-connector-line {
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  opacity: 0;
+  transition: stroke-dashoffset 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.orbit-connector-line.is-drawn {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
+
+.orbit-node-dot {
+  pointer-events: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.3);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.orbit-node-dot.is-drawn {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .orbit-energy-bead {
   pointer-events: none;
   will-change: transform;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* ==========================================================================
-   9. RESPONSIVE — Lower screen heights
+   7. RESPONSIVE
    ========================================================================== */
-@media (max-height: 820px) {
+@media (max-width: 1024px) {
   .vedika-orbit-stage-clean {
-    min-height: 500px;
+    height: 520px;
+    min-height: 520px;
   }
 
-  .vedika-center-pod-clean {
-    width: 320px;
-    height: 320px;
+  .orbit-capsule-card {
+    width: 215px;
+    height: 50px;
   }
 
-  .vedika-robot-canvas-box {
-    width: 190px;
-    height: 190px;
+  .card-icon-badge {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
   }
 
-  .orbit-unified-bar {
-    width: 200px;
-    height: 44px;
+  .card-title {
+    font-size: 0.78rem;
   }
 
-  .orbit-unified-bar.dir-left {
-    transform: translate(-181px, -50%);
-  }
-
-  .drawer-title-text {
-    font-size: 0.76rem;
-  }
-
-  .drawer-desc-text {
-    font-size: 0.58rem;
-  }
-}
-
-@media (max-height: 720px) {
-  .drawer-desc-text {
-    display: none;
-  }
-}
-
-/* ==========================================================================
-   10. REDUCED MOTION
-   ========================================================================== */
-@media (prefers-reduced-motion: reduce) {
-  .orbit-unified-bar {
-    transition: none !important;
+  .card-eyebrow {
+    font-size: 0.54rem;
   }
 }

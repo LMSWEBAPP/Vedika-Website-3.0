@@ -66,6 +66,20 @@ export default function VedikaOrbitStage() {
 
   // Construct master GSAP timeline with optimized, brisk, and fluid timings
   const buildTimeline = useCallback(() => {
+    // Reset all 9 segment paths to be completely hidden before starting
+    segmentRefs.current.forEach((el, i) => {
+      if (el) {
+        const seg = ORBIT_SEGMENTS[i];
+        el.style.visibility = 'hidden';
+        el.style.opacity = '0';
+        el.style.strokeDasharray = `${seg.arcLength}px ${seg.arcLength}px`;
+        el.style.strokeDashoffset = `${seg.arcLength}px`;
+      }
+    });
+    if (beadGroupRef.current) {
+      beadGroupRef.current.style.opacity = '0';
+    }
+
     const tl = gsap.timeline({
       paused: true,
       onComplete: () => {
@@ -105,7 +119,7 @@ export default function VedikaOrbitStage() {
       setRevealedIcons(new Set([1]));
       setCompletedSteps(new Set([1]));
       if (beadGroupRef.current) {
-        beadGroupRef.current.style.opacity = '1';
+        gsap.to(beadGroupRef.current, { opacity: 1, duration: 0.3 });
       }
     });
 
@@ -335,12 +349,24 @@ export default function VedikaOrbitStage() {
             beadGroupRef={beadGroupRef}
             beadHaloRef={beadHaloRef}
             beadCoreRef={beadCoreRef}
+            revealedSteps={revealedBars}
           />
         </div>
 
         {/* Central 3D Vedika Robot Canvas (floating dead-center in the ring) */}
         <div className="vedika-robot-canvas-box">
           <CentralVedika3D />
+        </div>
+
+        {/* Hologram Stage Pedestal beneath Vedika (exact match to reference image) */}
+        <div className="vedika-hologram-pedestal" aria-hidden="true">
+          <div className="hologram-projection-cone" />
+          <div className="hologram-glow-floor" />
+          <div className="hologram-disc-outer">
+            <div className="hologram-disc-inner">
+              <div className="hologram-flare-core" />
+            </div>
+          </div>
         </div>
       </div>
 

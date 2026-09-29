@@ -50,7 +50,7 @@ function VedikaRobotModel() {
   // Calibrated alignment offsets to place Vedika in the dead-center of the circular progress ring
   // Offsets compensate for model bounding-box asymmetry and visual mass of the head
   const CALIBRATED_OFFSET_X = 0.042; // Shifts right to balance left-right margin to the ring
-  const CALIBRATED_OFFSET_Y = -0.072; // Shifts down to balance top-bottom margin to the ring
+  const CALIBRATED_OFFSET_Y = 0.065; // Shifts up so Vedika and pedestal are completely inside the ring
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -62,7 +62,7 @@ function VedikaRobotModel() {
   });
 
   return (
-    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.66, 0.66, 0.66]}>
+    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.58, 0.58, 0.58]}>
       <primitive object={clonedScene} />
     </group>
   );

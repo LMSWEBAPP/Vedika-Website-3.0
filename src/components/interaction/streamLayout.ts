@@ -15,8 +15,8 @@ export function getStreamAnchors(width: number, height: number): StreamAnchors {
   const leftOrbX = sideMargin + 50;
   const rightOrbX = width - sideMargin - 50;
   const midX = width / 2;
-  // Vertically aligned with Vedika's chest/torso and the orbs
-  const centerY = height * 0.49;
+  // Vertically aligned with Vedika's chest (raised to 58.8% of viewport)
+  const centerY = height * 0.588;
   const orbRadius = 32; // 64px button / 2
 
   return { width, height, leftOrbX, midX, rightOrbX, centerY, orbRadius };

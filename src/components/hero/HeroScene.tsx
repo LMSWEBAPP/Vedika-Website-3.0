@@ -13,7 +13,7 @@ interface HeroSceneProps {
   scrollRef?: React.RefObject<ScrollState>;
 }
 
-export function HeroScene({ scrollRef }: HeroSceneProps) {
+export const HeroScene = React.memo(function HeroScene({ scrollRef }: HeroSceneProps) {
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
@@ -68,4 +68,4 @@ export function HeroScene({ scrollRef }: HeroSceneProps) {
       </Canvas>
     </div>
   );
-}
+});

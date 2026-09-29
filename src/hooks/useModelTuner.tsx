@@ -38,11 +38,11 @@ export const DEFAULT_TUNER_VALUES: TunerValues = {
   idleEnabled: true,
 
   // Page 3 (User fixed values)
-  p3X: -1.6,
-  p3Y: -0.14,
+  p3X: 0,
+  p3Y: -0.08,
   p3Z: 0,
-  p3Scale: 0.65,
-  p3RotY: 37,
+  p3Scale: 0.56,
+  p3RotY: 0,
   p3RotX: 0,
 
   // Page 3 Waves (User fixed parameters)

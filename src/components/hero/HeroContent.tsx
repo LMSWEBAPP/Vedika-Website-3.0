@@ -35,12 +35,12 @@ export function HeroContent({ scrollRef, onExploreClick }: HeroContentProps) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '10px',
-          marginBottom: '1.75rem',
+          marginBottom: '1.5rem',
           letterSpacing: '0.22em',
-          fontSize: '0.8125rem',
+          fontSize: '0.78125rem',
           fontWeight: 600,
           textTransform: 'uppercase',
-          color: theme.colors.accentBright || theme.colors.accent,
+          color: '#E5C378',
         }}
       >
         <span
@@ -49,44 +49,71 @@ export function HeroContent({ scrollRef, onExploreClick }: HeroContentProps) {
             width: '6px',
             height: '6px',
             borderRadius: '50%',
-            backgroundColor: theme.colors.accentBright || theme.colors.accent,
-            boxShadow: `0 0 10px ${theme.colors.accent}`,
+            backgroundColor: '#E5C378',
+            boxShadow: '0 0 10px rgba(229, 195, 120, 0.6)',
           }}
         />
-        <span>AI TUTOR</span>
+        <span>Personalized Learning</span>
       </div>
 
       {/* Main Editorial Hero Heading */}
       <h1
         style={{
-          fontSize: 'clamp(2.75rem, 5.2vw, 5.25rem)',
-          fontWeight: 550,
-          lineHeight: 1.04,
-          letterSpacing: '-0.035em',
-          color: theme.colors.textPrimary,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
           marginBottom: '1.75rem',
-          textWrap: 'balance',
+          fontFamily: "var(--font-serif), 'Newsreader', 'Playfair Display', Georgia, serif",
         }}
       >
-        Learning,
-        <br />
         <span
           style={{
-            color: theme.colors.textSecondary,
-            fontWeight: 450,
+            fontSize: 'clamp(2.75rem, 5.2vw, 5.25rem)',
+            fontWeight: 600,
+            lineHeight: 1.0,
+            letterSpacing: '0.01em',
+            color: '#FFFFFF',
+            textShadow: '0 2px 24px rgba(255, 255, 255, 0.12)',
           }}
         >
-          but more human.
+          VEDIKA
+        </span>
+        <span
+          style={{
+            fontSize: 'clamp(1.75rem, 3.2vw, 3.125rem)',
+            fontWeight: 400,
+            fontStyle: 'italic',
+            lineHeight: 1.15,
+            letterSpacing: '-0.01em',
+            color: '#E5C378',
+            marginTop: '0.2rem',
+            marginBottom: '0.15rem',
+            textShadow: '0 2px 20px rgba(229, 195, 120, 0.18)',
+          }}
+        >
+          your Personal
+        </span>
+        <span
+          style={{
+            fontSize: 'clamp(2.5rem, 4.6vw, 4.625rem)',
+            fontWeight: 600,
+            lineHeight: 1.02,
+            letterSpacing: '0.02em',
+            color: '#FDE19F',
+            textShadow: '0 0 30px rgba(253, 225, 159, 0.28)',
+          }}
+        >
+          AI TUTOR
         </span>
       </h1>
 
       {/* Supporting Text */}
       <p
         style={{
-          fontSize: 'clamp(1.0625rem, 1.25vw, 1.25rem)',
-          lineHeight: 1.6,
+          fontSize: 'clamp(1.0625rem, 1.2vw, 1.2rem)',
+          lineHeight: 1.65,
           fontWeight: 400,
-          color: theme.colors.textSecondary,
+          color: 'rgba(225, 235, 245, 0.78)',
           marginBottom: '1.25rem',
           maxWidth: '460px',
         }}
@@ -107,12 +134,12 @@ export function HeroContent({ scrollRef, onExploreClick }: HeroContentProps) {
           letterSpacing: '0.01em',
         }}
       >
-        <Sparkles size={14} color={theme.colors.accentBright || theme.colors.accent} />
+        <Sparkles size={14} color="#E5C378" />
         <span>Built around the way you learn.</span>
       </div>
 
       {/* Action / Call to Explore */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
         <button
           onClick={onExploreClick}
           aria-label="Explore Vedika interactive tutor"
@@ -120,39 +147,38 @@ export function HeroContent({ scrollRef, onExploreClick }: HeroContentProps) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '10px',
-            padding: '12px 24px',
+            padding: '13px 26px',
             borderRadius: '9999px',
-            border: `1px solid ${theme.colors.border}`,
-            color: theme.colors.textPrimary,
+            background: 'linear-gradient(135deg, #FDE19F 0%, #ECC97E 55%, #D4A853 100%)',
+            color: '#081017',
             fontSize: '0.9375rem',
-            fontWeight: 500,
+            fontWeight: 600,
             letterSpacing: '0.02em',
             cursor: 'pointer',
+            border: 'none',
+            boxShadow: '0 4px 20px rgba(236, 201, 126, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4)',
             transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-            backdropFilter: 'blur(8px)',
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = theme.colors.accent;
-            e.currentTarget.style.boxShadow = `0 0 20px ${theme.colors.glow}`;
             e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 28px rgba(236, 201, 126, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = theme.colors.border;
-            e.currentTarget.style.boxShadow = 'none';
             e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 20px rgba(236, 201, 126, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4)';
           }}
         >
           <span>Explore Vedika</span>
-          <ArrowDown size={15} style={{ animation: 'bounceSubtle 2s infinite ease-in-out' }} />
+          <ArrowDown size={15} color="#081017" style={{ animation: 'bounceSubtle 2s infinite ease-in-out' }} />
         </button>
 
         <span
           style={{
             fontSize: '0.8125rem',
-            color: theme.colors.textMuted,
-            letterSpacing: '0.05em',
+            color: 'rgba(236, 201, 126, 0.75)',
+            letterSpacing: '0.08em',
             textTransform: 'uppercase',
+            fontWeight: 500,
           }}
         >
           Interactive Experience

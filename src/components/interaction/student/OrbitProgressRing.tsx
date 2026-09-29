@@ -8,6 +8,7 @@ import {
   BEAD_START_X,
   BEAD_START_Y,
   STUDENT_ORBIT_FEATURES,
+  NODE_POSITIONS,
 } from './studentOrbitData';
 
 interface OrbitProgressRingProps {
@@ -15,6 +16,7 @@ interface OrbitProgressRingProps {
   beadGroupRef: React.RefObject<SVGGElement | null>;
   beadHaloRef: React.RefObject<SVGCircleElement | null>;
   beadCoreRef: React.RefObject<SVGCircleElement | null>;
+  revealedSteps: Set<number>;
 }
 
 export default function OrbitProgressRing({
@@ -22,6 +24,7 @@ export default function OrbitProgressRing({
   beadGroupRef,
   beadHaloRef,
   beadCoreRef,
+  revealedSteps,
 }: OrbitProgressRingProps) {
   const initialColor = STUDENT_ORBIT_FEATURES[0].color; // Pink (#EC4899)
 
@@ -39,10 +42,10 @@ export default function OrbitProgressRing({
         <filter
           id="vOrbitNeonGlow"
           filterUnits="userSpaceOnUse"
-          x="-40"
-          y="-40"
-          width={ORBIT_SIZE + 80}
-          height={ORBIT_SIZE + 80}
+          x="-60"
+          y="-60"
+          width={ORBIT_SIZE + 120}
+          height={ORBIT_SIZE + 120}
         >
           <feGaussianBlur stdDeviation="5.0" result="wideGlow" />
           <feGaussianBlur stdDeviation="2.2" result="tightGlow" />
@@ -68,9 +71,49 @@ export default function OrbitProgressRing({
             <stop offset="100%" stopColor={seg.toColor} stopOpacity="1" />
           </linearGradient>
         ))}
+
+        {/* Dedicated linear gradients for each connector line: vibrant ring glow -> card accent */}
+        {STUDENT_ORBIT_FEATURES.map((feat) => {
+          const pos = NODE_POSITIONS[feat.index];
+          if (!pos) return null;
+          return (
+            <linearGradient
+              key={`grad-conn-${feat.id}`}
+              id={`connGrad_${feat.id}`}
+              gradientUnits="userSpaceOnUse"
+              x1={pos.x1}
+              y1={pos.y1}
+              x2={pos.x2}
+              y2={pos.y2}
+            >
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+              <stop offset="30%" stopColor={feat.color} stopOpacity="0.9" />
+              <stop offset="100%" stopColor={feat.color} stopOpacity="0.3" />
+            </linearGradient>
+          );
+        })}
       </defs>
 
-      {/* ── 9 Progressive Arc Segments with vibrant neon glow ── */}
+      {/* ── 0. Connectors from Orbit Nodes to Cards (with Gradient & Progressive Reveal) ── */}
+      {STUDENT_ORBIT_FEATURES.map((feat) => {
+        const pos = NODE_POSITIONS[feat.index];
+        if (!pos?.connectorD) return null;
+        const isDrawn = revealedSteps.has(feat.index);
+        return (
+          <path
+            key={`conn-${feat.id}`}
+            d={pos.connectorD}
+            stroke={`url(#connGrad_${feat.id})`}
+            strokeWidth={2.0}
+            fill="none"
+            filter="url(#vOrbitNeonGlow)"
+            className={`orbit-connector-line ${isDrawn ? 'is-drawn' : ''}`}
+          />
+        );
+      })}
+
+
+      {/* ── 2. 9 Progressive Arc Segments with vibrant active neon glow ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
           key={`arc-${seg.gradientId}`}
@@ -94,6 +137,26 @@ export default function OrbitProgressRing({
           className="orbit-segment-arc"
         />
       ))}
+
+      {/* ── 3. 9 Glowing Colored Orbit Nodes on the Ring (Progressive Reveal) ── */}
+      {STUDENT_ORBIT_FEATURES.map((feat) => {
+        const pos = NODE_POSITIONS[feat.index];
+        const rad = (pos.nodeAngleDeg * Math.PI) / 180;
+        const nx = 300 + 125 * Math.cos(rad);
+        const ny = 300 + 125 * Math.sin(rad);
+        const isDrawn = revealedSteps.has(feat.index);
+        return (
+          <g
+            key={`orbit-node-dot-${feat.id}`}
+            transform={`translate(${nx.toFixed(2)}, ${ny.toFixed(2)})`}
+            className={`orbit-node-dot ${isDrawn ? 'is-drawn' : ''}`}
+          >
+            <circle r={8} fill={feat.color} opacity={0.45} filter="url(#vOrbitNeonGlow)" />
+            <circle r={4.5} fill={feat.color} />
+            <circle r={2} fill="#FFFFFF" />
+          </g>
+        );
+      })}
 
       {/* ── Moving Energy Bead Particle with radiant outer aura ── */}
       <g
