@@ -71,6 +71,9 @@ export function ParticleSphereSection() {
             left: 'calc(50% + 115px)',
             top: 'calc(50% - 295px)',
             transform: 'translate(0%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
@@ -79,6 +82,7 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#D97706', display: 'inline-block', boxShadow: '0 0 8px rgba(217, 119, 6, 0.6)' }} />
           Math Lab
         </div>
 
@@ -89,6 +93,9 @@ export function ParticleSphereSection() {
             left: 'calc(50% - 395px)',
             top: 'calc(50% - 90px)',
             transform: 'translate(-100%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
@@ -97,6 +104,7 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1D4ED8', display: 'inline-block', boxShadow: '0 0 8px rgba(29, 78, 216, 0.6)' }} />
           Computer Lab
         </div>
 
@@ -107,6 +115,9 @@ export function ParticleSphereSection() {
             left: 'calc(50% - 290px)',
             top: 'calc(50% + 238px)',
             transform: 'translate(-100%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
@@ -115,6 +126,7 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#7C3AED', display: 'inline-block', boxShadow: '0 0 8px rgba(124, 58, 237, 0.6)' }} />
           Biology Lab
         </div>
 
@@ -125,6 +137,9 @@ export function ParticleSphereSection() {
             left: 'calc(50% + 395px)',
             top: 'calc(50% - 90px)',
             transform: 'translate(0%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
@@ -133,6 +148,7 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#0284C7', display: 'inline-block', boxShadow: '0 0 8px rgba(2, 132, 199, 0.6)' }} />
           Physics Lab
         </div>
 
@@ -143,6 +159,9 @@ export function ParticleSphereSection() {
             left: 'calc(50% + 290px)',
             top: 'calc(50% + 238px)',
             transform: 'translate(0%, -50%)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.04em',
@@ -151,6 +170,7 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#BE123C', display: 'inline-block', boxShadow: '0 0 8px rgba(190, 18, 60, 0.6)' }} />
           Chemistry Lab
         </div>
       </div>

@@ -37,8 +37,8 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   {
     id: 'math',
     name: 'Math Lab',
-    color1: '#D97706', // Rich amber gold
-    color2: '#F59E0B',
+    color1: '#B45309', // Deep high-contrast amber gold
+    color2: '#D97706',
     targetX: 0,
     targetY: 0.84,
     rotYOffset: 0,
@@ -47,8 +47,8 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   {
     id: 'physics',
     name: 'Physics Lab',
-    color1: '#0891B2', // Rich electric teal / cyan
-    color2: '#06B6D4',
+    color1: '#0369A1', // Deep vibrant sapphire / electric cyan
+    color2: '#0284C7',
     targetX: 0.80,
     targetY: 0.26,
     rotYOffset: (2 * Math.PI) / 5,
@@ -57,8 +57,8 @@ const SATELLITE_LABS: SatelliteConfig[] = [
   {
     id: 'chemistry',
     name: 'Chemistry Lab',
-    color1: '#BE123C', // Rich cosmic ruby crimson
-    color2: '#E11D48',
+    color1: '#9F1239', // Deep punchy cosmic ruby crimson
+    color2: '#BE123C',
     targetX: 0.49,
     targetY: -0.68,
     rotYOffset: (4 * Math.PI) / 5,
@@ -173,13 +173,13 @@ export function SphericalParticleCage() {
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-      // Delicate, soft starlight particles: smaller, clean, and not dense
+      // Delicate, soft starlight particles: punchy contrast and crisp visibility
       const material = new THREE.PointsMaterial({
-        size: isMobile ? 0.026 : 0.022,
+        size: isMobile ? 0.029 : 0.025,
         map: texture || undefined,
         vertexColors: true,
         transparent: true,
-        opacity: 0.80,
+        opacity: 0.95,
         blending: THREE.NormalBlending,
         depthWrite: false,
       });
