@@ -169,7 +169,7 @@ export function ParticleSphereSection() {
         }}
         style={{
           position: 'absolute',
-          left: isMobile ? '50%' : 'calc(50% + 14vh)',
+          left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
           top: isMobile ? '50%' : 'calc(50% + 1.8vh)',
           transform: 'translate(-50%, -50%)',
           width: '270px',
@@ -201,8 +201,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? '50%' : 'calc(50% + 14vh)',
-            top: isMobile ? 'calc(50% - 170px)' : 'calc(50% - 25.5vh)',
+            left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
+            top: isMobile ? 'calc(50% - 170px)' : 'calc(50% - 22.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -223,8 +223,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% - 290px)' : 'calc(50% + 14vh - 37.5vh)',
-            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 1.5vh)',
+            left: isMobile ? 'calc(50% - 290px)' : 'calc(50% + 24.4vh - 37.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 3.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -245,8 +245,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% - 180px)' : 'calc(50% + 14vh - 23vh)',
-            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 38.5vh)',
+            left: isMobile ? 'calc(50% - 180px)' : 'calc(50% + 24.4vh - 23vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 44vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -267,8 +267,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% + 290px)' : 'calc(50% + 14vh + 37.5vh)',
-            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 1.5vh)',
+            left: isMobile ? 'calc(50% + 290px)' : 'calc(50% + 24.4vh + 37.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 3.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -289,8 +289,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% + 180px)' : 'calc(50% + 14vh + 23vh)',
-            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 38.5vh)',
+            left: isMobile ? 'calc(50% + 180px)' : 'calc(50% + 24.4vh + 23vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 44vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -319,8 +319,8 @@ export function ParticleSphereSection() {
         }}
         style={{
           position: 'absolute',
-          bottom: 'clamp(2.0rem, 4.5vh, 3.2rem)',
-          left: isMobile ? '50%' : 'calc(50% + 14vh)',
+          bottom: 'clamp(1.5rem, 3.5vh, 2.5rem)',
+          left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
           transform: 'translateX(-50%)',
           display: 'inline-flex',
           alignItems: 'center',

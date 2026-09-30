@@ -134,7 +134,7 @@ export function VedikaModel() {
     const p3Z = 0;
 
     // Page 4 targets: positioned in the right partition for side-by-side layout
-    const p4X = isMobile ? 0 : 0.30;
+    const p4X = isMobile ? 0 : 0.52;
     const p4Y = isMobile ? -0.02 : -0.04;
     const p4Scale = isMobile ? 0.46 : 0.54;
     const p4RotY = 0;
