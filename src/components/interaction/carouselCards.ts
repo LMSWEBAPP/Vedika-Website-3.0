@@ -191,7 +191,7 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
   {
     id: 'code-help',
     tag: '05 • ENGINEERING',
-    title: 'Code Help & Review',
+    title: 'Code Help &amp; Review',
     lines: [
       'Syntax debugging, architectural',
       'review, and instant idiomatic',
@@ -335,11 +335,26 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
 ];
 
 /**
+ * Escapes raw XML characters safely to avoid breaking SVG data URI parsing.
+ */
+function safeXmlText(text: string): string {
+  return text
+    .replace(/&(?!(amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
  * Generates an ultra-crisp, high-DPI SVG Data URL for each card.
- * Uses 1000x900 aspect ratio for wide, luxury cards with large, high-readability text.
+ * Uses 1000x900 aspect ratio for wide, luxury cards with centered content.
  */
 export function generateCardSvg(data: CarouselCardData): string {
-  const { tag, title, lines, accentColor, secondaryColor, iconSvg } = data;
+  const { accentColor, secondaryColor, iconSvg } = data;
+  const tag = safeXmlText(data.tag);
+  const title = safeXmlText(data.title);
+  const line0 = safeXmlText(data.lines[0]);
+  const line1 = safeXmlText(data.lines[1]);
+  const line2 = safeXmlText(data.lines[2]);
 
   const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" width="1000" height="900">
@@ -358,8 +373,8 @@ export function generateCardSvg(data: CarouselCardData): string {
       <stop offset="100%" stop-color="#1E293B" stop-opacity="0.2" />
     </linearGradient>
 
-    <!-- Radial Glow Halo -->
-    <radialGradient id="halo-${data.id}" cx="50%" cy="28%" r="52%">
+    <!-- Radial Glow Halo (Centered at y=32%) -->
+    <radialGradient id="halo-${data.id}" cx="50%" cy="32%" r="52%">
       <stop offset="0%" stop-color="${accentColor}" stop-opacity="0.25" />
       <stop offset="50%" stop-color="${accentColor}" stop-opacity="0.08" />
       <stop offset="100%" stop-color="${accentColor}" stop-opacity="0" />
@@ -513,8 +528,8 @@ export function generateCardSvg(data: CarouselCardData): string {
   <!-- Inner Subtle Specular Border -->
   <rect x="16" y="16" width="968" height="868" rx="44" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1.5" />
 
-  <!-- TOP PILL BADGE (Big, bold, high contrast, 100% visible) -->
-  <g transform="translate(500, 78)">
+  <!-- TOP PILL BADGE (Centered at y=120) -->
+  <g transform="translate(500, 120)">
     <rect x="-165" y="-24" width="330" height="48" rx="24" fill="#0B132B" fill-opacity="0.92" stroke="${accentColor}" stroke-opacity="0.85" stroke-width="2.5" />
     <circle cx="-130" cy="0" r="7" fill="${accentColor}" filter="url(#shadow-${data.id})" />
     <text x="-110" y="7" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="800" letter-spacing="3" fill="#FFFFFF">
@@ -522,40 +537,31 @@ export function generateCardSvg(data: CarouselCardData): string {
     </text>
   </g>
 
-  <!-- HERO ICON PEDESTAL AREA (Centered at x=500, y=240) -->
-  <circle cx="500" cy="240" r="145" fill="url(#icon-glow-${data.id})" />
-  <circle cx="500" cy="240" r="120" fill="none" stroke="${accentColor}" stroke-opacity="0.24" stroke-width="2" stroke-dasharray="8 8" />
-  <circle cx="500" cy="240" r="88" fill="#090E1A" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2" />
+  <!-- HERO ICON PEDESTAL AREA (Centered at x=500, y=295) -->
+  <circle cx="500" cy="295" r="145" fill="url(#icon-glow-${data.id})" />
+  <circle cx="500" cy="295" r="120" fill="none" stroke="${accentColor}" stroke-opacity="0.24" stroke-width="2" stroke-dasharray="8 8" />
+  <circle cx="500" cy="295" r="88" fill="#090E1A" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2" />
 
-  <!-- 3D SOFT ICON -->
-  <g id="icon-group-${data.id}">
+  <!-- 3D SOFT ICON (Shifted down by 55px to match y=295 pedestal) -->
+  <g id="icon-group-${data.id}" transform="translate(0, 55)">
     ${iconSvg}
   </g>
 
-  <!-- ACCENT DIVIDER -->
-  <line x1="360" y1="445" x2="640" y2="445" stroke="${accentColor}" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round" />
-  <circle cx="500" cy="445" r="4.5" fill="${accentColor}" />
+  <!-- ACCENT DIVIDER (Centered at y=495) -->
+  <line x1="360" y1="495" x2="640" y2="495" stroke="${accentColor}" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="500" cy="495" r="4.5" fill="${accentColor}" />
 
-  <!-- TITLE (Hero headline - 52px bold, glowing crisp white) -->
-  <text x="500" y="520" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="800" letter-spacing="-0.5" fill="#FFFFFF">
+  <!-- TITLE (Hero headline - centered at y=570) -->
+  <text x="500" y="570" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="800" letter-spacing="-0.5" fill="#FFFFFF">
     ${title}
   </text>
 
-  <!-- SUBTITLE / DESCRIPTION (31px font, rich slate-white, clear and legible) -->
-  <text x="500" y="595" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="31" font-weight="500" fill="#E2E8F0" letter-spacing="0.2">
-    <tspan x="500" dy="0">${lines[0]}</tspan>
-    <tspan x="500" dy="44">${lines[1]}</tspan>
-    <tspan x="500" dy="44">${lines[2]}</tspan>
+  <!-- SUBTITLE / DESCRIPTION (Centered at y=645, lines at 645, 689, 733) -->
+  <text x="500" y="645" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="31" font-weight="500" fill="#E2E8F0" letter-spacing="0.2">
+    <tspan x="500" dy="0">${line0}</tspan>
+    <tspan x="500" dy="44">${line1}</tspan>
+    <tspan x="500" dy="44">${line2}</tspan>
   </text>
-
-  <!-- BOTTOM INTERACTIVE CHIP -->
-  <g transform="translate(500, 810)">
-    <rect x="-150" y="-18" width="300" height="36" rx="18" fill="#0B0F19" fill-opacity="0.85" stroke="#334155" stroke-width="1.2" />
-    <circle cx="-120" cy="0" r="4" fill="${accentColor}" />
-    <text x="5" y="4" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" letter-spacing="1.5" fill="#CBD5E1">
-      EXPLORE WITH VEDIKA &#8594;
-    </text>
-  </g>
 </svg>
   `.trim();
 
@@ -565,8 +571,8 @@ export function generateCardSvg(data: CarouselCardData): string {
 export function getCarouselItems() {
   return CAROUSEL_CARDS.map((card) => ({
     src: generateCardSvg(card),
-    alt: card.title.replace('&amp;', '&'),
-    title: card.title.replace('&amp;', '&'),
+    alt: card.title.replace(/&amp;/g, '&'),
+    title: card.title.replace(/&amp;/g, '&'),
     subtitle: card.lines.join(' '),
   }));
 }

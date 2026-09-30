@@ -127,7 +127,7 @@ export function VedikaModel() {
 
     // Page 3 targets (centered in the middle, elevated into clear zone)
     const p3X = 0;
-    const p3Y = isMobile ? 0.06 : 0.11;
+    const p3Y = isMobile ? 0.10 : 0.16;
     const p3Scale = isMobile ? 0.46 : 0.55;
     const p3RotY = isMobile ? 0 : carouselLookRef.current.rotY;
     const p3RotX = isMobile ? 0 : carouselLookRef.current.rotX;

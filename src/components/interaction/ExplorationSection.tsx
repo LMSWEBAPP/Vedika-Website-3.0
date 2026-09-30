@@ -87,14 +87,14 @@ export function ExplorationSection() {
         </p>
       </div>
 
-      {/* 3D FLEX CAROUSEL (Larger cards, generous headroom, captions removed) */}
+      {/* 3D FLEX CAROUSEL (Positioned lower to reveal Vedika's face and shoulders) */}
       <div
         style={{
           position: 'absolute',
-          top: '56%',
+          top: '64%',
           left: 0,
           width: '100%',
-          height: 'clamp(580px, 72vh, 820px)',
+          height: 'clamp(540px, 66vh, 760px)',
           transform: isVedikaInPosition
             ? 'translateY(-50%) scale(1)'
             : 'translateY(-46%) scale(0.96)',
@@ -108,7 +108,7 @@ export function ExplorationSection() {
           items={carouselItems}
           preset="liquid"
           intro="rise"
-          cardHeight={0.52}
+          cardHeight={0.50}
           gap={54}
           squeeze={0.14}
           focusOnClick
