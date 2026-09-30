@@ -29,19 +29,7 @@
 }
 
 .flex-carousel__caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 20px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  pointer-events: none;
-  text-align: center;
-  animation: flex-carousel-reveal 900ms ease both;
-  z-index: 25;
+  display: none !important;
 }
 
 .flex-carousel__title {

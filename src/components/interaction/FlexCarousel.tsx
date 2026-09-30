@@ -383,7 +383,7 @@ export const FlexCarousel: React.FC<FlexCarouselProps> = ({
   focusOnClick = true,
   autoplay = false,
   interval = 4,
-  captions = true,
+  captions = false,
   captureWheel = true,
   onChange,
   onSelect,

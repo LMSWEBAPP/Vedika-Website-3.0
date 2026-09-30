@@ -87,14 +87,14 @@ export function ExplorationSection() {
         </p>
       </div>
 
-      {/* 3D FLEX CAROUSEL (Generous headroom, soft 3D curve without top clipping, no duplicate captions) */}
+      {/* 3D FLEX CAROUSEL (Larger cards, generous headroom, captions removed) */}
       <div
         style={{
           position: 'absolute',
-          top: '57%',
+          top: '56%',
           left: 0,
           width: '100%',
-          height: 'clamp(540px, 68vh, 760px)',
+          height: 'clamp(580px, 72vh, 820px)',
           transform: isVedikaInPosition
             ? 'translateY(-50%) scale(1)'
             : 'translateY(-46%) scale(0.96)',
@@ -108,20 +108,21 @@ export function ExplorationSection() {
           items={carouselItems}
           preset="liquid"
           intro="rise"
-          cardHeight={0.43}
-          gap={50}
+          cardHeight={0.52}
+          gap={54}
           squeeze={0.14}
           focusOnClick
+          captions={false}
           fit="portrait"
-          radius={28}
-          lensWidth={0.78}
-          lensHeight={1.26}
-          tilt={36}
+          radius={30}
+          lensWidth={0.80}
+          lensHeight={1.30}
+          tilt={32}
           roundness={1}
-          bend={0.22}
+          bend={0.20}
           reach={0.34}
           curl="twist"
-          dispersion={0.38}
+          dispersion={0.36}
           liquid={0.10}
           followCursor={false}
           autoplay={false}
