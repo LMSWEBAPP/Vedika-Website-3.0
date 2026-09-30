@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
-import CentralVedika3D from '../CentralVedika3D';
 import OrbitProgressRing from './OrbitProgressRing';
 import OrbitFeatureNode from './OrbitFeatureNode';
 import { useInteraction } from '@/hooks/useInteraction';
@@ -353,9 +352,13 @@ export default function VedikaOrbitStage() {
           />
         </div>
 
-        {/* Central 3D Vedika Robot Canvas (floating dead-center in the ring) */}
+        {/* Central Vedika Bot Image (matching Teacher & Admin panels) */}
         <div className="vedika-robot-canvas-box">
-          <CentralVedika3D />
+          <img
+            src="/assets/vedika-bot.png"
+            alt="Vedika AI"
+            className="student-vedika-bot-img"
+          />
         </div>
 
         {/* Hologram Stage Pedestal beneath Vedika (exact match to reference image) */}
