@@ -5,14 +5,15 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
 // ============================================================================
-// 1. MATH LAB 3D: ICONIC 3D GOLDEN PI (π), 3D INFINITY (∞) LEMNISCATE,
-// COORDINATE ASTROLABE RINGS, AND ORBITING SIGMA (∑) & DELTA (Δ) SYMBOLS
-// Universally recognizable, prestigious mathematical centerpiece:
-// - Gleaming, sculpted 3D golden Pi (π) with classical serifs and signature hook
-// - Parametric 3D Infinity (∞) Bernoulli Lemniscate ribbon cradling the base
-// - Intersecting Astrolabe / Coordinate Armillary Rings with degree graduations
-// - Orbiting 3D Greek mathematical satellites: Sigma (∑ summation) & Delta (Δ)
-// - Base-free, cleanly floating and levitating within the golden satellite cage!
+// 1. MATH LAB 3D: ICONIC 3D PI (π) IN RADIANT HIGH-CONTRAST ROYAL COBALT &
+// ELECTRIC CYAN WITH 3D INFINITY (∞) LEMNISCATE & ASTROLABE GIMBAL RINGS
+// High-contrast complementary color scheme designed to stand out against
+// the amber-gold satellite particle cage:
+// - Deep Royal Cobalt & Sapphire 3D Pi (π) with radiant Electric Cyan serifs
+// - Glowing Electric Cyan & Aquamarine 3D Infinity (∞) Bernoulli Lemniscate
+// - Obsidian & Neon Cyan Astrolabe Rings with 12 degree graduation ticks
+// - Orbiting high-contrast mathematical satellites: Sigma (∑) & Delta (Δ)
+// - Base-free, cleanly floating and levitating within the spherical particle cage!
 // ============================================================================
 
 class LemniscateCurve extends THREE.Curve<THREE.Vector3> {
@@ -107,39 +108,40 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
   return (
     <group ref={groupRef} scale={hovered ? 1.15 : 1.05}>
       {/* ======================================================== */}
-      {/* 1. SCULPTED 3D GOLDEN PI (π) SYMBOL SCULPTURE            */}
+      {/* 1. SCULPTED 3D PI (π) SYMBOL (Royal Cobalt & Cyan)       */}
+      {/* High-contrast complementary colors against amber cage    */}
       {/* ======================================================== */}
       <group ref={piRef} position={[0, 0.008, 0]}>
-        {/* Horizontal Roof Crossbar */}
+        {/* Horizontal Roof Crossbar (Deep Royal Cobalt Blue) */}
         <mesh position={[0, 0.038, 0]}>
           <boxGeometry args={[0.076, 0.011, 0.014]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
+            color="#1E40AF"
+            emissive="#2563EB"
+            emissiveIntensity={2.6}
             metalness={0.9}
             roughness={0.12}
           />
         </mesh>
-        {/* Left Serif Flourish */}
+        {/* Left Serif Flourish (Electric Cyan Tip) */}
         <mesh position={[-0.038, 0.034, 0]}>
           <boxGeometry args={[0.008, 0.016, 0.014]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
-            metalness={0.9}
+            color="#00F5D4"
+            emissive="#0284C7"
+            emissiveIntensity={3.2}
+            metalness={0.85}
             roughness={0.12}
           />
         </mesh>
-        {/* Right Serif Flourish */}
+        {/* Right Serif Flourish (Electric Cyan Tip) */}
         <mesh position={[0.038, 0.039, 0]}>
           <boxGeometry args={[0.008, 0.013, 0.014]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
-            metalness={0.9}
+            color="#00F5D4"
+            emissive="#0284C7"
+            emissiveIntensity={3.2}
+            metalness={0.85}
             roughness={0.12}
           />
         </mesh>
@@ -148,9 +150,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[-0.018, 0.002, 0]}>
           <boxGeometry args={[0.011, 0.062, 0.012]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
+            color="#1E40AF"
+            emissive="#2563EB"
+            emissiveIntensity={2.6}
             metalness={0.9}
             roughness={0.12}
           />
@@ -158,10 +160,10 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[-0.018, -0.030, 0]}>
           <boxGeometry args={[0.016, 0.006, 0.014]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
-            metalness={0.9}
+            color="#00F5D4"
+            emissive="#0284C7"
+            emissiveIntensity={3.2}
+            metalness={0.85}
             roughness={0.12}
           />
         </mesh>
@@ -170,9 +172,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[0.018, 0.010, 0]}>
           <boxGeometry args={[0.011, 0.046, 0.012]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
+            color="#1E40AF"
+            emissive="#2563EB"
+            emissiveIntensity={2.6}
             metalness={0.9}
             roughness={0.12}
           />
@@ -180,9 +182,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[0.022, -0.018, 0]} rotation={[0, 0, -0.45]}>
           <boxGeometry args={[0.011, 0.020, 0.012]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
+            color="#1E40AF"
+            emissive="#2563EB"
+            emissiveIntensity={2.6}
             metalness={0.9}
             roughness={0.12}
           />
@@ -190,42 +192,43 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
         <mesh position={[0.031, -0.025, 0]} rotation={[0, 0, -1.1]}>
           <boxGeometry args={[0.010, 0.018, 0.012]} />
           <meshStandardMaterial
-            color="#F59E0B"
-            emissive="#D97706"
-            emissiveIntensity={2.4}
-            metalness={0.9}
+            color="#00F5D4"
+            emissive="#0284C7"
+            emissiveIntensity={3.2}
+            metalness={0.85}
             roughness={0.12}
           />
         </mesh>
         <mesh position={[0.038, -0.021, 0]}>
           <sphereGeometry args={[0.006, 12, 12]} />
           <meshStandardMaterial
-            color="#FEF08A"
-            emissive="#F59E0B"
-            emissiveIntensity={3.2}
+            color="#FFFFFF"
+            emissive="#00F5D4"
+            emissiveIntensity={4.0}
           />
         </mesh>
 
-        {/* Central Luminous Singularity Jewel in the Arch of π */}
+        {/* Central Luminous Singularity Jewel in the Arch of π (Radiant Magenta) */}
         <mesh position={[0, 0.004, 0]}>
           <octahedronGeometry args={[0.014, 0]} />
           <meshStandardMaterial
-            color="#FDE68A"
-            emissive="#F59E0B"
-            emissiveIntensity={3.5}
+            color="#D946EF"
+            emissive="#C026D3"
+            emissiveIntensity={3.6}
           />
         </mesh>
       </group>
 
       {/* ======================================================== */}
       {/* 2. 3D INFINITY (∞) MÖBIUS LEMNISCATE RIBBON             */}
+      {/* Luminous Electric Cyan & Aquamarine (High-Contrast Glow) */}
       {/* ======================================================== */}
       <mesh ref={infinityRef} geometry={infinityGeometry}>
         <meshStandardMaterial
-          color="#7C3AED"
-          emissive="#A855F7"
-          emissiveIntensity={3.2}
-          metalness={0.8}
+          color="#00F5D4"
+          emissive="#0284C7"
+          emissiveIntensity={3.4}
+          metalness={0.85}
           roughness={0.12}
         />
       </mesh>
@@ -233,19 +236,19 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
       {/* ======================================================== */}
       {/* 3. COORDINATE ASTROLABE ARMILLARY GIMBAL RINGS           */}
       {/* ======================================================== */}
-      {/* Ring 1 (Tilted Equator with 12 Degree Graduations) */}
+      {/* Ring 1 (Midnight Navy with 12 Electric Cyan Degree Ticks) */}
       <group ref={ring1Ref} rotation={[0.65, 0.35, 0]}>
         <mesh>
           <torusGeometry args={[0.092, 0.0028, 16, 64]} />
           <meshStandardMaterial
-            color="#78350F"
-            emissive="#F59E0B"
-            emissiveIntensity={2.0}
-            metalness={0.9}
-            roughness={0.15}
+            color="#0F172A"
+            emissive="#1E3A8A"
+            emissiveIntensity={1.6}
+            metalness={0.95}
+            roughness={0.12}
           />
         </mesh>
-        {/* 12 Degree Graduation Ticks */}
+        {/* 12 Degree Graduation Ticks in Glowing Cyan */}
         {tickAngles.map((ang, idx) => (
           <mesh
             key={`tick-${idx}`}
@@ -254,24 +257,24 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
           >
             <boxGeometry args={[0.007, 0.0022, 0.004]} />
             <meshStandardMaterial
-              color="#FEF08A"
-              emissive="#F59E0B"
-              emissiveIntensity={2.6}
+              color="#00F5D4"
+              emissive="#0284C7"
+              emissiveIntensity={3.2}
             />
           </mesh>
         ))}
       </group>
 
-      {/* Ring 2 (Counter-Rotating Meridian Ring) */}
+      {/* Ring 2 (Radiant Royal Violet / Magenta Meridian Ring) */}
       <group ref={ring2Ref} rotation={[-0.55, 0.65, 0.2]}>
         <mesh>
           <torusGeometry args={[0.086, 0.0024, 16, 64]} />
           <meshStandardMaterial
-            color="#0284C7"
-            emissive="#00F5D4"
-            emissiveIntensity={2.2}
+            color="#7C3AED"
+            emissive="#A855F7"
+            emissiveIntensity={2.8}
             metalness={0.85}
-            roughness={0.2}
+            roughness={0.18}
           />
         </mesh>
       </group>
@@ -279,57 +282,57 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
       {/* ======================================================== */}
       {/* 4. ORBITING MATHEMATICAL SATELLITE GLYPHS                */}
       {/* ======================================================== */}
-      {/* Floating 3D Sigma (∑ Summation) Symbol */}
+      {/* Floating 3D Sigma (∑ Summation) Symbol in Radiant Emerald/Mint */}
       <group ref={sigmaRef} position={[0.108, 0.020, 0]}>
         {/* Top Horizontal Bar */}
         <mesh position={[0, 0.016, 0]}>
           <boxGeometry args={[0.024, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#0284C7" emissive="#00F5D4" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
         </mesh>
         {/* Upper Diagonal */}
         <mesh position={[-0.005, 0.008, 0]} rotation={[0, 0, Math.PI / 4]}>
           <boxGeometry args={[0.018, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#0284C7" emissive="#00F5D4" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
         </mesh>
         {/* Lower Diagonal */}
         <mesh position={[-0.005, -0.008, 0]} rotation={[0, 0, -Math.PI / 4]}>
           <boxGeometry args={[0.018, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#0284C7" emissive="#00F5D4" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
         </mesh>
         {/* Bottom Horizontal Bar */}
         <mesh position={[0, -0.016, 0]}>
           <boxGeometry args={[0.024, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#0284C7" emissive="#00F5D4" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
         </mesh>
       </group>
 
-      {/* Floating 3D Delta (Δ Triangle) Symbol */}
+      {/* Floating 3D Delta (Δ Triangle) Symbol in Radiant Crimson / Rose */}
       <group ref={deltaRef} position={[-0.108, 0.020, 0]}>
         {/* Left Strut */}
         <mesh position={[-0.007, 0, 0]} rotation={[0, 0, Math.PI / 6]}>
           <cylinderGeometry args={[0.0024, 0.0024, 0.028, 8]} />
-          <meshStandardMaterial color="#BE185D" emissive="#F43F5E" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
         </mesh>
         {/* Right Strut */}
         <mesh position={[0.007, 0, 0]} rotation={[0, 0, -Math.PI / 6]}>
           <cylinderGeometry args={[0.0024, 0.0024, 0.028, 8]} />
-          <meshStandardMaterial color="#BE185D" emissive="#F43F5E" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
         </mesh>
         {/* Base Strut */}
         <mesh position={[0, -0.012, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.0024, 0.0024, 0.026, 8]} />
-          <meshStandardMaterial color="#BE185D" emissive="#F43F5E" emissiveIntensity={3.2} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
         </mesh>
         {/* Apex Jewel Node */}
         <mesh position={[0, 0.014, 0]}>
           <sphereGeometry args={[0.0045, 12, 12]} />
-          <meshStandardMaterial color="#FDA4AF" emissive="#F43F5E" emissiveIntensity={3.5} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#F43F5E" emissiveIntensity={4.0} />
         </mesh>
       </group>
 
-      {/* Luminous Warm Golden Primary Glow & Violet Accent Lights */}
-      <pointLight color="#F59E0B" intensity={hovered ? 4.0 : 3.0} distance={0.7} />
-      <pointLight position={[0, -0.05, 0]} color="#7C3AED" intensity={hovered ? 2.8 : 1.8} distance={0.5} />
+      {/* High-Contrast Electric Cyan Primary Glow & Royal Blue Accent Light */}
+      <pointLight color="#00F5D4" intensity={hovered ? 4.2 : 3.2} distance={0.75} />
+      <pointLight position={[0, -0.05, 0]} color="#2563EB" intensity={hovered ? 3.0 : 2.0} distance={0.6} />
     </group>
   );
 }
