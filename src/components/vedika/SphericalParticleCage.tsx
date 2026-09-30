@@ -123,8 +123,6 @@ export function SphericalParticleCage() {
   const mainGroupRef = useRef<THREE.Group | null>(null);
   const satelliteGroupRefs = useRef<(THREE.Group | null)[]>([]);
   const iconGroupRefs = useRef<(THREE.Group | null)[]>([]);
-  const haloGroupRef = useRef<THREE.Group | null>(null);
-  const raysGroupRef = useRef<THREE.Group | null>(null);
   const transitionTRef = useRef<number>(0);
 
   const { isLabsExpanded } = useInteraction();
@@ -277,20 +275,6 @@ export function SphericalParticleCage() {
     // Subtle gentle celestial breathing of entire system
     mainGroupRef.current.rotation.y = Math.cos(time * 0.22) * 0.08;
     mainGroupRef.current.rotation.z = Math.sin(time * 0.18) * 0.05;
-
-    // Golden Halo Ring around Vedika (Image 1 Style)
-    if (haloGroupRef.current) {
-      const haloScale = THREE.MathUtils.lerp(0.85, 1.0, easeT);
-      haloGroupRef.current.scale.set(haloScale, haloScale, 1);
-      haloGroupRef.current.rotation.z += delta * 0.12;
-      haloGroupRef.current.visible = smoothReveal > 0.05;
-    }
-
-    // Luminous Connecting Rays from Halo to the 5 Satellites (Image 1 Style)
-    if (raysGroupRef.current) {
-      raysGroupRef.current.scale.set(easeT, easeT, 1);
-      raysGroupRef.current.visible = easeT > 0.02;
-    }
   });
 
   // Centered in the right partition matching Vedika
@@ -298,79 +282,9 @@ export function SphericalParticleCage() {
 
   return (
     <group ref={mainGroupRef} position={[0, cageCenterY, 0]} visible={false}>
-      {/* Dynamic atmospheric lighting for the dark cosmic stage */}
-      <ambientLight intensity={1.2} />
-      <directionalLight position={[0, 4, 3]} intensity={1.5} />
-
-      {/* ======================================================== */}
-      {/* 1. CENTRAL GOLDEN HALO RING AROUND VEDIKA (Image 1 Style) */}
-      {/* ======================================================== */}
-      <group ref={haloGroupRef} position={[0, 0, -0.02]} scale={[0, 0, 0]}>
-        {/* Core Luminous Gold Ring */}
-        <mesh>
-          <ringGeometry args={[0.36, 0.385, 64]} />
-          <meshBasicMaterial
-            color="#F59E0B"
-            transparent
-            opacity={0.80}
-            blending={THREE.AdditiveBlending}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        {/* Outer Diffuse Warm Halo Glow */}
-        <mesh>
-          <ringGeometry args={[0.34, 0.415, 64]} />
-          <meshBasicMaterial
-            color="#D97706"
-            transparent
-            opacity={0.28}
-            blending={THREE.AdditiveBlending}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      </group>
-
-      {/* ======================================================== */}
-      {/* 2. LUMINOUS CONNECTING ENERGY RAYS TO THE 5 SATELLITES   */}
-      {/* Delicate laser conduits connecting halo to satellite ends */}
-      {/* ======================================================== */}
-      <group ref={raysGroupRef} position={[0, 0, -0.025]} scale={[0, 0, 0]}>
-        {SATELLITE_LABS.map((lab) => {
-          const angle = Math.atan2(lab.targetY, lab.targetX);
-          const dist = Math.hypot(lab.targetX, lab.targetY);
-          const rStart = 0.38;
-          const rEnd = dist - 0.22;
-          const rayLen = Math.max(0.01, rEnd - rStart);
-          const rayMid = (rStart + rEnd) / 2;
-
-          return (
-            <group key={`ray-${lab.id}`} rotation={[0, 0, angle]}>
-              {/* Thin Laser Core */}
-              <mesh position={[rayMid, 0, 0]}>
-                <planeGeometry args={[rayLen, 0.005]} />
-                <meshBasicMaterial
-                  color={lab.color2}
-                  transparent
-                  opacity={0.75}
-                  blending={THREE.AdditiveBlending}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-              {/* Diffuse Outer Glow */}
-              <mesh position={[rayMid, 0, 0]}>
-                <planeGeometry args={[rayLen, 0.020]} />
-                <meshBasicMaterial
-                  color={lab.color1}
-                  transparent
-                  opacity={0.30}
-                  blending={THREE.AdditiveBlending}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-            </group>
-          );
-        })}
-      </group>
+      {/* Ambient illumination for the pure white stage */}
+      <ambientLight intensity={1.8} />
+      <directionalLight position={[0, 4, 3]} intensity={1.8} />
 
       {/* THE 5 SATELLITE CLUSTERS */}
       {satelliteData.map(({ lab, geometry, material }, idx) => {

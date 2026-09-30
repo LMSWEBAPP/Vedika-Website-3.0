@@ -94,7 +94,27 @@ export default function OrbitProgressRing({
         })}
       </defs>
 
-      {/* ── 0. Connectors from Orbit Nodes to Cards (with Gradient & Progressive Reveal) ── */}
+      {/* ── 0. Golden Celestial Ambient Orbit Ring around Vedika (Image 1 reference) ── */}
+      <circle
+        cx={300}
+        cy={300}
+        r={PROGRESS_R}
+        fill="none"
+        stroke="rgba(245, 175, 65, 0.28)"
+        strokeWidth={1.8}
+        filter="url(#vOrbitNeonGlow)"
+      />
+      <circle
+        cx={300}
+        cy={300}
+        r={PROGRESS_R}
+        fill="rgba(245, 175, 65, 0.02)"
+        stroke="rgba(251, 191, 36, 0.45)"
+        strokeWidth={1.0}
+        strokeDasharray="4 6"
+      />
+
+      {/* ── 1. Connectors from Orbit Nodes to Cards (with Gradient & Progressive Reveal) ── */}
       {STUDENT_ORBIT_FEATURES.map((feat) => {
         const pos = NODE_POSITIONS[feat.index];
         if (!pos?.connectorD) return null;

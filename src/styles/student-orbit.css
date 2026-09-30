@@ -114,8 +114,8 @@
   clip-path: polygon(18% 0%, 82% 0%, 100% 100%, 0% 100%);
   background: linear-gradient(
     to top,
-    rgba(99, 102, 241, 0.32) 0%,
-    rgba(139, 92, 246, 0.14) 50%,
+    rgba(245, 158, 11, 0.22) 0%,
+    rgba(59, 130, 246, 0.12) 50%,
     transparent 100%
   );
   pointer-events: none;
@@ -129,8 +129,8 @@
   top: 0;
   bottom: 0;
   width: 1.5px;
-  background: linear-gradient(to top, rgba(168, 85, 247, 0.7) 0%, rgba(139, 92, 246, 0.25) 60%, transparent 100%);
-  filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.85));
+  background: linear-gradient(to top, rgba(245, 158, 11, 0.7) 0%, rgba(59, 130, 246, 0.25) 60%, transparent 100%);
+  filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.85));
 }
 .hologram-projection-cone::before {
   left: 0;
@@ -152,15 +152,15 @@
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgba(28, 14, 58, 0.95) 0%,
-    rgba(14, 7, 32, 0.98) 70%,
-    rgba(8, 4, 18, 0.99) 100%
+    rgba(28, 20, 10, 0.95) 0%,
+    rgba(14, 12, 20, 0.98) 70%,
+    rgba(8, 9, 16, 0.99) 100%
   );
-  border: 1.8px solid rgba(168, 85, 247, 0.85);
+  border: 1.8px solid rgba(245, 158, 11, 0.75);
   box-shadow:
-    0 0 15px rgba(168, 85, 247, 0.75),
-    0 0 25px rgba(124, 58, 237, 0.4),
-    inset 0 0 10px rgba(147, 51, 234, 0.5);
+    0 0 15px rgba(245, 158, 11, 0.65),
+    0 0 25px rgba(59, 130, 246, 0.35),
+    inset 0 0 10px rgba(245, 158, 11, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,14 +172,14 @@
   width: 74px;
   height: 16px;
   border-radius: 50%;
-  border: 1.2px solid rgba(147, 51, 234, 0.75);
+  border: 1.2px solid rgba(245, 158, 11, 0.65);
   box-shadow:
-    0 0 8px rgba(139, 92, 246, 0.6),
-    inset 0 0 6px rgba(124, 58, 237, 0.5);
+    0 0 8px rgba(245, 158, 11, 0.5),
+    inset 0 0 6px rgba(59, 130, 246, 0.4);
   background: radial-gradient(
     ellipse at center,
-    rgba(20, 10, 45, 0.9) 0%,
-    rgba(10, 5, 25, 0.95) 100%
+    rgba(20, 15, 10, 0.9) 0%,
+    rgba(10, 8, 15, 0.95) 100%
   );
   display: flex;
   align-items: center;
@@ -212,7 +212,7 @@
   width: 128px;
   height: 28px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(147, 51, 234, 0.4) 0%, transparent 75%);
+  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.35) 0%, rgba(59, 130, 246, 0.15) 45%, transparent 75%);
   filter: blur(8px);
   pointer-events: none;
 }
@@ -252,14 +252,18 @@
   outline: none;
   padding: 0 10px 0 5px;
 
-  /* Premium glassmorphism matching reference image */
-  background: rgba(8, 12, 24, 0.88);
+  /* Premium dark-lux glassmorphism matching Image 1 */
+  background: radial-gradient(
+    ellipse at 20% 50%,
+    rgba(var(--card-accent-rgb), 0.14) 0%,
+    rgba(9, 13, 24, 0.92) 80%
+  );
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid var(--card-accent);
+  border: 1.5px solid rgba(var(--card-accent-rgb), 0.78);
   box-shadow:
-    0 0 16px rgba(var(--card-accent-rgb), 0.35),
-    inset 0 0 12px rgba(var(--card-accent-rgb), 0.08);
+    0 0 18px rgba(var(--card-accent-rgb), 0.30),
+    inset 0 0 14px rgba(var(--card-accent-rgb), 0.10);
 
   transition:
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -286,9 +290,10 @@
 /* Hover state */
 .orbit-capsule-card:hover {
   transform: translate(-50%, -50%) scale(1.04) !important;
+  border-color: rgba(var(--card-accent-rgb), 0.95);
   box-shadow:
-    0 0 24px rgba(var(--card-accent-rgb), 0.65),
-    inset 0 0 14px rgba(var(--card-accent-rgb), 0.15);
+    0 0 26px rgba(var(--card-accent-rgb), 0.70),
+    inset 0 0 16px rgba(var(--card-accent-rgb), 0.20);
 }
 
 /* Active node (spotlight) */
@@ -296,8 +301,8 @@
   border-color: #FFFFFF;
   border-width: 1.8px;
   box-shadow:
-    0 0 28px rgba(var(--card-accent-rgb), 0.85),
-    inset 0 0 16px rgba(var(--card-accent-rgb), 0.2);
+    0 0 30px rgba(var(--card-accent-rgb), 0.90),
+    inset 0 0 18px rgba(var(--card-accent-rgb), 0.25);
   z-index: 35;
 }
 
@@ -314,22 +319,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(var(--card-accent-rgb), 0.14);
-  border: 2px solid var(--card-accent);
-  box-shadow: 0 0 12px rgba(var(--card-accent-rgb), 0.55);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--card-accent-rgb), 0.25) 0%,
+    rgba(var(--card-accent-rgb), 0.08) 100%
+  );
+  border: 1.8px solid var(--card-accent);
+  color: var(--card-accent);
+  box-shadow: 0 0 14px rgba(var(--card-accent-rgb), 0.50);
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .orbit-capsule-card:hover .card-icon-badge {
   transform: scale(1.08);
-  box-shadow: 0 0 18px rgba(var(--card-accent-rgb), 0.8);
+  box-shadow: 0 0 20px rgba(var(--card-accent-rgb), 0.85);
 }
 
 .orbit-capsule-card.is-active .card-icon-badge {
   color: #FFFFFF;
-  background: rgba(var(--card-accent-rgb), 0.35);
-  box-shadow: 0 0 20px rgba(var(--card-accent-rgb), 0.95);
+  background: rgba(var(--card-accent-rgb), 0.40);
+  box-shadow: 0 0 24px rgba(var(--card-accent-rgb), 1.0);
 }
 
 /* ── 2. Text Column: Eyebrow + Bold Title ── */
@@ -348,9 +358,9 @@
   font-size: 0.58rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.08em;
   color: var(--card-accent);
-  text-shadow: 0 0 8px rgba(var(--card-accent-rgb), 0.55);
+  text-shadow: 0 0 10px rgba(var(--card-accent-rgb), 0.65);
   white-space: nowrap;
   line-height: 1.1;
   margin-bottom: 2px;
@@ -368,19 +378,43 @@
   text-overflow: ellipsis;
 }
 
-/* ── 3. Faint Watermark Illustration on Right ── */
+/* ── 3. Gradient-faded, Alive Holographic Watermark on Right ── */
 .card-watermark {
-  opacity: 0.22;
+  position: relative;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 4px;
-  transition: opacity 0.25s ease;
+  filter: drop-shadow(0 0 8px rgba(var(--card-accent-rgb), 0.50));
+  animation: watermarkAlive 4s ease-in-out infinite alternate;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+@keyframes watermarkAlive {
+  0% {
+    transform: scale(0.95) translateY(0);
+    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.40));
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1.05) translateY(-1px);
+    filter: drop-shadow(0 0 12px rgba(var(--card-accent-rgb), 0.80));
+    opacity: 1;
+  }
 }
 
 .orbit-capsule-card:hover .card-watermark {
-  opacity: 0.45;
+  transform: scale(1.15) translateY(-2px) !important;
+  filter: drop-shadow(0 0 16px rgba(var(--card-accent-rgb), 0.95)) !important;
+  opacity: 1 !important;
+}
+
+.orbit-capsule-card.is-active .card-watermark {
+  transform: scale(1.12) !important;
+  filter: drop-shadow(0 0 16px rgba(var(--card-accent-rgb), 0.95)) !important;
+  opacity: 1 !important;
 }
 
 /* Shimmer sweep */

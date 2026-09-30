@@ -127,10 +127,8 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
             color="#1E40AF"
             emissive="#2563EB"
             emissiveIntensity={2.8}
-            transparent
-            opacity={0.86}
-            metalness={0.7}
-            roughness={0.08}
+            metalness={0.9}
+            roughness={0.12}
           />
         </mesh>
         {/* Left Serif Crown Block (Vivid Electric Cyan) */}
@@ -139,11 +137,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.6}
-            transparent
-            opacity={0.90}
-            metalness={0.65}
-            roughness={0.08}
+            emissiveIntensity={3.4}
+            metalness={0.85}
+            roughness={0.12}
           />
         </mesh>
         {/* Right Serif Crown Block (Vivid Electric Cyan) */}
@@ -152,11 +148,9 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.6}
-            transparent
-            opacity={0.90}
-            metalness={0.65}
-            roughness={0.08}
+            emissiveIntensity={3.4}
+            metalness={0.85}
+            roughness={0.12}
           />
         </mesh>
 
@@ -167,10 +161,8 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
             color="#1E40AF"
             emissive="#2563EB"
             emissiveIntensity={2.8}
-            transparent
-            opacity={0.86}
-            metalness={0.7}
-            roughness={0.08}
+            metalness={0.9}
+            roughness={0.12}
           />
         </mesh>
         {/* Left Grounded Foot Cap (Electric Cyan) */}
@@ -467,31 +459,28 @@ export function PhysicsLab3D({ hovered }: { hovered: boolean }) {
           </mesh>
         </group>
 
-        {/* 2. LUMINOUS PLANETARY RINGS (Gradient Faded Celestial Multi-Band Structure) */}
-        {/* Main Sapphire Cyan Ring Disc with Gradient Transparency */}
+        {/* 2. LUMINOUS PLANETARY RINGS (High-Opacity, Defined Multi-Band Structure) */}
+        {/* Main Sapphire Cyan Ring Disc */}
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.078, 0.138, 64]} />
+          <ringGeometry args={[0.080, 0.136, 64]} />
           <meshStandardMaterial
-            color="#0284C7"
-            emissive="#00F5D4"
-            emissiveIntensity={2.2}
+            color="#0369A1"
+            emissive="#0284C7"
+            emissiveIntensity={1.8}
             transparent
-            opacity={0.72}
+            opacity={0.94}
             side={THREE.DoubleSide}
-            roughness={0.08}
-            metalness={0.2}
+            roughness={0.12}
           />
         </mesh>
 
-        {/* Outer Ring Luminous Border Accent (Brilliant Neon Cyan Gradient Rim) */}
+        {/* Outer Ring Luminous Border Accent (Brilliant Neon Cyan) */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.138, 0.0032, 16, 64]} />
+          <torusGeometry args={[0.136, 0.0035, 16, 64]} />
           <meshStandardMaterial
             color="#00F5D4"
-            emissive="#38BDF8"
-            emissiveIntensity={3.6}
-            transparent
-            opacity={0.85}
+            emissive="#06B6D4"
+            emissiveIntensity={3.2}
           />
         </mesh>
 
@@ -954,22 +943,14 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
 export function BiologyLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
   const helixRef = useRef<THREE.Group | null>(null);
-  const rungsGroupRef = useRef<(THREE.Group | null)[]>([]);
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
-    groupRef.current.position.y = Math.sin(t * 1.9 + 3) * 0.012;
+    groupRef.current.position.y = Math.sin(t * 1.9 + 3) * 0.010;
     if (helixRef.current) {
       helixRef.current.rotation.y += delta * (hovered ? 2.4 : 1.4);
     }
-    // Traveling bioluminescent heartbeat wave up the helix
-    rungsGroupRef.current.forEach((rung, i) => {
-      if (!rung) return;
-      const wave = Math.sin(t * 3.2 - i * 0.45);
-      const s = 1.0 + wave * 0.12;
-      rung.scale.set(s, s, s);
-    });
   });
 
   const rungs = useMemo(() => {
@@ -989,252 +970,173 @@ export function BiologyLab3D({ hovered }: { hovered: boolean }) {
   }, []);
 
   return (
-    <group ref={groupRef} scale={hovered ? 1.15 : 1.02}>
+    <group ref={groupRef} scale={hovered ? 1.05 : 0.94}>
       <group ref={helixRef}>
         {rungs.map((r, i) => (
-          <group
-            key={i}
-            ref={(el) => {
-              rungsGroupRef.current[i] = el;
-            }}
-            position={[0, r.y, 0]}
-          >
-            {/* Strand A: Gradient Faded Royal Violet / Orchid Nucleotide */}
+          <group key={i} position={[0, r.y, 0]}>
+            {/* Strand A: Deep Royal Violet Nucleotide Sphere */}
             <mesh position={[r.x1, 0, r.z1]}>
               <sphereGeometry args={[0.024, 16, 16]} />
               <meshStandardMaterial
-                color="#8B5CF6"
-                emissive="#A855F7"
-                emissiveIntensity={2.5}
-                transparent
-                opacity={0.85}
-                roughness={0.12}
-                metalness={0.2}
-              />
-            </mesh>
-            {/* Strand B: Gradient Faded Vivid Fuchsia / Rose Nucleotide */}
-            <mesh position={[r.x2, 0, r.z2]}>
-              <sphereGeometry args={[0.024, 16, 16]} />
-              <meshStandardMaterial
-                color="#EC4899"
-                emissive="#F43F5E"
-                emissiveIntensity={2.5}
-                transparent
-                opacity={0.85}
-                roughness={0.12}
-                metalness={0.2}
-              />
-            </mesh>
-            {/* Bioluminescent Double Rung Connection Bridge */}
-            <mesh rotation={[0, -r.angle, Math.PI / 2]}>
-              <cylinderGeometry args={[0.0055, 0.0055, 0.15, 8]} />
-              <meshStandardMaterial
-                color="#C084FC"
-                emissive="#7C3AED"
-                emissiveIntensity={2.0}
-                transparent
-                opacity={0.78}
+                color="#6D28D9"
+                emissive="#5B21B6"
+                emissiveIntensity={1.4}
                 roughness={0.15}
               />
             </mesh>
-            {/* Central Genetic Spark Node */}
-            <mesh>
-              <sphereGeometry args={[0.007, 12, 12]} />
+            {/* Strand B: Vivid Fuchsia / Magenta Nucleotide Sphere */}
+            <mesh position={[r.x2, 0, r.z2]}>
+              <sphereGeometry args={[0.024, 16, 16]} />
               <meshStandardMaterial
-                color="#FFFFFF"
-                emissive="#00F5D4"
-                emissiveIntensity={4.0}
+                color="#BE185D"
+                emissive="#9D174D"
+                emissiveIntensity={1.4}
+                roughness={0.15}
+              />
+            </mesh>
+            {/* Thick Double Rung Connection Bridge */}
+            <mesh rotation={[0, -r.angle, Math.PI / 2]}>
+              <cylinderGeometry args={[0.0055, 0.0055, 0.15, 8]} />
+              <meshStandardMaterial
+                color="#7C3AED"
+                emissive="#6D28D9"
+                emissiveIntensity={0.8}
+                roughness={0.2}
               />
             </mesh>
           </group>
         ))}
       </group>
 
-      <pointLight color="#A855F7" intensity={hovered ? 3.8 : 2.8} distance={0.70} />
-      <pointLight color="#EC4899" intensity={hovered ? 2.8 : 1.8} distance={0.60} position={[0, -0.05, 0]} />
+      <pointLight color="#7C3AED" intensity={hovered ? 3.0 : 2.2} distance={0.65} />
     </group>
   );
 }
 
 // ============================================================================
-// 5. COMPUTER LAB 3D: ALIVE 3D QUANTUM NEURAL CORE WITH GRADIENT FADED
-// HOLOGRAPHIC DATA RIBBONS & PULSING CYBERNETIC JEWEL MATRIX
-// Replaces the flat logo disc with an alive, breathing, volumetric 3D entity:
-// - Intersecting glowing Quantum Octahedron core that pulses like an active CPU
-// - Dual counter-rotating gradient-faded cybernetic data rings in Electric Cyan & Sapphire
-// - Floating levitating neural data nodes with soft radiant glow
-// - Ethereal transparent falloff and living kinetic respiration!
+// 5. COMPUTER LAB 3D: AUTHENTIC OFFICIAL PYTHON 3D LOGO (RING-FREE)
+// Uses the exact, official Python Software Foundation vector paths & gradients.
+// Rendered on a gleaming 3D cyber emblem disc with floating microchip pins!
 // ============================================================================
+const PYTHON_SVG_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(
+  `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="110px" height="110px" viewBox="0.21 -0.077 110 110"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="63.8159" y1="56.6829" x2="118.4934" y2="1.8225" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#387EB8"/><stop offset="1" style="stop-color:#366994"/></linearGradient><path fill="url(#SVGID_1_)" d="M55.023-0.077c-25.971,0-26.25,10.081-26.25,12.156c0,3.148,0,12.594,0,12.594h26.75v3.781 c0,0-27.852,0-37.375,0c-7.949,0-17.938,4.833-17.938,26.25c0,19.673,7.792,27.281,15.656,27.281c2.335,0,9.344,0,9.344,0 s0-9.765,0-13.125c0-5.491,2.721-15.656,15.406-15.656c15.91,0,19.971,0,26.531,0c3.902,0,14.906-1.696,14.906-14.406 c0-13.452,0-17.89,0-24.219C82.054,11.426,81.515-0.077,55.023-0.077z M40.273,8.392c2.662,0,4.813,2.15,4.813,4.813 c0,2.661-2.151,4.813-4.813,4.813s-4.813-2.151-4.813-4.813C35.46,10.542,37.611,8.392,40.273,8.392z"/><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="97.0444" y1="21.6321" x2="155.6665" y2="-34.5308" gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"><stop offset="0" style="stop-color:#FFE052"/><stop offset="1" style="stop-color:#FFC331"/></linearGradient><path fill="url(#SVGID_2_)" d="M55.397,109.923c25.959,0,26.282-10.271,26.282-12.156c0-3.148,0-12.594,0-12.594H54.897v-3.781 c0,0,28.032,0,37.375,0c8.009,0,17.938-4.954,17.938-26.25c0-23.322-10.538-27.281-15.656-27.281c-2.336,0-9.344,0-9.344,0 s0,10.216,0,13.125c0,5.491-2.631,15.656-15.406,15.656c-15.91,0-19.476,0-26.532,0c-3.892,0-14.906,1.896-14.906,14.406 c0,14.475,0,18.265,0,24.219C28.366,100.497,31.562,109.923,55.397,109.923z M70.148,101.454c-2.662,0-4.813-2.151-4.813-4.813 s2.15-4.813,4.813-4.813c2.661,0,4.813,2.151,4.813,4.813S72.809,101.454,70.148,101.454z"/></svg>`
+)}`;
+
 export function ComputerLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
-  const coreRef = useRef<THREE.Mesh | null>(null);
-  const innerCoreRef = useRef<THREE.Mesh | null>(null);
-  const ring1Ref = useRef<THREE.Group | null>(null);
-  const ring2Ref = useRef<THREE.Group | null>(null);
-  const ring3Ref = useRef<THREE.Group | null>(null);
-  const nodesRef = useRef<(THREE.Mesh | null)[]>([]);
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
 
-  useFrame((state, delta) => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.clearRect(0, 0, 1024, 1024);
+      // Center the official Python logo with crisp breathing margins
+      ctx.drawImage(img, 72, 72, 880, 880);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.generateMipmaps = true;
+      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.needsUpdate = true;
+      setTexture(tex);
+    };
+    img.src = PYTHON_SVG_DATA_URI;
+  }, []);
+
+  useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
-    const speed = hovered ? 2.2 : 1.2;
 
-    // Alive organic levitation respiration
-    groupRef.current.position.y = Math.sin(t * 1.9 + 4) * 0.012;
-
-    // Pulsing alive Quantum Core
-    if (coreRef.current) {
-      coreRef.current.rotation.y += delta * speed * 0.85;
-      coreRef.current.rotation.x = Math.sin(t * 1.4) * 0.15;
-      const pulse = 1.0 + Math.sin(t * 3.2) * 0.08;
-      coreRef.current.scale.set(pulse, pulse, pulse);
-    }
-
-    // Fast counter-rotating inner singularity crystal
-    if (innerCoreRef.current) {
-      innerCoreRef.current.rotation.y -= delta * speed * 1.6;
-      innerCoreRef.current.rotation.z += delta * speed * 1.1;
-      const pulse2 = 1.0 + Math.cos(t * 4.0) * 0.12;
-      innerCoreRef.current.scale.set(pulse2, pulse2, pulse2);
-    }
-
-    // Counter-rotating Holographic Gradient Data Rings
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += delta * speed * 0.70;
-      ring1Ref.current.rotation.y = Math.sin(t * 1.1) * 0.25;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.x -= delta * speed * 0.80;
-      ring2Ref.current.rotation.z += delta * speed * 0.50;
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.y += delta * speed * 0.90;
-      ring3Ref.current.rotation.x = Math.cos(t * 1.3) * 0.30;
-    }
-
-    // Orbiting alive neural data nodes
-    nodesRef.current.forEach((node, i) => {
-      if (!node) return;
-      const angle = t * speed * 1.2 + (i * Math.PI * 2) / 6;
-      const r = 0.125 + Math.sin(t * 2.0 + i) * 0.015;
-      node.position.set(
-        Math.cos(angle) * r,
-        Math.sin(angle * 2) * 0.025,
-        Math.sin(angle) * r
-      );
-      const s = 0.8 + Math.sin(t * 4.0 + i) * 0.35;
-      node.scale.set(s, s, s);
-    });
+    // Gentle 3D levitation and isometric view
+    groupRef.current.position.y = Math.sin(t * 2.0 + 4) * 0.010;
+    groupRef.current.rotation.y = Math.sin(t * 1.3) * 0.24;
+    groupRef.current.rotation.x = Math.cos(t * 1.1) * 0.12 + 0.10;
   });
 
   return (
-    <group ref={groupRef} scale={hovered ? 1.18 : 1.05}>
-      {/* 1. CENTRAL QUANTUM NEURAL CORE (Gradient Faded Translucent Octahedron) */}
-      <mesh ref={coreRef}>
-        <octahedronGeometry args={[0.072, 0]} />
-        <meshStandardMaterial
-          color="#1D4ED8"
-          emissive="#38BDF8"
-          emissiveIntensity={2.8}
-          transparent
-          opacity={0.82}
-          roughness={0.08}
-          metalness={0.4}
-        />
-      </mesh>
-
-      {/* 2. INNER GLOWING SINGULARITY JEWEL */}
-      <mesh ref={innerCoreRef}>
-        <octahedronGeometry args={[0.038, 0]} />
-        <meshStandardMaterial
-          color="#00F5D4"
-          emissive="#60A5FA"
-          emissiveIntensity={4.5}
-          roughness={0.05}
-          metalness={0.2}
-        />
-      </mesh>
-
-      {/* 3. DUAL HOLOGRAPHIC DATA RINGS WITH GRADIENT FADED TRANSPARENCY */}
-      {/* Ring 1: Electric Cyan Gradient Ring */}
-      <group ref={ring1Ref} rotation={[0.45, 0.3, 0]}>
-        <mesh>
-          <torusGeometry args={[0.108, 0.0042, 16, 64]} />
+    <group ref={groupRef} scale={hovered ? 1.08 : 0.96}>
+      {/* 3D Cyber Emblem Token holding the authentic official Python logo */}
+      <group>
+        {/* Sleek Dark Navy Disc Chassis */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.096, 0.096, 0.016, 40]} />
           <meshStandardMaterial
-            color="#00F5D4"
-            emissive="#38BDF8"
-            emissiveIntensity={3.2}
-            transparent
-            opacity={0.78}
-            roughness={0.1}
+            color="#0B132B"
+            emissive="#1E3A8A"
+            emissiveIntensity={0.55}
+            metalness={0.85}
+            roughness={0.18}
           />
         </mesh>
-        {/* Luminous micro-circuit nodes along Ring 1 */}
+
+        {/* Outer Beveled Edge Rim (Solid metallic cylinder, NO torus) */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.098, 0.098, 0.008, 40, 1, true]} />
+          <meshStandardMaterial
+            color="#38BDF8"
+            emissive="#0284C7"
+            emissiveIntensity={1.2}
+            metalness={0.9}
+            roughness={0.15}
+          />
+        </mesh>
+
+        {/* 4 Corner Microchip Gold Connector Pins (NO rings) */}
         {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((ang, idx) => (
           <mesh
-            key={`node1-${idx}`}
-            position={[Math.cos(ang) * 0.108, Math.sin(ang) * 0.108, 0]}
+            key={`pin-${idx}`}
+            position={[Math.cos(ang) * 0.102, Math.sin(ang) * 0.102, 0]}
+            rotation={[0, 0, ang]}
           >
-            <sphereGeometry args={[0.007, 12, 12]} />
+            <boxGeometry args={[0.012, 0.008, 0.010]} />
             <meshStandardMaterial
-              color="#FFFFFF"
-              emissive="#00F5D4"
-              emissiveIntensity={4.8}
+              color="#F59E0B"
+              emissive="#D97706"
+              emissiveIntensity={1.8}
+              metalness={0.95}
+              roughness={0.1}
             />
           </mesh>
         ))}
+
+        {/* Front Face: Official Python Logo */}
+        {texture && (
+          <>
+            <mesh position={[0, 0, 0.009]}>
+              <planeGeometry args={[0.165, 0.165]} />
+              <meshStandardMaterial
+                map={texture}
+                transparent
+                alphaTest={0.01}
+                roughness={0.2}
+                metalness={0.1}
+              />
+            </mesh>
+
+            {/* Back Face: Symmetrical for 3D viewing */}
+            <mesh position={[0, 0, -0.009]} rotation={[0, Math.PI, 0]}>
+              <planeGeometry args={[0.165, 0.165]} />
+              <meshStandardMaterial
+                map={texture}
+                transparent
+                alphaTest={0.01}
+                roughness={0.2}
+                metalness={0.1}
+              />
+            </mesh>
+          </>
+        )}
       </group>
 
-      {/* Ring 2: Royal Cobalt Meridian Ring */}
-      <group ref={ring2Ref} rotation={[-0.55, 0.4, 0.3]}>
-        <mesh>
-          <torusGeometry args={[0.096, 0.0038, 16, 64]} />
-          <meshStandardMaterial
-            color="#2563EB"
-            emissive="#60A5FA"
-            emissiveIntensity={2.8}
-            transparent
-            opacity={0.75}
-            roughness={0.1}
-          />
-        </mesh>
-      </group>
-
-      {/* Ring 3: Delicate Equatorial Gyro Ring */}
-      <group ref={ring3Ref} rotation={[Math.PI / 2, 0, 0]}>
-        <mesh>
-          <torusGeometry args={[0.122, 0.0028, 16, 64]} />
-          <meshStandardMaterial
-            color="#38BDF8"
-            emissive="#00F5D4"
-            emissiveIntensity={2.5}
-            transparent
-            opacity={0.65}
-            roughness={0.1}
-          />
-        </mesh>
-      </group>
-
-      {/* 4. 6 ORBITING ALIVE NEURAL DATA NODES */}
-      {Array.from({ length: 6 }).map((_, i) => (
-        <mesh
-          key={`node-${i}`}
-          ref={(el) => {
-            nodesRef.current[i] = el;
-          }}
-        >
-          <sphereGeometry args={[0.0065, 12, 12]} />
-          <meshStandardMaterial
-            color={i % 2 === 0 ? '#00F5D4' : '#60A5FA'}
-            emissive={i % 2 === 0 ? '#38BDF8' : '#3B82F6'}
-            emissiveIntensity={4.5}
-          />
-        </mesh>
-      ))}
-
-      {/* Living Atmospheric Cyber Glow Light */}
-      <pointLight color="#00F5D4" intensity={hovered ? 4.2 : 3.0} distance={0.75} />
-      <pointLight color="#3B82F6" intensity={hovered ? 3.0 : 2.0} distance={0.65} position={[0, -0.05, 0]} />
+      <pointLight color="#38BDF8" intensity={hovered ? 3.0 : 2.2} distance={0.65} />
     </group>
   );
 }

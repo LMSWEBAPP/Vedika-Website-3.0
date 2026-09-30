@@ -11,33 +11,36 @@ export function AtmosphericBackground() {
   const { theme } = useTheme();
   const { scrollProgress } = useInteraction();
 
-  // Pure White Stage: ONLY Page 2 (peaks at scrollProgress = 1.0)
+  // Pure White Stage: Page 2 (peaks at scrollProgress = 1.0) AND Page 4 (peaks at scrollProgress = 3.0)
   let whiteOpacity = 0;
   if (scrollProgress <= 1.0) {
     whiteOpacity = Math.min(1, Math.max(0, (scrollProgress - 0.15) * 1.35));
-  } else {
+  } else if (scrollProgress <= 2.15) {
     whiteOpacity = Math.max(0, 1 - (scrollProgress - 1.0) * 2.2);
+  } else if (scrollProgress <= 3.30) {
+    // Page 4: Smoothly reaches 100% pure white
+    whiteOpacity = Math.min(1, Math.max(0, (scrollProgress - 2.15) / 0.45));
+  } else {
+    // Fade out white as user moves to Page 5 (pitch black)
+    whiteOpacity = Math.max(0, 1 - (scrollProgress - 3.30) / 0.40);
   }
 
-  // Pitch Black Stage: Page 3 (scrollProgress ~ 2.0) and Page 5 (scrollProgress ~ 4.0)
+  // Pitch Black Stage: Page 3 (scrollProgress ~ 2.0) AND Page 5 (scrollProgress ~ 4.0)
   let blackOpacity = 0;
   if (scrollProgress <= 1.05) {
     blackOpacity = 0;
-  } else if (scrollProgress <= 2.2) {
+  } else if (scrollProgress <= 2.15) {
     blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 1.05) * 2.5));
-  } else if (scrollProgress <= 3.3) {
-    blackOpacity = Math.max(0, 1 - (scrollProgress - 2.2) / 0.45);
+  } else if (scrollProgress <= 3.30) {
+    // Fade out black as user moves to Page 4 (white)
+    blackOpacity = Math.max(0, 1 - (scrollProgress - 2.15) / 0.45);
   } else {
-    blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 3.40) / 0.40));
+    // Page 5: Smoothly reaches 100% complete solid pitch black
+    blackOpacity = Math.min(1, Math.max(0, (scrollProgress - 3.30) / 0.40));
   }
 
-  // Deep Obsidian Cosmic Stage for Page 4 (Image 1 Style)
-  const page4AtmosphereOpacity =
-    Math.max(0, Math.min(1, (scrollProgress - 2.15) / 0.45)) *
-    Math.max(0, Math.min(1, (3.75 - scrollProgress) / 0.45));
-
   const isSolidBlack =
-    (scrollProgress >= 1.4 && scrollProgress <= 2.2) || scrollProgress >= 3.8;
+    (scrollProgress >= 1.4 && scrollProgress <= 2.2) || scrollProgress >= 3.7;
 
   return (
     <div
@@ -133,24 +136,6 @@ export function AtmosphericBackground() {
           backgroundColor: '#000000',
           opacity: blackOpacity,
           zIndex: 9,
-          pointerEvents: 'none',
-          transition: 'opacity 0.25s ease-out',
-        }}
-      />
-
-      {/* Layer 9: Deep Midnight Obsidian Stage with Golden Ethereal Halo for Page 4 (Image 1 Style) */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: `
-            radial-gradient(circle at calc(50% + 27.2vh) 48%, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.12) 28%, transparent 65%),
-            radial-gradient(circle at calc(50% + 27.2vh) 48%, rgba(56, 189, 248, 0.14) 15%, transparent 60%),
-            radial-gradient(circle at 18% 48%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-            #070A12
-          `,
-          opacity: page4AtmosphereOpacity,
-          zIndex: 10,
           pointerEvents: 'none',
           transition: 'opacity 0.25s ease-out',
         }}

@@ -22,15 +22,15 @@ export const STEP_MS = 2500;
  *   Level 5: Node 5 (Right, Y = +185)& Node 6 (Left, Y = +185) [ΔY = 90px]
  */
 export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
-  // ── LEVEL 1: TOP ──────────────────────────────────────────────────────────
+  // ── LEVEL 1: TOP (Warm Royal Gold, matching School Curriculum in Image 1) ───
   {
     id: 'non-judgmental',
     index: 1,
     title: 'Non-Judgmental Space',
     desc: 'Ask freely and make mistakes without fear.',
     shortLabel: 'Learn without fear',
-    color: '#EC4899',
-    rgb: '236, 72, 153',
+    color: '#F59E0B',
+    rgb: '245, 158, 11',
     direction: 'top',
     cardRow: 0,
   },
@@ -110,8 +110,8 @@ export const STUDENT_ORBIT_FEATURES: StudentOrbitFeature[] = [
     title: 'Ask Unlimited Questions',
     desc: 'Ask anything anytime, as often as needed.',
     shortLabel: 'Zero limits',
-    color: '#A855F7',
-    rgb: '168, 85, 247',
+    color: '#2563EB',
+    rgb: '37, 99, 235',
     direction: 'left',
     cardRow: 2,
   },

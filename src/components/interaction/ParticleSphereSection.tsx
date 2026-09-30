@@ -43,7 +43,7 @@ export function ParticleSphereSection() {
     >
       {/* ============================================================ */}
       {/* 1. LEFT-SIDE HERO TEXT BLOCK (Interactive Labs Headline & CTA) */}
-      {/* Premium dark cosmic styling with golden glow matching Image 1  */}
+      {/* Adjusts seamlessly within the available space on the left     */}
       {/* ============================================================ */}
       {!isMobile && (
         <div
@@ -65,23 +65,17 @@ export function ParticleSphereSection() {
           {/* Eyebrow Accent Badge */}
           <div
             style={{
-              fontSize: '0.78rem',
+              fontSize: '0.80rem',
               fontWeight: 700,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: '#38BDF8',
-              marginBottom: '1rem',
+              color: '#3B82F6',
+              marginBottom: '0.85rem',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '5px 14px',
-              borderRadius: '9999px',
-              background: 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.30)',
-              boxShadow: '0 0 16px rgba(56, 189, 248, 0.20)',
+              gap: '6px',
             }}
           >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
             Interactive Labs
           </div>
 
@@ -92,9 +86,8 @@ export function ParticleSphereSection() {
               fontWeight: 800,
               lineHeight: 1.08,
               letterSpacing: '-0.035em',
-              color: '#FFFFFF',
+              color: '#0F172A',
               margin: '0 0 1.25rem 0',
-              textShadow: '0 2px 24px rgba(0, 0, 0, 0.6)',
             }}
           >
             Explore
@@ -103,11 +96,10 @@ export function ParticleSphereSection() {
             <br />
             <span
               style={{
-                background: 'linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%)',
+                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #B45309 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 display: 'inline-block',
-                filter: 'drop-shadow(0 0 24px rgba(245, 158, 11, 0.45))',
               }}
             >
               Differently.
@@ -118,16 +110,16 @@ export function ParticleSphereSection() {
           <p
             style={{
               fontSize: 'clamp(0.92rem, 1.05vw, 1.02rem)',
-              lineHeight: 1.65,
-              color: '#94A3B8',
+              lineHeight: 1.62,
+              color: '#475569',
               margin: '0 0 2rem 0',
-              fontWeight: 400,
+              fontWeight: 450,
             }}
           >
             Step into interactive labs powered by AI. Ask questions, run experiments, visualize concepts and learn at your own pace — with Vedika by your side.
           </p>
 
-          {/* Explore Labs CTA Pill Button (Luminous Amber / Gold Glass) */}
+          {/* Explore Labs CTA Pill Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -141,29 +133,28 @@ export function ParticleSphereSection() {
               gap: '10px',
               padding: '13px 28px',
               borderRadius: '9999px',
-              background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.35) 100%)',
-              color: '#FFFFFF',
+              background: 'linear-gradient(135deg, #FDE68A 0%, #FBBF24 50%, #F59E0B 100%)',
+              color: '#451A03',
               fontWeight: 700,
               fontSize: '0.94rem',
               letterSpacing: '0.01em',
-              border: '1px solid rgba(245, 158, 11, 0.65)',
-              boxShadow: '0 0 24px rgba(245, 158, 11, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(245, 158, 11, 0.45)',
+              boxShadow: '0 8px 24px rgba(245, 158, 11, 0.28), 0 2px 6px rgba(0, 0, 0, 0.04)',
               cursor: 'pointer',
               transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 0 35px rgba(245, 158, 11, 0.50), inset 0 1px 2px rgba(255, 255, 255, 0.4)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(245, 158, 11, 0.38)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 0 24px rgba(245, 158, 11, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(245, 158, 11, 0.28), 0 2px 6px rgba(0, 0, 0, 0.04)';
             }}
             aria-label="Explore Labs"
           >
             <span>Explore Labs</span>
-            <ArrowRight size={17} strokeWidth={2.4} color="#FBBF24" />
+            <ArrowRight size={17} strokeWidth={2.4} />
           </button>
         </div>
       )}
@@ -193,8 +184,8 @@ export function ParticleSphereSection() {
       />
 
       {/* ============================================================ */}
-      {/* 3. 5 LAB NAME LABELS (Image 1 Style Glowing Glass Capsules)  */}
-      {/* Left labs on left, right labs on right, Math on right        */}
+      {/* 3. 5 LAB NAME LABELS (Left labs on left, right labs on right)*/}
+      {/* Math Lab placed on its right side as requested               */}
       {/* ============================================================ */}
       <div
         style={{
@@ -206,7 +197,7 @@ export function ParticleSphereSection() {
           zIndex: 32,
         }}
       >
-        {/* Math Lab: Right side of Top Sphere (Amber Gold Capsule) */}
+        {/* Math Lab: Right side of Top Sphere */}
         <div
           style={{
             position: 'absolute',
@@ -215,25 +206,20 @@ export function ParticleSphereSection() {
             transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '7px 18px',
-            borderRadius: '24px',
-            background: 'rgba(10, 15, 28, 0.85)',
-            border: '1px solid rgba(245, 158, 11, 0.55)',
-            boxShadow: '0 0 18px rgba(245, 158, 11, 0.28), 0 4px 12px rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(16px)',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.03em',
-            color: '#FFFFFF',
+            color: '#0F172A',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
-          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#F59E0B', display: 'inline-block', boxShadow: '0 0 10px #F59E0B' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#D97706', display: 'inline-block', boxShadow: '0 0 8px rgba(217, 119, 6, 0.6)' }} />
           <span>Math Lab</span>
         </div>
 
-        {/* Computer Lab: Left side of Upper Left Sphere (Electric Blue Capsule) */}
+        {/* Computer Lab: Left side of Upper Left Sphere */}
         <div
           style={{
             position: 'absolute',
@@ -242,25 +228,20 @@ export function ParticleSphereSection() {
             transform: 'translate(-100%, -50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '7px 18px',
-            borderRadius: '24px',
-            background: 'rgba(10, 15, 28, 0.85)',
-            border: '1px solid rgba(59, 130, 246, 0.55)',
-            boxShadow: '0 0 18px rgba(59, 130, 246, 0.28), 0 4px 12px rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(16px)',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.03em',
-            color: '#FFFFFF',
+            color: '#0F172A',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           <span>Computer Lab</span>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#3B82F6', display: 'inline-block', boxShadow: '0 0 10px #3B82F6' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1D4ED8', display: 'inline-block', boxShadow: '0 0 8px rgba(29, 78, 216, 0.6)' }} />
         </div>
 
-        {/* Biology Lab: Left side of Lower Left Sphere (Radiant Orchid Capsule) */}
+        {/* Biology Lab: Left side of Lower Left Sphere */}
         <div
           style={{
             position: 'absolute',
@@ -269,25 +250,20 @@ export function ParticleSphereSection() {
             transform: 'translate(-100%, -50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '7px 18px',
-            borderRadius: '24px',
-            background: 'rgba(10, 15, 28, 0.85)',
-            border: '1px solid rgba(168, 85, 247, 0.55)',
-            boxShadow: '0 0 18px rgba(168, 85, 247, 0.28), 0 4px 12px rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(16px)',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.03em',
-            color: '#FFFFFF',
+            color: '#0F172A',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
           <span>Biology Lab</span>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#A855F7', display: 'inline-block', boxShadow: '0 0 10px #A855F7' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#7C3AED', display: 'inline-block', boxShadow: '0 0 8px rgba(124, 58, 237, 0.6)' }} />
         </div>
 
-        {/* Physics Lab: Right side of Upper Right Sphere (Sapphire / Cyan Capsule) */}
+        {/* Physics Lab: Right side of Upper Right Sphere */}
         <div
           style={{
             position: 'absolute',
@@ -296,25 +272,20 @@ export function ParticleSphereSection() {
             transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '7px 18px',
-            borderRadius: '24px',
-            background: 'rgba(10, 15, 28, 0.85)',
-            border: '1px solid rgba(56, 189, 248, 0.55)',
-            boxShadow: '0 0 18px rgba(56, 189, 248, 0.28), 0 4px 12px rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(16px)',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.03em',
-            color: '#FFFFFF',
+            color: '#0F172A',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
-          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#38BDF8', display: 'inline-block', boxShadow: '0 0 10px #38BDF8' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#0284C7', display: 'inline-block', boxShadow: '0 0 8px rgba(2, 132, 199, 0.6)' }} />
           <span>Physics Lab</span>
         </div>
 
-        {/* Chemistry Lab: Right side of Lower Right Sphere (Cosmic Ruby Capsule) */}
+        {/* Chemistry Lab: Right side of Lower Right Sphere */}
         <div
           style={{
             position: 'absolute',
@@ -323,21 +294,16 @@ export function ParticleSphereSection() {
             transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '7px 18px',
-            borderRadius: '24px',
-            background: 'rgba(10, 15, 28, 0.85)',
-            border: '1px solid rgba(244, 63, 94, 0.55)',
-            boxShadow: '0 0 18px rgba(244, 63, 94, 0.28), 0 4px 12px rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(16px)',
+            gap: '7px',
             fontWeight: 700,
             fontSize: '13px',
             letterSpacing: '0.03em',
-            color: '#FFFFFF',
+            color: '#0F172A',
+            textShadow: '0 1px 3px rgba(255, 255, 255, 0.95)',
             whiteSpace: 'nowrap',
           }}
         >
-          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#F43F5E', display: 'inline-block', boxShadow: '0 0 10px #F43F5E' }} />
+          <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#BE123C', display: 'inline-block', boxShadow: '0 0 8px rgba(190, 18, 60, 0.6)' }} />
           <span>Chemistry Lab</span>
         </div>
       </div>
@@ -359,18 +325,18 @@ export function ParticleSphereSection() {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
-          padding: '8px 24px',
+          padding: '8px 22px',
           borderRadius: '24px',
           background: isLabsExpanded
-            ? 'rgba(239, 68, 68, 0.16)'
-            : 'rgba(15, 23, 42, 0.85)',
+            ? 'rgba(239, 68, 68, 0.08)'
+            : 'rgba(15, 23, 42, 0.90)',
           border: isLabsExpanded
-            ? '1px solid rgba(239, 68, 68, 0.55)'
-            : '1px solid rgba(255, 255, 255, 0.18)',
+            ? '1px solid rgba(239, 68, 68, 0.35)'
+            : '1px solid rgba(15, 23, 42, 0.20)',
           boxShadow: isLabsExpanded
-            ? '0 0 25px rgba(239, 68, 68, 0.35)'
-            : '0 0 25px rgba(0, 0, 0, 0.7)',
-          backdropFilter: 'blur(16px)',
+            ? '0 8px 25px rgba(239, 68, 68, 0.12)'
+            : '0 8px 30px rgba(15, 23, 42, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08)',
+          backdropFilter: 'blur(12px)',
           cursor: 'pointer',
           pointerEvents: 'auto',
           zIndex: 40,
@@ -379,12 +345,12 @@ export function ParticleSphereSection() {
       >
         {isLabsExpanded ? (
           <>
-            <X size={14} color="#FB7185" />
+            <X size={14} color="#E11D48" />
             <span
               style={{
                 fontSize: '0.80rem',
                 fontWeight: 600,
-                color: '#FDA4AF',
+                color: '#BE123C',
                 letterSpacing: '0.03em',
               }}
             >
@@ -393,7 +359,7 @@ export function ParticleSphereSection() {
           </>
         ) : (
           <>
-            <Sparkles size={14} color="#FBBF24" />
+            <Sparkles size={14} color="#A855F7" />
             <span
               style={{
                 fontSize: '0.80rem',
