@@ -28,51 +28,58 @@ const FRAG_SHADER = `
   float neuro_shape(vec2 uv, float t, float p) {
     vec2 sine_acc = vec2(0.);
     vec2 res = vec2(0.);
-    float scale = 8.;
+    float scale = 7.5;
 
     for (int j = 0; j < 15; j++) {
       uv = rotate(uv, 1.);
       sine_acc = rotate(sine_acc, 1.);
       vec2 layer = uv * scale + float(j) + sine_acc - t;
-      sine_acc += sin(layer) + 2.4 * p;
+      sine_acc += sin(layer) + 2.2 * p;
       res += (.5 + .5 * cos(layer)) / scale;
-      scale *= 1.2;
+      scale *= 1.18;
     }
     return res.x + res.y;
   }
 
   void main() {
-    vec2 uv = .5 * vUv;
-    uv.x *= u_ratio;
+    // 3D Z-axis plane perspective projection
+    vec2 p_uv = vUv - vec2(0.5, 0.5);
+    p_uv.x *= u_ratio;
+
+    // Subtle Z-axis depth tilt so waves feel like a receding spatial plane
+    float zDepth = 1.0 + p_uv.y * 0.28;
+    vec2 uv = (p_uv / zDepth) * 0.85;
 
     vec2 pointer = vUv - u_pointer_position;
     pointer.x *= u_ratio;
     float p = clamp(length(pointer), 0., 1.);
     p = .5 * pow(1. - p, 2.);
 
-    float t = .0008 * u_time;
+    float t = .0011 * u_time;
 
     float noise = neuro_shape(uv, t, p);
 
-    noise = 1.2 * pow(noise, 3.);
-    noise += pow(noise, 10.);
-    noise = max(.0, noise - .5);
+    // Dynamic wave sharpening
+    noise = 1.25 * pow(noise, 3.);
+    noise += pow(noise, 9.);
+    noise = max(.0, noise - .45);
 
-    // Smooth radial vignette so it softly dissolves towards the boundaries
-    float dist = length(vUv - .5);
-    noise *= (1. - smoothstep(0.18, 0.65, dist));
+    // Natural peripheral edge fade across the section
+    float edgeFade = 1.0 - smoothstep(0.42, 0.72, length(vUv - 0.5));
+    noise *= edgeFade;
 
-    // Luxurious gold & obsidian black palette (harmonized with Vedika ring)
-    vec3 goldDeep = vec3(0.55, 0.38, 0.08);   // deep amber gold
-    vec3 goldWarm = vec3(0.85, 0.65, 0.18);   // radiant gold
-    vec3 goldBright = vec3(0.98, 0.88, 0.48); // champagne sparkle
+    // ── VIBRANT GLOWING GOLDEN COLOR MATRIX ──
+    vec3 goldAmber = vec3(0.92, 0.58, 0.12);   // warm amber base
+    vec3 goldPure  = vec3(1.00, 0.80, 0.24);   // bright metallic gold
+    vec3 goldGlow  = vec3(1.00, 0.94, 0.65);   // luminous champagne brilliance
 
-    vec3 goldColor = mix(goldDeep, goldWarm, 0.5 + 0.5 * sin(uv.x * 2.5 + t * 0.8));
-    goldColor = mix(goldColor, goldBright, pow(noise, 2.2));
+    // Shift colors smoothly along the undulating waves
+    vec3 waveGold = mix(goldAmber, goldPure, 0.5 + 0.5 * sin(uv.x * 2.2 + t * 0.7));
+    waveGold = mix(waveGold, goldGlow, pow(clamp(noise * 0.75, 0.0, 1.0), 2.2));
 
-    // Very subtle, quiet presence so it never distracts from the cards or Vedika
-    vec3 color = goldColor * noise * 0.55;
-    float alpha = noise * 0.35;
+    // Luminous bright golden energy with rich black depth contrast
+    vec3 color = waveGold * (noise * 1.55 + pow(noise, 2.0) * 0.7);
+    float alpha = clamp(noise * 0.85, 0.0, 1.0);
 
     gl_FragColor = vec4(color, alpha);
   }
@@ -152,7 +159,7 @@ export default function NeuralNoiseBackground() {
     const resize = () => {
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
       const width = Math.max(1, Math.floor(rect.width * dpr));
       const height = Math.max(1, Math.floor(rect.height * dpr));
       if (canvas.width !== width || canvas.height !== height) {
@@ -180,8 +187,8 @@ export default function NeuralNoiseBackground() {
     window.addEventListener('pointermove', onPointerMove, { passive: true });
 
     const render = (time: number) => {
-      pointer.x += (pointer.tX - pointer.x) * 0.15;
-      pointer.y += (pointer.tY - pointer.y) * 0.15;
+      pointer.x += (pointer.tX - pointer.x) * 0.12;
+      pointer.y += (pointer.tY - pointer.y) * 0.12;
 
       if (uTimeLoc) gl.uniform1f(uTimeLoc, time);
       if (uPointerPosLoc) gl.uniform2f(uPointerPosLoc, pointer.x, pointer.y);
