@@ -49,10 +49,10 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: 'clamp(2.5rem, 5.2vw, 6rem)',
+            left: 'clamp(2.5rem, 5.5vw, 6.5rem)',
             top: '50%',
             transform: 'translateY(-50%)',
-            maxWidth: 'min(390px, 28vw)',
+            maxWidth: 'min(440px, 34vw)',
             pointerEvents: 'auto',
             zIndex: 36,
             display: 'flex',
@@ -82,7 +82,7 @@ export function ParticleSphereSection() {
           {/* Main Headline */}
           <h2
             style={{
-              fontSize: 'clamp(2.5rem, 4.4vw, 3.8rem)',
+              fontSize: 'clamp(2.4rem, 4.2vw, 3.6rem)',
               fontWeight: 800,
               lineHeight: 1.08,
               letterSpacing: '-0.035em',
@@ -160,7 +160,7 @@ export function ParticleSphereSection() {
       )}
 
       {/* ============================================================ */}
-      {/* 2. INVISIBLE CENTRAL CLICK TRIGGER OVER VEDIKA               */}
+      {/* 2. INVISIBLE CENTRAL CLICK TRIGGER OVER VEDIKA (RIGHT PART)  */}
       {/* ============================================================ */}
       <div
         onClick={(e) => {
@@ -169,8 +169,8 @@ export function ParticleSphereSection() {
         }}
         style={{
           position: 'absolute',
-          left: '50%',
-          top: '50%',
+          left: isMobile ? '50%' : 'calc(50% + 14vh)',
+          top: isMobile ? '50%' : 'calc(50% + 1.8vh)',
           transform: 'translate(-50%, -50%)',
           width: '270px',
           height: '340px',
@@ -185,7 +185,7 @@ export function ParticleSphereSection() {
 
       {/* ============================================================ */}
       {/* 3. 5 LAB NAME LABELS (Centered neatly beneath each bubble)   */}
-      {/* Matches reference design without intruding on the left text  */}
+      {/* Aligned in the right partition matching 3D satellite coords  */}
       {/* ============================================================ */}
       <div
         style={{
@@ -201,8 +201,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: '50%',
-            top: 'calc(50% - 170px)',
+            left: isMobile ? '50%' : 'calc(50% + 14vh)',
+            top: isMobile ? 'calc(50% - 170px)' : 'calc(50% - 25.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -223,8 +223,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% - 290px)',
-            top: 'calc(50% + 20px)',
+            left: isMobile ? 'calc(50% - 290px)' : 'calc(50% + 14vh - 37.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 1.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -245,8 +245,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% - 180px)',
-            top: 'calc(50% + 340px)',
+            left: isMobile ? 'calc(50% - 180px)' : 'calc(50% + 14vh - 23vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 38.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -267,8 +267,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% + 290px)',
-            top: 'calc(50% + 20px)',
+            left: isMobile ? 'calc(50% + 290px)' : 'calc(50% + 14vh + 37.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 1.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -289,8 +289,8 @@ export function ParticleSphereSection() {
         <div
           style={{
             position: 'absolute',
-            left: 'calc(50% + 180px)',
-            top: 'calc(50% + 340px)',
+            left: isMobile ? 'calc(50% + 180px)' : 'calc(50% + 14vh + 23vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 38.5vh)',
             transform: 'translate(-50%, 0)',
             display: 'flex',
             alignItems: 'center',
@@ -310,6 +310,7 @@ export function ParticleSphereSection() {
 
       {/* ============================================================ */}
       {/* 4. SUBTLE BOTTOM TOGGLE PILL (Close Labs)                    */}
+      {/* Aligned neatly in the right partition underneath Vedika      */}
       {/* ============================================================ */}
       <div
         onClick={(e) => {
@@ -319,7 +320,7 @@ export function ParticleSphereSection() {
         style={{
           position: 'absolute',
           bottom: 'clamp(2.0rem, 4.5vh, 3.2rem)',
-          left: '50%',
+          left: isMobile ? '50%' : 'calc(50% + 14vh)',
           transform: 'translateX(-50%)',
           display: 'inline-flex',
           alignItems: 'center',

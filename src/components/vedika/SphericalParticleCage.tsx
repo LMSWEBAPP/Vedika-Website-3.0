@@ -257,12 +257,27 @@ export function SphericalParticleCage() {
       }
     });
 
+    // Position the entire satellite cage in lockstep with Vedika in the right partition
+    const targetCageX = isMobile ? 0 : 0.30;
+    let cageX = 0;
+    if (scrollProgress <= 3.25) {
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 2.0) / 0.70));
+      const p = pTravel * pTravel * (3 - 2 * pTravel);
+      cageX = THREE.MathUtils.lerp(0, targetCageX, p);
+    } else {
+      const pTravel = Math.max(0, Math.min(1, (scrollProgress - 3.20) / 0.40));
+      const p = pTravel * pTravel * (3 - 2 * pTravel);
+      cageX = THREE.MathUtils.lerp(targetCageX, 0, p);
+    }
+    mainGroupRef.current.position.x = cageX;
+    mainGroupRef.current.position.y = cageCenterY;
+
     // Subtle gentle celestial breathing of entire system
     mainGroupRef.current.rotation.y = Math.cos(time * 0.22) * 0.08;
     mainGroupRef.current.rotation.z = Math.sin(time * 0.18) * 0.05;
   });
 
-  // Centered exactly in the middle of the page matching Vedika
+  // Centered in the right partition matching Vedika
   const cageCenterY = isMobile ? -0.02 : -0.04;
 
   return (

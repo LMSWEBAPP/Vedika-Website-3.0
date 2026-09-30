@@ -133,8 +133,8 @@ export function VedikaModel() {
     const p3RotX = isMobile ? 0 : carouselLookRef.current.rotX;
     const p3Z = 0;
 
-    // Page 4 targets: completely centered in the exact middle of the page
-    const p4X = 0;
+    // Page 4 targets: positioned in the right partition for side-by-side layout
+    const p4X = isMobile ? 0 : 0.30;
     const p4Y = isMobile ? -0.02 : -0.04;
     const p4Scale = isMobile ? 0.46 : 0.54;
     const p4RotY = 0;
