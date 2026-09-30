@@ -19,23 +19,31 @@ function VedikaRobotModel() {
         mesh.receiveShadow = false;
 
         if (mesh.material) {
-          const enhanceMat = (m: THREE.Material) => {
-            const newMat = m.clone();
+          const enhanceMaterial = (origMat: THREE.Material) => {
+            const newMat = origMat.clone();
             newMat.transparent = false;
             newMat.opacity = 1.0;
-            if ('roughness' in newMat) {
-              (newMat as any).roughness = Math.min((newMat as any).roughness ?? 0.5, 0.35);
-            }
-            if ('metalness' in newMat) {
-              (newMat as any).metalness = Math.min((newMat as any).metalness ?? 0.1, 0.12);
+            if ((newMat as THREE.MeshStandardMaterial).isMeshStandardMaterial) {
+              const std = newMat as THREE.MeshStandardMaterial;
+              std.roughness = Math.min(std.roughness ?? 0.4, 0.28);
+              std.metalness = Math.min(std.metalness ?? 0.15, 0.08);
+              // If material has color, brighten base casing tone
+              if (std.color) {
+                std.color.offsetHSL(0, 0, 0.09);
+              }
+              // Boost emissive glow on robot face screen & eyes
+              if (std.emissive && std.emissive.getHex() > 0) {
+                std.emissiveIntensity = 2.4;
+              }
             }
             newMat.needsUpdate = true;
             return newMat;
           };
+
           if (Array.isArray(mesh.material)) {
-            mesh.material = mesh.material.map(enhanceMat);
+            mesh.material = mesh.material.map(enhanceMaterial);
           } else {
-            mesh.material = enhanceMat(mesh.material);
+            mesh.material = enhanceMaterial(mesh.material);
           }
         }
       }
@@ -51,21 +59,20 @@ function VedikaRobotModel() {
   }, [scene]);
 
   // Calibrated alignment offsets to place Vedika in the dead-center of the circular progress ring
-  // Offsets compensate for model bounding-box asymmetry and visual mass of the head
-  const CALIBRATED_OFFSET_X = 0.042; // Shifts right to balance left-right margin to the ring
-  const CALIBRATED_OFFSET_Y = 0.065; // Shifts up so Vedika and pedestal are completely inside the ring
+  const CALIBRATED_OFFSET_X = 0.042;
+  const CALIBRATED_OFFSET_Y = 0.062;
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
     // Perfectly centered idle breathing oscillation in the dead-center of the ring
     groupRef.current.position.x = CALIBRATED_OFFSET_X;
-    groupRef.current.position.y = CALIBRATED_OFFSET_Y + Math.sin(t * 1.3) * 0.018;
+    groupRef.current.position.y = CALIBRATED_OFFSET_Y + Math.sin(t * 1.3) * 0.016;
     groupRef.current.rotation.y = Math.sin(t * 0.9) * 0.16;
   });
 
   return (
-    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.62, 0.62, 0.62]}>
+    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.66, 0.66, 0.66]}>
       <primitive object={clonedScene} />
     </group>
   );
@@ -76,18 +83,34 @@ export default function CentralVedika3D() {
     <div style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
       <Canvas
         camera={{ position: [0, 0, 2.3], fov: 40 }}
-        gl={{ powerPreference: 'high-performance', alpha: true, antialias: true }}
-        dpr={[1, 1.5]}
+        gl={{
+          powerPreference: 'high-performance',
+          alpha: true,
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.5,
+        }}
+        dpr={[1, 2]}
         style={{ pointerEvents: 'none', width: '100%', height: '100%' }}
       >
-        <ambientLight intensity={3.6} />
-        <directionalLight position={[0, 2.5, 3.5]} intensity={4.2} color="#FFFFFF" />
-        <directionalLight position={[-2.5, 1, 2.5]} intensity={2.6} color="#E0F2FE" />
-        <directionalLight position={[2.5, 1, 2.5]} intensity={2.6} color="#FEF3C7" />
-        {/* Direct frontal spotlight for bright, vibrant chassis illumination */}
-        <pointLight position={[0, 0.35, 1.9]} intensity={3.4} color="#FFFFFF" distance={5} />
-        {/* Upward stage bounce light to illuminate chest and feet */}
-        <pointLight position={[0, -0.6, 1.2]} intensity={3.0} color="#FDE68A" distance={4} />
+        {/* Crisp omnidirectional studio ambient light */}
+        <ambientLight intensity={3.4} color="#FFFFFF" />
+
+        {/* Primary Key light pointing directly at front face and body */}
+        <directionalLight position={[0, 2.5, 4.5]} intensity={4.5} color="#FFFFFF" />
+
+        {/* Upward stage bounce light from glowing gold pedestal */}
+        <pointLight position={[0, -0.9, 1.4]} intensity={4.0} color="#FEF3C7" distance={6} />
+
+        {/* Left fill light: clean cool highlight */}
+        <directionalLight position={[-3, 1.5, 3]} intensity={2.8} color="#F0F9FF" />
+
+        {/* Right fill light: warm golden accent */}
+        <directionalLight position={[3, 1.5, 3]} intensity={2.8} color="#FFFBEB" />
+
+        {/* Top rim light: head and shoulder edge definition */}
+        <directionalLight position={[0, 4, 0]} intensity={3.2} color="#FFFFFF" />
+
         <Suspense fallback={null}>
           <VedikaRobotModel />
         </Suspense>

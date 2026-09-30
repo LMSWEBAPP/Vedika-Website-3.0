@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import CentralVedika3D from '../CentralVedika3D';
 import OrbitProgressRing from './OrbitProgressRing';
 import OrbitFeatureNode from './OrbitFeatureNode';
-import NeuralNoiseBackground from './NeuralNoiseBackground';
 import { useInteraction } from '@/hooks/useInteraction';
 import {
   STUDENT_ORBIT_FEATURES,
@@ -341,9 +340,6 @@ export default function VedikaOrbitStage() {
       role="region"
       aria-label="Student Learning Ecosystem 360-Degree Circular Orbit"
     >
-      {/* ── Subdued Golden & Black Neural Noise Wavy Background ─────── */}
-      <NeuralNoiseBackground />
-
       {/* ── CENTER: 3D BOT + PROGRESSIVE NEON RING ───────────────── */}
       <div className={`vedika-center-pod-clean ${isBotFadedIn ? 'bot-visible' : 'bot-entering'}`}>
         {/* SVG Progress Ring with 9 individual multicolor arc segments + energy bead */}

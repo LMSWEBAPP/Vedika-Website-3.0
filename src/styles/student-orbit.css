@@ -29,22 +29,6 @@
   transition: opacity 0.6s ease-out;
 }
 
-/* ── Golden Wavy Neural Noise Z-Axis Plane Background Canvas ── */
-.student-neural-noise-canvas {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  min-width: 920px;
-  min-height: 560px;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.65;
-  mix-blend-mode: screen;
-}
-
 /* ==========================================================================
    2. CENTER: VEDIKA BOT + PROGRESS RING (R=125, D=250, Canvas=600)
    ========================================================================== */
@@ -81,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 6;
+  z-index: 5;
   pointer-events: none;
 }
 
@@ -90,7 +74,7 @@
   pointer-events: none;
 }
 
-/* Central 3D Bot Canvas Container: centered in the ring (above ring background) */
+/* Central 3D Bot Canvas Container: centered in the ring, elevated in front of background ring */
 .vedika-robot-canvas-box {
   position: absolute;
   top: 50%;
@@ -102,7 +86,8 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 8;
+  z-index: 7;
+  filter: drop-shadow(0 4px 18px rgba(254, 240, 138, 0.20)) brightness(1.08) contrast(1.04);
 }
 
 /* ── Futuristic Hologram Stage Pedestal beneath Vedika (Fully inside the orbit ring) ── */
@@ -387,7 +372,7 @@
   text-overflow: ellipsis;
 }
 
-/* ── 3. Half-faded, Deeply Soft Watermark on Right (NO enclosing circle) ── */
+/* ── 3. Half-faded, Half-visible Watermark on Right (NO enclosing circle) ── */
 .card-watermark {
   position: relative;
   flex-shrink: 0;
@@ -395,21 +380,21 @@
   align-items: center;
   justify-content: center;
   margin-right: 4px;
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.05) 80%, transparent 100%);
-  opacity: 0.35;
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.1) 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.1) 85%, transparent 100%);
+  opacity: 0.75;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
 
 .orbit-capsule-card:hover .card-watermark {
-  opacity: 0.52;
-  transform: translateX(1px);
+  opacity: 0.92;
+  transform: translateX(2px);
 }
 
 .orbit-capsule-card.is-active .card-watermark {
-  opacity: 0.60;
-  transform: translateX(1px);
+  opacity: 1;
+  transform: translateX(2px);
 }
 
 /* Shimmer sweep */

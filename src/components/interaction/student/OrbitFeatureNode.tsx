@@ -52,19 +52,19 @@ function getWatermarkIcon(feature: StudentOrbitFeature) {
       style={{ overflow: 'visible' }}
     >
       <defs>
-        {/* Deeply faded watermark linear gradient: subtle on left, softly fading out */}
+        {/* Half-fade, half-visible linear gradient: visible on left, fading to transparent on right */}
         <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor={color} stopOpacity="0.32" />
-          <stop offset="35%" stopColor={color} stopOpacity="0.16" />
-          <stop offset="70%" stopColor={color} stopOpacity="0.03" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.75" />
+          <stop offset="35%" stopColor={color} stopOpacity="0.45" />
+          <stop offset="65%" stopColor={color} stopOpacity="0.12" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
 
-        {/* Delicate subtle stroke gradient with half-fade transition */}
+        {/* Luminous stroke gradient with half-fade transition */}
         <linearGradient id={strokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.40" />
-          <stop offset="30%" stopColor={color} stopOpacity="0.22" />
-          <stop offset="70%" stopColor={color} stopOpacity="0.04" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+          <stop offset="30%" stopColor={color} stopOpacity="0.55" />
+          <stop offset="65%" stopColor={color} stopOpacity="0.12" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
       </defs>
