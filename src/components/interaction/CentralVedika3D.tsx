@@ -19,20 +19,23 @@ function VedikaRobotModel() {
         mesh.receiveShadow = false;
 
         if (mesh.material) {
-          if (Array.isArray(mesh.material)) {
-            mesh.material = mesh.material.map((m) => {
-              const newMat = m.clone();
-              newMat.transparent = false;
-              newMat.opacity = 1.0;
-              newMat.needsUpdate = true;
-              return newMat;
-            });
-          } else {
-            const newMat = (mesh.material as THREE.Material).clone();
+          const enhanceMat = (m: THREE.Material) => {
+            const newMat = m.clone();
             newMat.transparent = false;
             newMat.opacity = 1.0;
+            if ('roughness' in newMat) {
+              (newMat as any).roughness = Math.min((newMat as any).roughness ?? 0.5, 0.35);
+            }
+            if ('metalness' in newMat) {
+              (newMat as any).metalness = Math.min((newMat as any).metalness ?? 0.1, 0.12);
+            }
             newMat.needsUpdate = true;
-            mesh.material = newMat;
+            return newMat;
+          };
+          if (Array.isArray(mesh.material)) {
+            mesh.material = mesh.material.map(enhanceMat);
+          } else {
+            mesh.material = enhanceMat(mesh.material);
           }
         }
       }
@@ -62,7 +65,7 @@ function VedikaRobotModel() {
   });
 
   return (
-    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.58, 0.58, 0.58]}>
+    <group ref={groupRef} position={[CALIBRATED_OFFSET_X, CALIBRATED_OFFSET_Y, 0]} scale={[0.62, 0.62, 0.62]}>
       <primitive object={clonedScene} />
     </group>
   );
@@ -77,10 +80,14 @@ export default function CentralVedika3D() {
         dpr={[1, 1.5]}
         style={{ pointerEvents: 'none', width: '100%', height: '100%' }}
       >
-        <ambientLight intensity={2.2} />
-        <directionalLight position={[2, 3, 4]} intensity={2.4} />
-        <pointLight position={[-2, -0.2, 1]} intensity={1.1} color="#06B6D4" />
-        <pointLight position={[2, -0.2, 1]} intensity={1.1} color="#A855F7" />
+        <ambientLight intensity={3.6} />
+        <directionalLight position={[0, 2.5, 3.5]} intensity={4.2} color="#FFFFFF" />
+        <directionalLight position={[-2.5, 1, 2.5]} intensity={2.6} color="#E0F2FE" />
+        <directionalLight position={[2.5, 1, 2.5]} intensity={2.6} color="#FEF3C7" />
+        {/* Direct frontal spotlight for bright, vibrant chassis illumination */}
+        <pointLight position={[0, 0.35, 1.9]} intensity={3.4} color="#FFFFFF" distance={5} />
+        {/* Upward stage bounce light to illuminate chest and feet */}
+        <pointLight position={[0, -0.6, 1.2]} intensity={3.0} color="#FDE68A" distance={4} />
         <Suspense fallback={null}>
           <VedikaRobotModel />
         </Suspense>

@@ -69,15 +69,6 @@ export default function OrbitProgressRing({
           <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.95" />
         </linearGradient>
 
-        {/* Counter-flow gradient for dashed track */}
-        <linearGradient id="vGoldBlackDashedGrad" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.6" />
-          <stop offset="26%" stopColor="#1E1609" stopOpacity="0.25" />
-          <stop offset="50%" stopColor="#080B12" stopOpacity="0.15" />
-          <stop offset="74%" stopColor="#92400E" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#FDE68A" stopOpacity="0.7" />
-        </linearGradient>
-
         {/* Individual linear gradients for each of the 9 segments */}
         {ORBIT_SEGMENTS.map((seg) => (
           <linearGradient
@@ -117,23 +108,12 @@ export default function OrbitProgressRing({
       </defs>
 
       {/* ── 0. Golden & Black Smooth Mixed Gradient Orbit Ring of Vedika ── */}
-      {/* Outer subtle concentric dashed track */}
-      <circle
-        cx={300}
-        cy={300}
-        r={PROGRESS_R + 6}
-        fill="none"
-        stroke="url(#vGoldBlackDashedGrad)"
-        strokeWidth={1.0}
-        strokeDasharray="4 6"
-      />
-
       {/* Main Solid Gold-Black Mixed Gradient Ring */}
       <circle
         cx={300}
         cy={300}
         r={PROGRESS_R}
-        fill="rgba(15, 12, 8, 0.25)"
+        fill="none"
         stroke="url(#vGoldBlackRingGrad)"
         strokeWidth={2.4}
         filter="url(#vOrbitNeonGlow)"
