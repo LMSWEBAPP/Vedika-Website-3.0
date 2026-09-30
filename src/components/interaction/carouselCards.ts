@@ -24,14 +24,32 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#FBBF24', // Amber/Yellow
     secondaryColor: '#D97706',
     iconSvg: `
-      <!-- Lightbulb -->
-      <path d="M460 170 C400 170 350 220 350 280 C350 326 376 364 414 382 L414 425 C414 433 421 440 430 440 L490 440 C499 440 506 433 506 425 L506 382 C544 364 570 326 570 280 C570 220 520 170 460 170 Z" fill="none" stroke="#FBBF24" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M430 470 L490 470" stroke="#FBBF24" stroke-width="10" stroke-linecap="round" />
-      <path d="M442 500 L478 500" stroke="#FBBF24" stroke-width="10" stroke-linecap="round" />
-      <path d="M430 280 Q460 240 460 340 Q460 240 490 280" fill="none" stroke="#FEF08A" stroke-width="8" stroke-linecap="round" />
-      <line x1="460" y1="120" x2="460" y2="140" stroke="#FBBF24" stroke-width="8" stroke-linecap="round" opacity="0.8" />
-      <line x1="340" y1="170" x2="355" y2="185" stroke="#FBBF24" stroke-width="8" stroke-linecap="round" opacity="0.8" />
-      <line x1="580" y1="170" x2="565" y2="185" stroke="#FBBF24" stroke-width="8" stroke-linecap="round" opacity="0.8" />
+      <!-- 3D Soft Lightbulb (Translucent Glass + Warm Radiant Core) -->
+      <g filter="url(#soft3d-drop-concept)">
+        <!-- Ambient Warm Glow behind Bulb -->
+        <circle cx="500" cy="225" r="75" fill="#FBBF24" opacity="0.22" filter="url(#soft3d-glow-concept)" />
+        
+        <!-- 3D Volumetric Glass Bulb -->
+        <path d="M500 152 C452 152 420 190 420 236 C420 270 440 298 468 316 L468 340 C468 346 473 350 478 350 L522 350 C527 350 532 346 532 340 L532 316 C560 298 580 270 580 236 C580 190 548 152 500 152 Z" 
+              fill="url(#bulb-body-concept)" stroke="#FBBF24" stroke-opacity="0.45" stroke-width="2.5" />
+        
+        <!-- Soft 3D Specular Highlight crescent on glass dome -->
+        <path d="M465 174 C482 164 515 168 535 180 C505 172 475 182 465 198 C462 188 463 180 465 174 Z" 
+              fill="#FFFFFF" opacity="0.75" />
+        
+        <!-- 3D Glowing Filament Loop with soft amber bloom -->
+        <path d="M474 275 Q500 215 500 240 Q500 215 526 275" 
+              fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" filter="url(#soft3d-glow-concept)" />
+        <circle cx="500" cy="235" r="9" fill="#FFFBEB" />
+
+        <!-- 3D Metallic Screw Base (3 soft volumetric rounded metallic rings) -->
+        <rect x="470" y="348" width="60" height="11" rx="5.5" fill="url(#metal-screw-concept)" />
+        <rect x="473" y="362" width="54" height="10" rx="5" fill="url(#metal-screw-concept)" />
+        <rect x="477" y="375" width="46" height="9" rx="4.5" fill="url(#metal-screw-concept)" />
+        
+        <!-- Golden Base Contact Tip -->
+        <path d="M485 386 C485 396 515 396 515 386 Z" fill="#D97706" />
+      </g>
     `,
   },
   // ── Card 2: Real-World Examples ──
@@ -47,15 +65,44 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#A855F7', // Violet
     secondaryColor: '#7C3AED',
     iconSvg: `
-      <!-- Open Book -->
-      <path d="M460 240 C420 210 360 210 320 220 L320 410 C360 400 420 400 460 430 C500 400 560 400 600 410 L600 220 C560 210 500 210 460 240 Z" fill="none" stroke="#A855F7" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
-      <line x1="460" y1="240" x2="460" y2="430" stroke="#E9D5FF" stroke-width="10" stroke-linecap="round" />
-      <line x1="350" y1="270" x2="430" y2="260" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-      <line x1="350" y1="310" x2="430" y2="300" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-      <line x1="350" y1="350" x2="410" y2="340" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-      <line x1="490" y1="260" x2="570" y2="270" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-      <line x1="490" y1="300" x2="570" y2="310" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
-      <line x1="490" y1="340" x2="550" y2="350" stroke="#C084FC" stroke-width="6" stroke-linecap="round" opacity="0.8" />
+      <!-- 3D Soft Open Codex / Book -->
+      <g filter="url(#soft3d-drop-examples)">
+        <!-- Ambient Violet Glow -->
+        <ellipse cx="500" cy="245" rx="85" ry="60" fill="#A855F7" opacity="0.22" filter="url(#soft3d-glow-examples)" />
+
+        <!-- 3D Book Base Spine Platform -->
+        <path d="M415 318 Q500 338 585 318 L585 332 Q500 352 415 332 Z" fill="#4C1D95" />
+
+        <!-- Left Page with 3D Curvature & Gradient -->
+        <path d="M496 200 C450 180 395 188 360 205 L365 315 C400 298 452 292 496 310 Z" 
+              fill="url(#book-left-examples)" stroke="#E9D5FF" stroke-opacity="0.4" stroke-width="2" />
+        
+        <!-- Right Page with 3D Curvature & Gradient -->
+        <path d="M504 200 C550 180 605 188 640 205 L635 315 C600 298 548 292 504 310 Z" 
+              fill="url(#book-right-examples)" stroke="#E9D5FF" stroke-opacity="0.4" stroke-width="2" />
+
+        <!-- Page Thickness Edge Layers underneath -->
+        <path d="M360 205 L365 315 L362 323 L356 213 Z" fill="#581C87" opacity="0.85" />
+        <path d="M640 205 L635 315 L638 323 L644 213 Z" fill="#581C87" opacity="0.85" />
+
+        <!-- Soft Specular Sheen across top page curves -->
+        <path d="M496 202 C455 184 410 190 380 206 C410 194 455 190 496 208 Z" fill="#FFFFFF" opacity="0.5" />
+        <path d="M504 202 C545 184 590 190 620 206 C590 194 545 190 504 208 Z" fill="#FFFFFF" opacity="0.5" />
+
+        <!-- Central 3D Binding Ridge -->
+        <line x1="500" y1="198" x2="500" y2="312" stroke="#2E1065" stroke-width="4" />
+
+        <!-- Draped 3D Silk Bookmark Ribbon -->
+        <path d="M500 196 Q508 250 514 330 L504 344 L494 330 Q500 250 500 196 Z" fill="#F472B6" filter="url(#soft3d-drop-examples)" />
+
+        <!-- Soft Embossed Content Lines -->
+        <line x1="395" y1="230" x2="465" y2="225" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+        <line x1="395" y1="250" x2="470" y2="245" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+        <line x1="395" y1="270" x2="450" y2="265" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+        <line x1="535" y1="225" x2="605" y2="230" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+        <line x1="530" y1="245" x2="605" y2="250" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+        <line x1="550" y1="265" x2="605" y2="270" stroke="#FFFFFF" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round" />
+      </g>
     `,
   },
   // ── Card 3: Step-by-Step Guidance ──
@@ -71,11 +118,35 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#22D3EE', // Cyan
     secondaryColor: '#0891B2',
     iconSvg: `
-      <!-- Graduation Cap -->
-      <polygon points="460,190 610,260 460,330 310,260" fill="none" stroke="#22D3EE" stroke-width="12" stroke-linejoin="round" />
-      <path d="M360 286 L360 370 C360 410 560 410 560 370 L560 286" fill="none" stroke="#22D3EE" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M570 278 L590 350 L580 390 L600 390 L590 350" fill="none" stroke="#A5F3FC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="570" cy="278" r="6" fill="#A5F3FC" />
+      <!-- 3D Soft Graduation Cap & Milestone Platform -->
+      <g filter="url(#soft3d-drop-guidance)">
+        <!-- Ambient Cyan Glow -->
+        <ellipse cx="500" cy="245" rx="85" ry="60" fill="#22D3EE" opacity="0.22" filter="url(#soft3d-glow-guidance)" />
+
+        <!-- 3D Skull Cap Cylinder underneath -->
+        <path d="M435 250 Q500 310 565 250 L565 285 Q500 345 435 285 Z" fill="url(#cap-base-guidance)" />
+
+        <!-- 3D Mortarboard Diamond Top - Volumetric Bevels -->
+        <!-- Left Side Bevel Thickness -->
+        <polygon points="360,215 500,270 500,285 360,230" fill="#0891B2" />
+        <!-- Right Side Bevel Thickness -->
+        <polygon points="640,215 500,270 500,285 640,230" fill="#0E7490" />
+        <!-- Main Isometric Top Diamond Surface -->
+        <polygon points="500,160 640,215 500,270 360,215" fill="url(#mortar-top-guidance)" stroke="#E0F2FE" stroke-opacity="0.35" stroke-width="2" />
+
+        <!-- Soft Specular Light across top corner -->
+        <polygon points="500,162 570,189 500,216 430,189" fill="#FFFFFF" opacity="0.4" />
+
+        <!-- Center Golden/Cyan 3D Button -->
+        <ellipse cx="500" cy="215" rx="10" ry="6" fill="#FBBF24" />
+        <circle cx="498" cy="213" r="3" fill="#FFFFFF" opacity="0.85" />
+
+        <!-- 3D Flowing Silk Tassel hanging over right corner with drop shadow -->
+        <path d="M500 215 Q590 220 622 235 Q632 265 628 320" fill="none" stroke="#FBBF24" stroke-width="5" stroke-linecap="round" />
+        <!-- Tassel Brush Fringe -->
+        <path d="M624 318 L634 322 L630 358 L620 358 Z" fill="#F59E0B" />
+        <circle cx="628" cy="320" r="5" fill="#FBBF24" />
+      </g>
     `,
   },
   // ── Card 4: Problem Solving ──
@@ -91,25 +162,36 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#F43F5E', // Rose/Pink
     secondaryColor: '#E11D48',
     iconSvg: `
-      <!-- Diagnostic Cog / Target -->
-      <circle cx="460" cy="300" r="85" fill="none" stroke="#F43F5E" stroke-width="12" />
-      <circle cx="460" cy="300" r="42" fill="none" stroke="#FECDD3" stroke-width="10" />
-      <circle cx="460" cy="300" r="14" fill="#F43F5E" />
-      <line x1="460" y1="180" x2="460" y2="215" stroke="#F43F5E" stroke-width="12" stroke-linecap="round" />
-      <line x1="460" y1="385" x2="460" y2="420" stroke="#F43F5E" stroke-width="12" stroke-linecap="round" />
-      <line x1="340" y1="300" x2="375" y2="300" stroke="#F43F5E" stroke-width="12" stroke-linecap="round" />
-      <line x1="545" y1="300" x2="580" y2="300" stroke="#F43F5E" stroke-width="12" stroke-linecap="round" />
-      <circle cx="375" cy="215" r="9" fill="#FB7185" />
-      <circle cx="545" cy="215" r="9" fill="#FB7185" />
-      <circle cx="375" cy="385" r="9" fill="#FB7185" />
-      <circle cx="545" cy="385" r="9" fill="#FB7185" />
+      <!-- 3D Soft Diagnostic Radar Prism -->
+      <g filter="url(#soft3d-drop-problem-solving)">
+        <circle cx="500" cy="240" r="85" fill="#F43F5E" opacity="0.20" filter="url(#soft3d-glow-problem-solving)" />
+
+        <!-- Outer 3D Beveled Disc Rim -->
+        <circle cx="500" cy="240" r="82" fill="url(#radar-outer-problem-solving)" stroke="#FECDD3" stroke-opacity="0.35" stroke-width="3" />
+        <circle cx="500" cy="240" r="66" fill="#1C1917" opacity="0.75" />
+
+        <!-- Middle Floating 3D Gyro Ring -->
+        <circle cx="500" cy="240" r="50" fill="none" stroke="url(#radar-mid-problem-solving)" stroke-width="9" />
+        <!-- Ring Specular Highlight -->
+        <path d="M465 205 A 50 50 0 0 1 535 205" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.75" />
+
+        <!-- Central 3D Glowing Core Sphere with Specular Gloss -->
+        <circle cx="500" cy="240" r="24" fill="url(#radar-core-problem-solving)" />
+        <circle cx="493" cy="233" r="6" fill="#FFFFFF" opacity="0.88" />
+
+        <!-- 4 Soft 3D Precision Calipers -->
+        <rect x="495" y="142" width="10" height="24" rx="5" fill="#FDA4AF" />
+        <rect x="495" y="314" width="10" height="24" rx="5" fill="#FDA4AF" />
+        <rect x="402" y="235" width="24" height="10" rx="5" fill="#FDA4AF" />
+        <rect x="574" y="235" width="24" height="10" rx="5" fill="#FDA4AF" />
+      </g>
     `,
   },
   // ── Card 5: Code Help & Refactoring ──
   {
     id: 'code-help',
     tag: '05 • ENGINEERING',
-    title: 'Code Help &amp; Review',
+    title: 'Code Help & Review',
     lines: [
       'Syntax debugging, architectural',
       'review, and instant idiomatic',
@@ -118,10 +200,25 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#38BDF8', // Sky Blue
     secondaryColor: '#0284C7',
     iconSvg: `
-      <!-- Code Brackets -->
-      <polyline points="390,230 310,300 390,370" fill="none" stroke="#38BDF8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-      <polyline points="530,230 610,300 530,370" fill="none" stroke="#38BDF8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-      <line x1="490" y1="210" x2="430" y2="390" stroke="#BAE6FD" stroke-width="12" stroke-linecap="round" />
+      <!-- 3D Soft Code Terminal Brackets -->
+      <g filter="url(#soft3d-drop-code-help)">
+        <ellipse cx="500" cy="240" rx="85" ry="60" fill="#38BDF8" opacity="0.22" filter="url(#soft3d-glow-code-help)" />
+
+        <!-- 3D Backing Glass Terminal Plate -->
+        <rect x="360" y="165" width="280" height="150" rx="28" fill="url(#code-plate-code-help)" stroke="#BAE6FD" stroke-opacity="0.35" stroke-width="2.5" />
+        
+        <!-- Left 3D Rounded Bracket < -->
+        <path d="M435 195 L395 240 L435 285" fill="none" stroke="url(#code-bracket-code-help)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M435 195 L395 240 L435 285" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.75" />
+
+        <!-- Right 3D Rounded Bracket > -->
+        <path d="M565 195 L605 240 L565 285" fill="none" stroke="url(#code-bracket-code-help)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M565 195 L605 240 L565 285" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.75" />
+
+        <!-- Central 3D Glowing Slash / -->
+        <line x1="520" y1="180" x2="480" y2="300" stroke="#E0F2FE" stroke-width="14" stroke-linecap="round" />
+        <line x1="520" y1="180" x2="480" y2="300" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.88" />
+      </g>
     `,
   },
   // ── Card 6: Build Understanding ──
@@ -137,13 +234,31 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#C084FC', // Soft Lavender
     secondaryColor: '#9333EA',
     iconSvg: `
-      <!-- Bar Chart with Growth Curve -->
-      <rect x="330" y="340" width="45" height="90" rx="8" fill="none" stroke="#C084FC" stroke-width="10" />
-      <rect x="405" y="280" width="45" height="150" rx="8" fill="none" stroke="#C084FC" stroke-width="10" />
-      <rect x="480" y="220" width="45" height="210" rx="8" fill="none" stroke="#C084FC" stroke-width="10" />
-      <rect x="555" y="160" width="45" height="270" rx="8" fill="none" stroke="#C084FC" stroke-width="10" />
-      <path d="M320 330 Q430 260 585 140" fill="none" stroke="#F3E8FF" stroke-width="10" stroke-linecap="round" />
-      <circle cx="585" cy="140" r="10" fill="#F3E8FF" />
+      <!-- 3D Soft Ascending Growth Pillars -->
+      <g filter="url(#soft3d-drop-build-understanding)">
+        <ellipse cx="500" cy="240" rx="85" ry="60" fill="#C084FC" opacity="0.22" filter="url(#soft3d-glow-build-understanding)" />
+
+        <!-- Pillar 1 (Left - lowest) -->
+        <path d="M375 260 L425 260 L425 330 L375 330 Z" fill="url(#pillar-body-1-build-understanding)" />
+        <ellipse cx="400" cy="260" rx="25" ry="11" fill="url(#pillar-cap-1-build-understanding)" />
+        <ellipse cx="400" cy="260" rx="16" ry="6" fill="#FFFFFF" opacity="0.55" />
+
+        <!-- Pillar 2 (Mid - medium) -->
+        <path d="M440 215 L490 215 L490 330 L440 330 Z" fill="url(#pillar-body-2-build-understanding)" />
+        <ellipse cx="465" cy="215" rx="25" ry="11" fill="url(#pillar-cap-2-build-understanding)" />
+        <ellipse cx="465" cy="215" rx="16" ry="6" fill="#FFFFFF" opacity="0.55" />
+
+        <!-- Pillar 3 (Right - highest) -->
+        <path d="M505 165 L555 165 L555 330 L505 330 Z" fill="url(#pillar-body-3-build-understanding)" />
+        <ellipse cx="530" cy="165" rx="25" ry="11" fill="url(#pillar-cap-3-build-understanding)" />
+        <ellipse cx="530" cy="165" rx="16" ry="6" fill="#FFFFFF" opacity="0.65" />
+
+        <!-- 3D Ascending Trajectory Ribbon -->
+        <path d="M380 250 Q460 210 575 145" fill="none" stroke="#F3E8FF" stroke-width="10" stroke-linecap="round" filter="url(#soft3d-glow-build-understanding)" />
+        <!-- Leading Star Crest -->
+        <circle cx="575" cy="145" r="14" fill="#FFFFFF" />
+        <circle cx="575" cy="145" r="7" fill="#C084FC" />
+      </g>
     `,
   },
   // ── Card 7: Interactive Practice ──
@@ -159,10 +274,28 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#34D399', // Mint Emerald
     secondaryColor: '#059669',
     iconSvg: `
-      <!-- Spark / Diamond Compass -->
-      <polygon points="460,180 495,265 580,300 495,335 460,420 425,335 340,300 425,265" fill="none" stroke="#34D399" stroke-width="12" stroke-linejoin="round" />
-      <circle cx="460" cy="300" r="28" fill="none" stroke="#A7F3D0" stroke-width="8" />
-      <circle cx="460" cy="300" r="10" fill="#34D399" />
+      <!-- 3D Soft Faceted Crystal Star -->
+      <g filter="url(#soft3d-drop-practice)">
+        <circle cx="500" cy="240" r="85" fill="#34D399" opacity="0.22" filter="url(#soft3d-glow-practice)" />
+
+        <!-- 3D Faceted Star Body -->
+        <!-- North Facets -->
+        <polygon points="500,140 500,240 450,210" fill="#A7F3D0" />
+        <polygon points="500,140 500,240 550,210" fill="#6EE7B7" />
+        <!-- East Facets -->
+        <polygon points="600,240 500,240 550,210" fill="#34D399" />
+        <polygon points="600,240 500,240 550,270" fill="#10B981" />
+        <!-- South Facets -->
+        <polygon points="500,340 500,240 550,270" fill="#059669" />
+        <polygon points="500,340 500,240 450,270" fill="#047857" />
+        <!-- West Facets -->
+        <polygon points="400,240 500,240 450,270" fill="#065F46" />
+        <polygon points="400,240 500,240 450,210" fill="#34D399" />
+
+        <!-- Soft 3D Inner Specular Gem -->
+        <circle cx="500" cy="240" r="28" fill="url(#gem-core-practice)" stroke="#ECFDF5" stroke-opacity="0.65" stroke-width="2.5" />
+        <circle cx="492" cy="232" r="7" fill="#FFFFFF" opacity="0.88" />
+      </g>
     `,
   },
   // ── Card 8: Adaptive Memory & Review ──
@@ -178,10 +311,25 @@ export const CAROUSEL_CARDS: CarouselCardData[] = [
     accentColor: '#FB7185', // Coral Pink
     secondaryColor: '#E11D48',
     iconSvg: `
-      <!-- Neural Loop / Infinity -->
-      <path d="M390 300 C330 240 300 360 390 360 C440 360 480 240 530 240 C620 240 590 360 530 300 C480 240 440 360 390 300 Z" fill="none" stroke="#FB7185" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="370" cy="300" r="10" fill="#FECDD3" />
-      <circle cx="550" cy="300" r="10" fill="#FECDD3" />
+      <!-- 3D Soft Infinity Synapse Ribbon -->
+      <g filter="url(#soft3d-drop-revision)">
+        <ellipse cx="500" cy="240" rx="95" ry="60" fill="#FB7185" opacity="0.22" filter="url(#soft3d-glow-revision)" />
+
+        <!-- Continuous 3D Volumetric Torus Loop -->
+        <path d="M430 240 C360 170 330 310 430 310 C480 310 520 170 570 170 C670 170 640 310 570 240 C520 170 480 310 430 240 Z" 
+              fill="none" stroke="url(#infinity-tube-revision)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+        <!-- Specular Ridge Line along spine of the 3D tube -->
+        <path d="M430 240 C360 170 330 310 430 310 C480 310 520 170 570 170 C670 170 640 310 570 240 C520 170 480 310 430 240 Z" 
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
+
+        <!-- Left Glowing Memory Node Sphere with Specular Highlight -->
+        <circle cx="410" cy="240" r="18" fill="url(#node-sphere-revision)" />
+        <circle cx="405" cy="235" r="5" fill="#FFFFFF" opacity="0.88" />
+
+        <!-- Right Glowing Memory Node Sphere with Specular Highlight -->
+        <circle cx="590" cy="240" r="18" fill="url(#node-sphere-revision)" />
+        <circle cx="585" cy="235" r="5" fill="#FFFFFF" opacity="0.88" />
+      </g>
     `,
   },
 ];
@@ -228,6 +376,130 @@ export function generateCardSvg(data: CarouselCardData): string {
       <feGaussianBlur stdDeviation="16" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
+
+    <!-- Soft 3D Drop Shadow Filter for tactile icon depth -->
+    <filter id="soft3d-drop-${data.id}" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+
+    <!-- Soft 3D Glow Filter -->
+    <filter id="soft3d-glow-${data.id}" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="14" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Soft 3D Icon Specific Gradients -->
+    <!-- Card 1: Lightbulb -->
+    <radialGradient id="bulb-body-${data.id}" cx="42%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="45%" stop-color="#FBBF24" />
+      <stop offset="85%" stop-color="#D97706" />
+      <stop offset="100%" stop-color="#92400E" />
+    </radialGradient>
+    <linearGradient id="metal-screw-${data.id}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78716C" />
+      <stop offset="35%" stop-color="#E7E5E4" />
+      <stop offset="70%" stop-color="#A8A29E" />
+      <stop offset="100%" stop-color="#57534E" />
+    </linearGradient>
+
+    <!-- Card 2: Open Book -->
+    <linearGradient id="book-left-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DDD6FE" />
+      <stop offset="40%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#6D28D9" />
+    </linearGradient>
+    <linearGradient id="book-right-${data.id}" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E9D5FF" />
+      <stop offset="40%" stop-color="#9333EA" />
+      <stop offset="100%" stop-color="#581C87" />
+    </linearGradient>
+
+    <!-- Card 3: Graduation Cap -->
+    <linearGradient id="mortar-top-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A5F3FC" />
+      <stop offset="35%" stop-color="#22D3EE" />
+      <stop offset="85%" stop-color="#0891B2" />
+      <stop offset="100%" stop-color="#0E7490" />
+    </linearGradient>
+    <linearGradient id="cap-base-${data.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0E7490" />
+      <stop offset="100%" stop-color="#164E63" />
+    </linearGradient>
+
+    <!-- Card 4: Radar -->
+    <radialGradient id="radar-outer-${data.id}" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FDA4AF" />
+      <stop offset="60%" stop-color="#F43F5E" />
+      <stop offset="100%" stop-color="#9F1239" />
+    </radialGradient>
+    <linearGradient id="radar-mid-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FECDD3" />
+      <stop offset="50%" stop-color="#FB7185" />
+      <stop offset="100%" stop-color="#BE123C" />
+    </linearGradient>
+    <radialGradient id="radar-core-${data.id}" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="40%" stop-color="#FB7185" />
+      <stop offset="100%" stop-color="#E11D48" />
+    </radialGradient>
+
+    <!-- Card 5: Code Terminal -->
+    <linearGradient id="code-plate-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(30, 41, 59, 0.9)" />
+      <stop offset="100%" stop-color="rgba(15, 23, 42, 0.95)" />
+    </linearGradient>
+    <linearGradient id="code-bracket-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7DD3FC" />
+      <stop offset="50%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Card 6: Growth Pillars -->
+    <linearGradient id="pillar-cap-1-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E9D5FF" />
+      <stop offset="100%" stop-color="#C084FC" />
+    </linearGradient>
+    <linearGradient id="pillar-body-1-${data.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#581C87" />
+    </linearGradient>
+    <linearGradient id="pillar-cap-2-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E8FF" />
+      <stop offset="100%" stop-color="#D8B4FE" />
+    </linearGradient>
+    <linearGradient id="pillar-body-2-${data.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9333EA" />
+      <stop offset="100%" stop-color="#4C1D95" />
+    </linearGradient>
+    <linearGradient id="pillar-cap-3-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF5FF" />
+      <stop offset="100%" stop-color="#E9D5FF" />
+    </linearGradient>
+    <linearGradient id="pillar-body-3-${data.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7E22CE" />
+      <stop offset="100%" stop-color="#3B0764" />
+    </linearGradient>
+
+    <!-- Card 7: Gem -->
+    <radialGradient id="gem-core-${data.id}" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#ECFDF5" />
+      <stop offset="45%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </radialGradient>
+
+    <!-- Card 8: Infinity -->
+    <linearGradient id="infinity-tube-${data.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDA4AF" />
+      <stop offset="35%" stop-color="#FB7185" />
+      <stop offset="70%" stop-color="#E11D48" />
+      <stop offset="100%" stop-color="#9F1239" />
+    </linearGradient>
+    <radialGradient id="node-sphere-${data.id}" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="45%" stop-color="#FDA4AF" />
+      <stop offset="100%" stop-color="#E11D48" />
+    </radialGradient>
   </defs>
 
   <!-- Card Background -->
@@ -239,37 +511,38 @@ export function generateCardSvg(data: CarouselCardData): string {
   <!-- Outer Glassmorphic Border -->
   <rect x="12" y="12" width="976" height="876" rx="48" fill="none" stroke="url(#border-grad-${data.id})" stroke-width="4.5" />
   <!-- Inner Subtle Specular Border -->
-  <rect x="16" y="16" width="968" height="868" rx="44" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.5" />
+  <rect x="16" y="16" width="968" height="868" rx="44" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1.5" />
 
-  <!-- TOP PILL BADGE -->
-  <g transform="translate(500, 72)">
-    <rect x="-125" y="-18" width="250" height="36" rx="18" fill="#1E293B" fill-opacity="0.85" stroke="${accentColor}" stroke-opacity="0.45" stroke-width="1.5" />
-    <circle cx="-100" cy="0" r="4.5" fill="${accentColor}" filter="url(#shadow-${data.id})" />
-    <text x="-80" y="5" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="${accentColor}">
+  <!-- TOP PILL BADGE (Big, bold, high contrast, 100% visible) -->
+  <g transform="translate(500, 78)">
+    <rect x="-165" y="-24" width="330" height="48" rx="24" fill="#0B132B" fill-opacity="0.92" stroke="${accentColor}" stroke-opacity="0.85" stroke-width="2.5" />
+    <circle cx="-130" cy="0" r="7" fill="${accentColor}" filter="url(#shadow-${data.id})" />
+    <text x="-110" y="7" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="800" letter-spacing="3" fill="#FFFFFF">
       ${tag}
     </text>
   </g>
 
-  <!-- HERO ICON AREA (Centered at x=500, y=250) -->
-  <circle cx="500" cy="250" r="150" fill="url(#icon-glow-${data.id})" />
-  <circle cx="500" cy="250" r="125" fill="none" stroke="${accentColor}" stroke-opacity="0.20" stroke-width="2" stroke-dasharray="8 8" />
-  <circle cx="500" cy="250" r="92" fill="#0B132B" fill-opacity="0.5" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="2" />
+  <!-- HERO ICON PEDESTAL AREA (Centered at x=500, y=240) -->
+  <circle cx="500" cy="240" r="145" fill="url(#icon-glow-${data.id})" />
+  <circle cx="500" cy="240" r="120" fill="none" stroke="${accentColor}" stroke-opacity="0.24" stroke-width="2" stroke-dasharray="8 8" />
+  <circle cx="500" cy="240" r="88" fill="#090E1A" fill-opacity="0.75" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2" />
 
-  <g id="icon-group-${data.id}" transform="translate(40, -50)">
+  <!-- 3D SOFT ICON -->
+  <g id="icon-group-${data.id}">
     ${iconSvg}
   </g>
 
-  <!-- DIVIDER / ACCENT LINE -->
-  <line x1="360" y1="450" x2="640" y2="450" stroke="${accentColor}" stroke-opacity="0.65" stroke-width="2.5" stroke-linecap="round" />
-  <circle cx="500" cy="450" r="4.5" fill="${accentColor}" />
+  <!-- ACCENT DIVIDER -->
+  <line x1="360" y1="445" x2="640" y2="445" stroke="${accentColor}" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="500" cy="445" r="4.5" fill="${accentColor}" />
 
-  <!-- TITLE (Big, bold, high contrast) -->
-  <text x="500" y="525" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="800" letter-spacing="-0.5" fill="#FFFFFF">
+  <!-- TITLE (Hero headline - 52px bold, glowing crisp white) -->
+  <text x="500" y="520" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="800" letter-spacing="-0.5" fill="#FFFFFF">
     ${title}
   </text>
 
-  <!-- SUBTITLE / DESCRIPTION (Large 33px font, high-contrast white-slate, crystal clear to naked eye) -->
-  <text x="500" y="598" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="33" font-weight="600" fill="#F8FAFC" letter-spacing="0.3">
+  <!-- SUBTITLE / DESCRIPTION (31px font, rich slate-white, clear and legible) -->
+  <text x="500" y="595" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif" font-size="31" font-weight="500" fill="#E2E8F0" letter-spacing="0.2">
     <tspan x="500" dy="0">${lines[0]}</tspan>
     <tspan x="500" dy="44">${lines[1]}</tspan>
     <tspan x="500" dy="44">${lines[2]}</tspan>
