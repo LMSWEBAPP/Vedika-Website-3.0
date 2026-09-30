@@ -5,14 +5,13 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
 // ============================================================================
-// 1. MATH LAB 3D: ICONIC 3D PI (π) IN RADIANT HIGH-CONTRAST ROYAL COBALT &
-// ELECTRIC CYAN WITH 3D INFINITY (∞) LEMNISCATE & ASTROLABE GIMBAL RINGS
-// High-contrast complementary color scheme designed to stand out against
-// the amber-gold satellite particle cage:
-// - Deep Royal Cobalt & Sapphire 3D Pi (π) with radiant Electric Cyan serifs
-// - Glowing Electric Cyan & Aquamarine 3D Infinity (∞) Bernoulli Lemniscate
-// - Obsidian & Neon Cyan Astrolabe Rings with 12 degree graduation ticks
-// - Orbiting high-contrast mathematical satellites: Sigma (∑) & Delta (Δ)
+// 1. MATH LAB 3D: PROMINENT, BOLD 3D PI (π) IN HIGH-CONTRAST ROYAL COBALT &
+// ELECTRIC CYAN WITH THICK 3D INFINITY (∞) LEMNISCATE & ASTROLABE GIMBAL RINGS
+// Redesigned with commanding scale, chunky solid geometry, and maximum contrast:
+// - Bold architectural 3D Pi (π) with prominent serif crown & sculpted J-hook
+// - Thick luminous Electric Cyan & Aquamarine 3D Infinity (∞) ribbon foundation
+// - Heavy-gauge Astrolabe Armillary Gimbal Rings with glowing graduation ticks
+// - Prominent orbiting mathematical satellites: Bold Sigma (∑) & Delta (Δ)
 // - Base-free, cleanly floating and levitating within the spherical particle cage!
 // ============================================================================
 
@@ -20,7 +19,7 @@ class LemniscateCurve extends THREE.Curve<THREE.Vector3> {
   scale: number;
   yOffset: number;
 
-  constructor(scale = 0.076, yOffset = -0.044) {
+  constructor(scale = 0.105, yOffset = -0.052) {
     super();
     this.scale = scale;
     this.yOffset = yOffset;
@@ -33,7 +32,7 @@ class LemniscateCurve extends THREE.Curve<THREE.Vector3> {
     const denom = 1 + sinT * sinT;
     const x = (this.scale * cosT) / denom;
     const z = (this.scale * sinT * cosT * 1.35) / denom;
-    const y = this.yOffset + Math.sin(theta * 2) * 0.008;
+    const y = this.yOffset + Math.sin(theta * 2) * 0.010;
     return optionalTarget.set(x, y, z);
   }
 }
@@ -41,16 +40,17 @@ class LemniscateCurve extends THREE.Curve<THREE.Vector3> {
 export function MathLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
   const piRef = useRef<THREE.Group | null>(null);
+  const coreRef = useRef<THREE.Mesh | null>(null);
   const infinityRef = useRef<THREE.Mesh | null>(null);
   const ring1Ref = useRef<THREE.Group | null>(null);
   const ring2Ref = useRef<THREE.Group | null>(null);
   const sigmaRef = useRef<THREE.Group | null>(null);
   const deltaRef = useRef<THREE.Group | null>(null);
 
-  // Smooth 3D Bernoulli Lemniscate Tube Geometry for the Infinity (∞) symbol
+  // Thick, prominent 3D Bernoulli Lemniscate Tube Geometry for Infinity (∞)
   const infinityGeometry = useMemo(() => {
-    const curve = new LemniscateCurve(0.076, -0.044);
-    return new THREE.TubeGeometry(curve, 64, 0.0035, 12, true);
+    const curve = new LemniscateCurve(0.105, -0.052);
+    return new THREE.TubeGeometry(curve, 64, 0.0075, 14, true);
   }, []);
 
   // 12 Degree Graduation Tick angles on the Astrolabe Ring
@@ -72,10 +72,18 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
       piRef.current.rotation.x = Math.sin(t * 1.1) * 0.08 + 0.05;
     }
 
+    // Counter-rotating inner singularity jewel
+    if (coreRef.current) {
+      coreRef.current.rotation.y -= delta * speed * 1.4;
+      coreRef.current.rotation.z += delta * speed * 0.9;
+      const pulse = 1.0 + Math.sin(t * 2.8) * 0.10;
+      coreRef.current.scale.set(pulse, pulse, pulse);
+    }
+
     // Counter-rotating 3D Infinity (∞) loop
     if (infinityRef.current) {
       infinityRef.current.rotation.y -= delta * speed * 0.45;
-      const pulse = 1.0 + Math.sin(t * 2.5) * 0.06;
+      const pulse = 1.0 + Math.sin(t * 2.5) * 0.05;
       infinityRef.current.scale.set(pulse, pulse, pulse);
     }
 
@@ -91,175 +99,177 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
     const orbitSpeed = speed * 0.85;
     if (sigmaRef.current) {
       const angle = t * orbitSpeed;
-      sigmaRef.current.position.x = Math.cos(angle) * 0.108;
-      sigmaRef.current.position.z = Math.sin(angle) * 0.108;
-      sigmaRef.current.position.y = 0.020 + Math.sin(t * 2.2) * 0.012;
+      sigmaRef.current.position.x = Math.cos(angle) * 0.138;
+      sigmaRef.current.position.z = Math.sin(angle) * 0.138;
+      sigmaRef.current.position.y = 0.022 + Math.sin(t * 2.2) * 0.014;
       sigmaRef.current.rotation.y = -angle + Math.PI / 2;
     }
     if (deltaRef.current) {
       const angle = t * orbitSpeed + Math.PI;
-      deltaRef.current.position.x = Math.cos(angle) * 0.108;
-      deltaRef.current.position.z = Math.sin(angle) * 0.108;
-      deltaRef.current.position.y = 0.020 + Math.cos(t * 2.2) * 0.012;
+      deltaRef.current.position.x = Math.cos(angle) * 0.138;
+      deltaRef.current.position.z = Math.sin(angle) * 0.138;
+      deltaRef.current.position.y = 0.022 + Math.cos(t * 2.2) * 0.014;
       deltaRef.current.rotation.y = -angle + Math.PI / 2;
     }
   });
 
   return (
-    <group ref={groupRef} scale={hovered ? 1.15 : 1.05}>
+    <group ref={groupRef} scale={hovered ? 1.25 : 1.15}>
       {/* ======================================================== */}
-      {/* 1. SCULPTED 3D PI (π) SYMBOL (Royal Cobalt & Cyan)       */}
-      {/* High-contrast complementary colors against amber cage    */}
+      {/* 1. SCULPTED 3D PI (π) SYMBOL (Bold, Thick, Prominent)    */}
+      {/* High-contrast Royal Cobalt & Cyan with robust volume     */}
       {/* ======================================================== */}
-      <group ref={piRef} position={[0, 0.008, 0]}>
-        {/* Horizontal Roof Crossbar (Deep Royal Cobalt Blue) */}
-        <mesh position={[0, 0.038, 0]}>
-          <boxGeometry args={[0.076, 0.011, 0.014]} />
+      <group ref={piRef} position={[0, 0.010, 0]}>
+        {/* Horizontal Roof Crossbar (Thick Architectural Beam) */}
+        <mesh position={[0, 0.046, 0]}>
+          <boxGeometry args={[0.114, 0.018, 0.020]} />
           <meshStandardMaterial
             color="#1E40AF"
             emissive="#2563EB"
-            emissiveIntensity={2.6}
+            emissiveIntensity={2.8}
             metalness={0.9}
             roughness={0.12}
           />
         </mesh>
-        {/* Left Serif Flourish (Electric Cyan Tip) */}
-        <mesh position={[-0.038, 0.034, 0]}>
-          <boxGeometry args={[0.008, 0.016, 0.014]} />
+        {/* Left Serif Crown Block (Vivid Electric Cyan) */}
+        <mesh position={[-0.057, 0.040, 0]}>
+          <boxGeometry args={[0.014, 0.024, 0.020]} />
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.2}
+            emissiveIntensity={3.4}
             metalness={0.85}
             roughness={0.12}
           />
         </mesh>
-        {/* Right Serif Flourish (Electric Cyan Tip) */}
-        <mesh position={[0.038, 0.039, 0]}>
-          <boxGeometry args={[0.008, 0.013, 0.014]} />
+        {/* Right Serif Crown Block (Vivid Electric Cyan) */}
+        <mesh position={[0.057, 0.047, 0]}>
+          <boxGeometry args={[0.014, 0.020, 0.020]} />
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.2}
+            emissiveIntensity={3.4}
             metalness={0.85}
             roughness={0.12}
           />
         </mesh>
 
-        {/* Left Straight Pillar Leg with Grounded Base Foot */}
-        <mesh position={[-0.018, 0.002, 0]}>
-          <boxGeometry args={[0.011, 0.062, 0.012]} />
+        {/* Left Straight Pillar Leg (Thick Solid Pillar) */}
+        <mesh position={[-0.027, 0.002, 0]}>
+          <boxGeometry args={[0.018, 0.076, 0.018]} />
           <meshStandardMaterial
             color="#1E40AF"
             emissive="#2563EB"
-            emissiveIntensity={2.6}
+            emissiveIntensity={2.8}
             metalness={0.9}
             roughness={0.12}
           />
         </mesh>
-        <mesh position={[-0.018, -0.030, 0]}>
-          <boxGeometry args={[0.016, 0.006, 0.014]} />
+        {/* Left Grounded Foot Cap (Electric Cyan) */}
+        <mesh position={[-0.027, -0.038, 0]}>
+          <boxGeometry args={[0.026, 0.010, 0.022]} />
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.2}
+            emissiveIntensity={3.4}
             metalness={0.85}
             roughness={0.12}
           />
         </mesh>
 
-        {/* Right Pillar Leg with Signature J-Curve Hook */}
-        <mesh position={[0.018, 0.010, 0]}>
-          <boxGeometry args={[0.011, 0.046, 0.012]} />
+        {/* Right Pillar Leg with Signature J-Curve Hook (Solid & Chunky) */}
+        <mesh position={[0.027, 0.012, 0]}>
+          <boxGeometry args={[0.018, 0.056, 0.018]} />
           <meshStandardMaterial
             color="#1E40AF"
             emissive="#2563EB"
-            emissiveIntensity={2.6}
+            emissiveIntensity={2.8}
             metalness={0.9}
             roughness={0.12}
           />
         </mesh>
-        <mesh position={[0.022, -0.018, 0]} rotation={[0, 0, -0.45]}>
-          <boxGeometry args={[0.011, 0.020, 0.012]} />
+        <mesh position={[0.034, -0.022, 0]} rotation={[0, 0, -0.45]}>
+          <boxGeometry args={[0.018, 0.026, 0.018]} />
           <meshStandardMaterial
             color="#1E40AF"
             emissive="#2563EB"
-            emissiveIntensity={2.6}
+            emissiveIntensity={2.8}
             metalness={0.9}
             roughness={0.12}
           />
         </mesh>
-        <mesh position={[0.031, -0.025, 0]} rotation={[0, 0, -1.1]}>
-          <boxGeometry args={[0.010, 0.018, 0.012]} />
+        <mesh position={[0.046, -0.030, 0]} rotation={[0, 0, -1.1]}>
+          <boxGeometry args={[0.016, 0.024, 0.018]} />
           <meshStandardMaterial
             color="#00F5D4"
             emissive="#0284C7"
-            emissiveIntensity={3.2}
+            emissiveIntensity={3.4}
             metalness={0.85}
             roughness={0.12}
           />
         </mesh>
-        <mesh position={[0.038, -0.021, 0]}>
-          <sphereGeometry args={[0.006, 12, 12]} />
+        <mesh position={[0.056, -0.024, 0]}>
+          <sphereGeometry args={[0.009, 16, 16]} />
           <meshStandardMaterial
             color="#FFFFFF"
             emissive="#00F5D4"
-            emissiveIntensity={4.0}
+            emissiveIntensity={4.2}
           />
         </mesh>
 
         {/* Central Luminous Singularity Jewel in the Arch of π (Radiant Magenta) */}
-        <mesh position={[0, 0.004, 0]}>
-          <octahedronGeometry args={[0.014, 0]} />
+        <mesh ref={coreRef} position={[0, 0.005, 0]}>
+          <octahedronGeometry args={[0.022, 0]} />
           <meshStandardMaterial
             color="#D946EF"
             emissive="#C026D3"
-            emissiveIntensity={3.6}
+            emissiveIntensity={3.8}
           />
         </mesh>
       </group>
 
       {/* ======================================================== */}
-      {/* 2. 3D INFINITY (∞) MÖBIUS LEMNISCATE RIBBON             */}
-      {/* Luminous Electric Cyan & Aquamarine (High-Contrast Glow) */}
+      {/* 2. THICK 3D INFINITY (∞) MÖBIUS LEMNISCATE RIBBON        */}
+      {/* Heavy-gauge glowing Electric Cyan & Aquamarine ribbon    */}
       {/* ======================================================== */}
       <mesh ref={infinityRef} geometry={infinityGeometry}>
         <meshStandardMaterial
           color="#00F5D4"
           emissive="#0284C7"
-          emissiveIntensity={3.4}
+          emissiveIntensity={3.5}
           metalness={0.85}
-          roughness={0.12}
+          roughness={0.10}
         />
       </mesh>
 
       {/* ======================================================== */}
       {/* 3. COORDINATE ASTROLABE ARMILLARY GIMBAL RINGS           */}
+      {/* Heavy-gauge defining circles with prominent tick markers */}
       {/* ======================================================== */}
       {/* Ring 1 (Midnight Navy with 12 Electric Cyan Degree Ticks) */}
       <group ref={ring1Ref} rotation={[0.65, 0.35, 0]}>
         <mesh>
-          <torusGeometry args={[0.092, 0.0028, 16, 64]} />
+          <torusGeometry args={[0.118, 0.0055, 16, 64]} />
           <meshStandardMaterial
             color="#0F172A"
             emissive="#1E3A8A"
-            emissiveIntensity={1.6}
+            emissiveIntensity={1.8}
             metalness={0.95}
             roughness={0.12}
           />
         </mesh>
-        {/* 12 Degree Graduation Ticks in Glowing Cyan */}
+        {/* 12 Prominent Degree Graduation Ticks in Glowing Cyan */}
         {tickAngles.map((ang, idx) => (
           <mesh
             key={`tick-${idx}`}
-            position={[Math.cos(ang) * 0.092, Math.sin(ang) * 0.092, 0]}
+            position={[Math.cos(ang) * 0.118, Math.sin(ang) * 0.118, 0]}
             rotation={[0, 0, ang]}
           >
-            <boxGeometry args={[0.007, 0.0022, 0.004]} />
+            <boxGeometry args={[0.011, 0.0035, 0.006]} />
             <meshStandardMaterial
               color="#00F5D4"
               emissive="#0284C7"
-              emissiveIntensity={3.2}
+              emissiveIntensity={3.4}
             />
           </mesh>
         ))}
@@ -268,11 +278,11 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
       {/* Ring 2 (Radiant Royal Violet / Magenta Meridian Ring) */}
       <group ref={ring2Ref} rotation={[-0.55, 0.65, 0.2]}>
         <mesh>
-          <torusGeometry args={[0.086, 0.0024, 16, 64]} />
+          <torusGeometry args={[0.108, 0.0048, 16, 64]} />
           <meshStandardMaterial
             color="#7C3AED"
             emissive="#A855F7"
-            emissiveIntensity={2.8}
+            emissiveIntensity={3.0}
             metalness={0.85}
             roughness={0.18}
           />
@@ -280,59 +290,59 @@ export function MathLab3D({ hovered }: { hovered: boolean }) {
       </group>
 
       {/* ======================================================== */}
-      {/* 4. ORBITING MATHEMATICAL SATELLITE GLYPHS                */}
+      {/* 4. ORBITING MATHEMATICAL SATELLITE GLYPHS (Bold Scale)   */}
       {/* ======================================================== */}
       {/* Floating 3D Sigma (∑ Summation) Symbol in Radiant Emerald/Mint */}
-      <group ref={sigmaRef} position={[0.108, 0.020, 0]}>
+      <group ref={sigmaRef} position={[0.138, 0.022, 0]}>
         {/* Top Horizontal Bar */}
-        <mesh position={[0, 0.016, 0]}>
-          <boxGeometry args={[0.024, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
+        <mesh position={[0, 0.022, 0]}>
+          <boxGeometry args={[0.032, 0.0065, 0.008]} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.6} />
         </mesh>
         {/* Upper Diagonal */}
-        <mesh position={[-0.005, 0.008, 0]} rotation={[0, 0, Math.PI / 4]}>
-          <boxGeometry args={[0.018, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
+        <mesh position={[-0.007, 0.011, 0]} rotation={[0, 0, Math.PI / 4]}>
+          <boxGeometry args={[0.024, 0.0065, 0.008]} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.6} />
         </mesh>
         {/* Lower Diagonal */}
-        <mesh position={[-0.005, -0.008, 0]} rotation={[0, 0, -Math.PI / 4]}>
-          <boxGeometry args={[0.018, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
+        <mesh position={[-0.007, -0.011, 0]} rotation={[0, 0, -Math.PI / 4]}>
+          <boxGeometry args={[0.024, 0.0065, 0.008]} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.6} />
         </mesh>
         {/* Bottom Horizontal Bar */}
-        <mesh position={[0, -0.016, 0]}>
-          <boxGeometry args={[0.024, 0.0045, 0.006]} />
-          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.4} />
+        <mesh position={[0, -0.022, 0]}>
+          <boxGeometry args={[0.032, 0.0065, 0.008]} />
+          <meshStandardMaterial color="#10B981" emissive="#00F5D4" emissiveIntensity={3.6} />
         </mesh>
       </group>
 
       {/* Floating 3D Delta (Δ Triangle) Symbol in Radiant Crimson / Rose */}
-      <group ref={deltaRef} position={[-0.108, 0.020, 0]}>
+      <group ref={deltaRef} position={[-0.138, 0.022, 0]}>
         {/* Left Strut */}
-        <mesh position={[-0.007, 0, 0]} rotation={[0, 0, Math.PI / 6]}>
-          <cylinderGeometry args={[0.0024, 0.0024, 0.028, 8]} />
-          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
+        <mesh position={[-0.009, 0, 0]} rotation={[0, 0, Math.PI / 6]}>
+          <cylinderGeometry args={[0.0035, 0.0035, 0.038, 8]} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.6} />
         </mesh>
         {/* Right Strut */}
-        <mesh position={[0.007, 0, 0]} rotation={[0, 0, -Math.PI / 6]}>
-          <cylinderGeometry args={[0.0024, 0.0024, 0.028, 8]} />
-          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
+        <mesh position={[0.009, 0, 0]} rotation={[0, 0, -Math.PI / 6]}>
+          <cylinderGeometry args={[0.0035, 0.0035, 0.038, 8]} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.6} />
         </mesh>
         {/* Base Strut */}
-        <mesh position={[0, -0.012, 0]} rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.0024, 0.0024, 0.026, 8]} />
-          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.4} />
+        <mesh position={[0, -0.016, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.0035, 0.0035, 0.036, 8]} />
+          <meshStandardMaterial color="#E11D48" emissive="#F43F5E" emissiveIntensity={3.6} />
         </mesh>
         {/* Apex Jewel Node */}
-        <mesh position={[0, 0.014, 0]}>
-          <sphereGeometry args={[0.0045, 12, 12]} />
-          <meshStandardMaterial color="#FFFFFF" emissive="#F43F5E" emissiveIntensity={4.0} />
+        <mesh position={[0, 0.019, 0]}>
+          <sphereGeometry args={[0.0065, 14, 14]} />
+          <meshStandardMaterial color="#FFFFFF" emissive="#F43F5E" emissiveIntensity={4.2} />
         </mesh>
       </group>
 
       {/* High-Contrast Electric Cyan Primary Glow & Royal Blue Accent Light */}
-      <pointLight color="#00F5D4" intensity={hovered ? 4.2 : 3.2} distance={0.75} />
-      <pointLight position={[0, -0.05, 0]} color="#2563EB" intensity={hovered ? 3.0 : 2.0} distance={0.6} />
+      <pointLight color="#00F5D4" intensity={hovered ? 4.5 : 3.5} distance={0.80} />
+      <pointLight position={[0, -0.05, 0]} color="#2563EB" intensity={hovered ? 3.2 : 2.2} distance={0.65} />
     </group>
   );
 }
