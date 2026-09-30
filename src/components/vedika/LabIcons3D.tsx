@@ -455,7 +455,7 @@ export function PhysicsLab3D({ hovered }: { hovered: boolean }) {
 export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
   const groupRef = useRef<THREE.Group | null>(null);
 
-  // 8 active micro-bubbles rising inside the beaker liquid
+  // 8 delicate micro-bubbles rising inside the beaker liquid
   const b1 = useRef<THREE.Mesh | null>(null);
   const b2 = useRef<THREE.Mesh | null>(null);
   const b3 = useRef<THREE.Mesh | null>(null);
@@ -465,8 +465,12 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
   const b7 = useRef<THREE.Mesh | null>(null);
   const b8 = useRef<THREE.Mesh | null>(null);
 
-  // 10 vibrant colored evaporation vapor puffs ascending into the air
-  const vaporPuffs = useRef<(THREE.Mesh | null)[]>([]);
+  // Expanding steam rings venting from the mouth of the beaker
+  const steamRing1 = useRef<THREE.Mesh | null>(null);
+  const steamRing2 = useRef<THREE.Mesh | null>(null);
+
+  // 16 billowing steam cloud puffs ascending and curling into the air
+  const steamPuffs = useRef<(THREE.Mesh | null)[]>([]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -477,7 +481,7 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
     groupRef.current.position.y = Math.sin(t * 1.8 + 2) * 0.008;
     groupRef.current.rotation.y = Math.sin(t * 0.8) * 0.12;
 
-    // 8 Active micro-bubbles rising through the chemical liquid
+    // 8 Delicate effervescent micro-bubbles rising through the chemical liquid
     const bubbleRefs = [b1, b2, b3, b4, b5, b6, b7, b8];
     const bParams = [
       { speed: 0.050, offset: 0.00, xOff: 0.012, zOff: 0.008, wobble: 3.2 },
@@ -500,40 +504,61 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
       const taper = 1.0 - progress * 0.40;
       bRef.current.position.x = bp.xOff * taper + Math.sin(t * bp.wobble + i) * 0.003;
       bRef.current.position.z = bp.zOff * taper + Math.cos(t * bp.wobble + i) * 0.003;
-      const s = 0.75 + progress * 0.55;
+      const s = 0.65 + progress * 0.40;
       bRef.current.scale.set(s, s, s);
     });
 
-    // 10 VIBRANT COLORED EVAPORATION VAPOR PUFFS (High-Contrast Saturated Billows)
-    vaporPuffs.current.forEach((puff, i) => {
+    // Rising animated steam rings venting from beaker mouth
+    if (steamRing1.current) {
+      const ring1Cycle = (t * 0.38 * speed) % 1;
+      steamRing1.current.position.y = 0.065 + ring1Cycle * 0.080;
+      const s1 = 0.70 + ring1Cycle * 1.6;
+      steamRing1.current.scale.set(s1, s1, s1);
+      steamRing1.current.rotation.x = Math.PI / 2 + Math.sin(t * 1.5) * 0.15;
+      const mat = steamRing1.current.material as THREE.MeshStandardMaterial;
+      if (mat) mat.opacity = Math.sin(ring1Cycle * Math.PI) * 0.60;
+    }
+    if (steamRing2.current) {
+      const ring2Cycle = (t * 0.38 * speed + 0.5) % 1;
+      steamRing2.current.position.y = 0.065 + ring2Cycle * 0.080;
+      const s2 = 0.70 + ring2Cycle * 1.6;
+      steamRing2.current.scale.set(s2, s2, s2);
+      steamRing2.current.rotation.x = Math.PI / 2 + Math.cos(t * 1.5) * 0.15;
+      const mat = steamRing2.current.material as THREE.MeshStandardMaterial;
+      if (mat) mat.opacity = Math.sin(ring2Cycle * Math.PI) * 0.60;
+    }
+
+    // 16 Billowing steam cloud puffs curling high into the air
+    steamPuffs.current.forEach((puff, i) => {
       if (!puff) return;
-      const count = 10;
+      const count = 16;
       const puffOffset = i / count;
-      const puffSpeed = (0.065 + (i % 4) * 0.012) * speed;
+      const puffSpeed = (0.052 + (i % 5) * 0.009) * speed;
       const cycle = (t * puffSpeed + puffOffset) % 1;
 
-      // Height: Starts right at meniscus (+0.010), passes through neck (+0.04 to +0.06), ascends high into air (+0.17)
-      puff.position.y = 0.010 + cycle * 0.165;
+      // Height: Starts right at beaker mouth (+0.063), billows high into the air (+0.24)
+      puff.position.y = 0.063 + cycle * 0.175;
 
-      // Swirling atmospheric convection eddy
-      const swirlAngle = (i * Math.PI * 2) / count + t * 0.8;
-      // Radius widens out above the beaker neck
-      const driftRad = cycle > 0.35 ? 0.008 + (cycle - 0.35) * 0.045 : cycle * 0.012;
-      puff.position.x = Math.cos(swirlAngle) * driftRad + Math.sin(t * 1.8 + i) * 0.003;
-      puff.position.z = Math.sin(swirlAngle) * driftRad + Math.cos(t * 1.5 + i) * 0.003;
+      // Swirling atmospheric steam convection eddies
+      const swirlAngle = (i * Math.PI * 2) / count + t * 1.1;
+      const driftRad = 0.005 + cycle * 0.048;
+      puff.position.x = Math.cos(swirlAngle) * driftRad + Math.sin(t * 1.4 + i) * 0.006;
+      puff.position.z = Math.sin(swirlAngle) * driftRad + Math.cos(t * 1.2 + i) * 0.006;
 
-      // Expansion as vapor billows outward
-      const scaleVal = 0.75 + cycle * 1.8;
+      // Billowing expansion as steam disperses into the air
+      const scaleVal = 0.45 + cycle * 3.2;
       puff.scale.set(scaleVal, scaleVal, scaleVal);
 
-      // Distinct colored visibility: high opacity emerging, soft dissipation at apex
+      // Steam opacity curve (soft puff emerging, becoming billowy, then dissipating)
       const mat = puff.material as THREE.MeshStandardMaterial;
       if (mat) {
-        let opacity = 0.90;
-        if (cycle < 0.12) {
-          opacity = (cycle / 0.12) * 0.90;
-        } else if (cycle > 0.70) {
-          opacity = Math.max(0, (1 - (cycle - 0.70) / 0.30) * 0.90);
+        let opacity = 0;
+        if (cycle < 0.15) {
+          opacity = (cycle / 0.15) * 0.70;
+        } else if (cycle < 0.50) {
+          opacity = 0.70;
+        } else {
+          opacity = Math.max(0, (1 - (cycle - 0.50) / 0.50) * 0.70);
         }
         mat.opacity = opacity;
       }
@@ -641,70 +666,103 @@ export function ChemistryLab3D({ hovered }: { hovered: boolean }) {
         </mesh>
 
         {/* ============================================================ */}
-        {/* 3. ACTIVE EFFERVESCENT REACTION MICRO-BUBBLES */}
+        {/* 3. ACTIVE EFFERVESCENT REACTION MICRO-BUBBLES (Smaller, delicate) */}
         {/* ============================================================ */}
         <mesh ref={b1}>
-          <sphereGeometry args={[0.0090, 12, 12]} />
+          <sphereGeometry args={[0.0042, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b2}>
-          <sphereGeometry args={[0.0075, 12, 12]} />
+          <sphereGeometry args={[0.0034, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b3}>
-          <sphereGeometry args={[0.0065, 12, 12]} />
+          <sphereGeometry args={[0.0028, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b4}>
-          <sphereGeometry args={[0.0085, 12, 12]} />
+          <sphereGeometry args={[0.0038, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b5}>
-          <sphereGeometry args={[0.0060, 12, 12]} />
+          <sphereGeometry args={[0.0026, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b6}>
-          <sphereGeometry args={[0.0080, 12, 12]} />
+          <sphereGeometry args={[0.0036, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b7}>
-          <sphereGeometry args={[0.0070, 12, 12]} />
+          <sphereGeometry args={[0.0030, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
         <mesh ref={b8}>
-          <sphereGeometry args={[0.0085, 12, 12]} />
+          <sphereGeometry args={[0.0040, 12, 12]} />
           <meshStandardMaterial color="#FEF08A" emissive="#F59E0B" emissiveIntensity={3.2} />
         </mesh>
 
         {/* ============================================================ */}
-        {/* 4. VISIBLY COLORED EVAPORATION VAPOR BILLOWS (Ruby / Magenta) */}
+        {/* 4. BILLOWING LABORATORY STEAM & STEAM RINGS */}
         {/* ============================================================ */}
+        {/* Steam Ring Vent 1 */}
+        <mesh ref={steamRing1} position={[0, 0.065, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.016, 0.0028, 16, 32]} />
+          <meshStandardMaterial
+            color="#FFE4E6"
+            emissive="#FDA4AF"
+            emissiveIntensity={1.8}
+            transparent
+            opacity={0.5}
+            roughness={0.2}
+          />
+        </mesh>
+
+        {/* Steam Ring Vent 2 */}
+        <mesh ref={steamRing2} position={[0, 0.065, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.020, 0.0032, 16, 32]} />
+          <meshStandardMaterial
+            color="#FFF1F2"
+            emissive="#FB7185"
+            emissiveIntensity={1.8}
+            transparent
+            opacity={0.5}
+            roughness={0.2}
+          />
+        </mesh>
+
+        {/* 16 Ethereal Billowing Steam Cloud Puffs */}
         {[
-          { color: '#F43F5E', emissive: '#BE123C', size: 0.015 },
-          { color: '#E11D48', emissive: '#9F1239', size: 0.017 },
-          { color: '#FB7185', emissive: '#E11D48', size: 0.014 },
-          { color: '#FDA4AF', emissive: '#BE123C', size: 0.016 },
-          { color: '#F43F5E', emissive: '#9F1239', size: 0.018 },
-          { color: '#E11D48', emissive: '#BE123C', size: 0.015 },
-          { color: '#C084FC', emissive: '#7C3AED', size: 0.016 },
-          { color: '#FB7185', emissive: '#E11D48', size: 0.015 },
-          { color: '#F43F5E', emissive: '#BE123C', size: 0.017 },
-          { color: '#E11D48', emissive: '#9F1239', size: 0.014 },
+          { color: '#FFF1F2', emissive: '#FDA4AF', size: 0.016 },
+          { color: '#FFE4E6', emissive: '#FB7185', size: 0.018 },
+          { color: '#FDA4AF', emissive: '#F43F5E', size: 0.015 },
+          { color: '#FFF1F2', emissive: '#E11D48', size: 0.017 },
+          { color: '#FFE4E6', emissive: '#FDA4AF', size: 0.019 },
+          { color: '#F5D0FE', emissive: '#C084FC', size: 0.016 },
+          { color: '#FFF1F2', emissive: '#FB7185', size: 0.018 },
+          { color: '#FDA4AF', emissive: '#F43F5E', size: 0.015 },
+          { color: '#FFE4E6', emissive: '#E11D48', size: 0.017 },
+          { color: '#FFF1F2', emissive: '#FDA4AF', size: 0.019 },
+          { color: '#E9D5FF', emissive: '#A855F7', size: 0.016 },
+          { color: '#FFE4E6', emissive: '#FB7185', size: 0.018 },
+          { color: '#FFF1F2', emissive: '#FDA4AF', size: 0.016 },
+          { color: '#FDA4AF', emissive: '#F43F5E', size: 0.018 },
+          { color: '#FFE4E6', emissive: '#FB7185', size: 0.017 },
+          { color: '#FFF1F2', emissive: '#FDA4AF', size: 0.019 },
         ].map((v, i) => (
           <mesh
-            key={`colored-vapor-${i}`}
+            key={`steam-puff-${i}`}
             ref={(el) => {
-              vaporPuffs.current[i] = el;
+              steamPuffs.current[i] = el;
             }}
           >
             <sphereGeometry args={[v.size, 16, 16]} />
             <meshStandardMaterial
               color={v.color}
               emissive={v.emissive}
-              emissiveIntensity={3.2}
+              emissiveIntensity={2.5}
               transparent
-              opacity={0.90}
-              roughness={0.25}
+              opacity={0.70}
+              roughness={0.3}
             />
           </mesh>
         ))}
