@@ -27,6 +27,7 @@ interface LetterParticle {
   color: string;
   fontFamily: string;
   fontWeight: string;
+  phase: number;
 }
 
 interface ChestSpark {
@@ -135,43 +136,45 @@ export const MultimodalWaveStream = React.memo(function MultimodalWaveStream() {
       "'Nirmala UI', 'Noto Sans Indic', 'Kohinoor Devanagari', 'Mukti', system-ui, -apple-system, sans-serif";
 
     const textLetters: LetterParticle[] = [];
-    const numLetters = 32;
+    const numLetters = 20;
+
+    const { midX: initMidX, rightOrbX: initRightX, centerY: initCenterY, orbRadius: initOrbR } = getStreamAnchors(width, height);
+    const initTextSpan = Math.max(120, (initRightX - initOrbR) - initMidX);
 
     for (let i = 0; i < numLetters; i++) {
-      const { midX, rightOrbX, centerY, orbRadius } = getStreamAnchors(width, height);
-      const endX = rightOrbX - orbRadius;
-      const span = endX - midX;
+      // Evenly space letters across the stream with gentle organic jitter so they never cluster
+      const u = (i + (Math.random() - 0.5) * 0.35) / numLetters;
       textLetters.push({
         char: getRandomGlyph(),
-        x: midX + Math.random() * span,
-        y: centerY + (Math.random() - 0.5) * 60,
-        baseY: centerY + (Math.random() - 0.5) * 45,
-        size: Math.floor(Math.random() * 12) + 16,
-        speed: Math.random() * 0.95 + 0.55,
-        rotation: (Math.random() - 0.5) * 0.6,
-        rotSpeed: (Math.random() - 0.5) * 0.025,
-        alpha: Math.random() * 0.65 + 0.35,
-        color: letterColors[Math.floor(Math.random() * letterColors.length)],
+        x: initMidX + Math.max(0, Math.min(1, u)) * initTextSpan,
+        y: initCenterY,
+        baseY: initCenterY + (Math.random() - 0.5) * 32,
+        size: Math.floor(Math.random() * 8) + 16, // 16px to 23px - crisp and readable
+        speed: Math.random() * 32 + 78, // 78 to 110 px/s smooth translation speed
+        rotation: (Math.random() - 0.5) * 0.35,
+        rotSpeed: (Math.random() - 0.5) * 0.012,
+        alpha: Math.random() * 0.3 + 0.7,
+        color: letterColors[i % letterColors.length],
         fontFamily: indicFontFamily,
-        fontWeight: Math.random() > 0.4 ? 'bold' : '600',
+        fontWeight: i % 2 === 0 ? '700' : '600',
+        phase: (i / numLetters) * Math.PI * 2,
       });
     }
 
     // Golden sparkles (Right side)
     const sparkles: Particle[] = [];
     const sparkleColors = ['#F59E0B', '#FBBF24', '#FDE68A', '#FEF08A', '#FCD34D'];
-    for (let i = 0; i < 26; i++) {
-      const { midX, rightOrbX, centerY, orbRadius } = getStreamAnchors(width, height);
-      const endX = rightOrbX - orbRadius;
-      const span = endX - midX;
+    const numSparkles = 22;
+    for (let i = 0; i < numSparkles; i++) {
+      const u = (i + (Math.random() - 0.5) * 0.5) / numSparkles;
       sparkles.push({
-        x: midX + Math.random() * span,
-        y: centerY + (Math.random() - 0.5) * 60,
-        baseY: centerY + (Math.random() - 0.5) * 45,
-        size: Math.random() * 2.2 + 1.0,
-        speed: Math.random() * 1.1 + 0.6,
-        alpha: Math.random() * 0.6 + 0.3,
-        color: sparkleColors[Math.floor(Math.random() * sparkleColors.length)],
+        x: initMidX + Math.max(0, Math.min(1, u)) * initTextSpan,
+        y: initCenterY,
+        baseY: initCenterY + (Math.random() - 0.5) * 34,
+        size: Math.random() * 2.2 + 1.2,
+        speed: Math.random() * 35 + 85,
+        alpha: Math.random() * 0.5 + 0.4,
+        color: sparkleColors[i % sparkleColors.length],
       });
     }
 
@@ -429,34 +432,37 @@ export const MultimodalWaveStream = React.memo(function MultimodalWaveStream() {
           }
         }
 
-        // Luminous Speech Particles
+        // Luminous Speech Particles - Flowing smoothly without clumping
         speechParticles.forEach((p) => {
+          p.x += p.speed * delta * 60 * 1.5 * flowDir;
+
           if (isSTT) {
-            p.x += p.speed * 1.6;
-            if (p.x > currentSpeechX) {
-              p.x = speechStartX;
-              p.baseY = centerY + (Math.random() - 0.5) * 45;
+            if (p.x > speechEndX) {
+              p.x = speechStartX + (p.x - speechEndX);
+              p.baseY = centerY + (Math.random() - 0.5) * 40;
             }
           } else {
-            p.x -= p.speed * 1.6;
             if (p.x < speechStartX) {
-              p.x = currentSpeechX;
-              p.baseY = centerY + (Math.random() - 0.5) * 45;
+              p.x = speechEndX - (speechStartX - p.x);
+              p.baseY = centerY + (Math.random() - 0.5) * 40;
             }
           }
 
-          if (p.x <= currentSpeechX) {
+          if (p.x <= currentSpeechX && p.x >= speechStartX) {
             const progress = (p.x - speechStartX) / speechSpan;
             const env = Math.sin(Math.max(0, Math.min(1, progress)) * Math.PI);
             const waveY = Math.sin(p.x * 0.02 + time * 2.2 * flowDir) * 18 * env;
             const currentY = p.baseY + waveY;
 
+            const fadeIn = Math.min(1, Math.max(0, (p.x - speechStartX) / 25));
+            const fadeOut = Math.min(1, Math.max(0, (speechEndX - p.x) / 25));
+
             ctx.beginPath();
             ctx.arc(p.x, currentY, p.size, 0, Math.PI * 2);
             ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.alpha * Math.max(0.2, env);
+            ctx.globalAlpha = p.alpha * fadeIn * fadeOut * Math.max(0.2, env);
             ctx.shadowColor = p.color;
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             ctx.fill();
             ctx.globalAlpha = 1.0;
             ctx.shadowBlur = 0;
@@ -664,77 +670,95 @@ export const MultimodalWaveStream = React.memo(function MultimodalWaveStream() {
           ctx.restore();
         }
 
-        // Floating Typographic Glyphs (Indic scripts + English)
+        // Floating Typographic Glyphs (Indic scripts + English) - Flowing smoothly without clumping
         textLetters.forEach((l) => {
+          // Continuous, time-delta based smooth translation (silky smooth at 60/120fps)
+          const moveStep = l.speed * delta * flowDir;
+          l.x += moveStep;
+          l.rotation += l.rotSpeed * delta * 60;
+
+          // Wrap seamlessly across boundaries so letters circulate freely as an infinite river
           if (isSTT) {
-            l.x += l.speed * 1.5;
-            l.rotation += l.rotSpeed;
-            if (l.x > currentTextX) {
-              l.x = textStartX;
-              l.baseY = centerY + (Math.random() - 0.5) * 45;
+            if (l.x > textEndX) {
+              l.x = textStartX + (l.x - textEndX);
+              l.baseY = centerY + (Math.random() - 0.5) * 32;
               l.char = getRandomGlyph();
+              l.phase = Math.random() * Math.PI * 2;
             }
           } else {
-            l.x -= l.speed * 1.5;
-            l.rotation -= l.rotSpeed;
             if (l.x < textStartX) {
-              l.x = currentTextX;
-              l.baseY = centerY + (Math.random() - 0.5) * 45;
+              l.x = textEndX - (textStartX - l.x);
+              l.baseY = centerY + (Math.random() - 0.5) * 32;
               l.char = getRandomGlyph();
+              l.phase = Math.random() * Math.PI * 2;
             }
           }
 
-          if (l.x <= currentTextX) {
+          // In sequential start, only reveal letters that the golden wave has reached!
+          // NEVER teleport them to textStartX - just reveal them in place as the wave passes!
+          if (l.x <= currentTextX && l.x >= textStartX) {
             const progress = (l.x - textStartX) / textSpan;
             const env = Math.sin(Math.max(0, Math.min(1, progress)) * Math.PI);
-            const waveY = Math.sin(l.x * 0.018 + time * 1.8 * flowDir) * 18 * env;
+
+            // Natural, graceful organic undulation along the golden ribbons
+            const waveY = Math.sin(l.x * 0.016 + time * 1.5 * flowDir + l.phase) * 15 * env;
             const currentY = l.baseY + waveY;
 
-            ctx.save();
-            ctx.translate(l.x, currentY);
-            ctx.rotate(l.rotation);
+            // Fade smoothly in near Vedika chest, fade out smoothly into text orb
+            const fadeIn = Math.min(1, Math.max(0, (l.x - textStartX) / 35));
+            const fadeOut = Math.min(1, Math.max(0, (textEndX - l.x) / 35));
+            const finalAlpha = l.alpha * fadeIn * fadeOut * Math.max(0.2, env);
 
-            ctx.font = `${l.fontWeight} ${l.size}px ${l.fontFamily}`;
-            ctx.fillStyle = l.color;
-            ctx.globalAlpha = l.alpha * Math.max(0.18, env);
-            ctx.shadowColor = 'rgba(245, 158, 11, 0.45)';
-            ctx.shadowBlur = 6;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(l.char, 0, 0);
+            if (finalAlpha > 0.02) {
+              ctx.save();
+              ctx.translate(l.x, currentY);
+              ctx.rotate(l.rotation);
 
-            ctx.restore();
+              ctx.font = `${l.fontWeight} ${l.size}px ${l.fontFamily}`;
+              ctx.fillStyle = l.color;
+              ctx.globalAlpha = finalAlpha;
+              ctx.shadowColor = 'rgba(245, 158, 11, 0.4)';
+              ctx.shadowBlur = 4;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(l.char, 0, 0);
+
+              ctx.restore();
+            }
           }
         });
 
-        // Golden Sparkles
+        // Golden Sparkles - Flowing smoothly without clumping
         sparkles.forEach((s) => {
+          s.x += s.speed * delta * flowDir;
+
           if (isSTT) {
-            s.x += s.speed * 1.6;
-            if (s.x > currentTextX) {
-              s.x = textStartX;
-              s.baseY = centerY + (Math.random() - 0.5) * 45;
+            if (s.x > textEndX) {
+              s.x = textStartX + (s.x - textEndX);
+              s.baseY = centerY + (Math.random() - 0.5) * 34;
             }
           } else {
-            s.x -= s.speed * 1.6;
             if (s.x < textStartX) {
-              s.x = currentTextX;
-              s.baseY = centerY + (Math.random() - 0.5) * 45;
+              s.x = textEndX - (textStartX - s.x);
+              s.baseY = centerY + (Math.random() - 0.5) * 34;
             }
           }
 
-          if (s.x <= currentTextX) {
+          if (s.x <= currentTextX && s.x >= textStartX) {
             const progress = (s.x - textStartX) / textSpan;
             const env = Math.sin(Math.max(0, Math.min(1, progress)) * Math.PI);
-            const waveY = Math.sin(s.x * 0.02 + time * 2.2 * flowDir) * 14 * env;
+            const waveY = Math.sin(s.x * 0.02 + time * 2.0 * flowDir) * 14 * env;
             const currentY = s.baseY + waveY;
+
+            const fadeIn = Math.min(1, Math.max(0, (s.x - textStartX) / 30));
+            const fadeOut = Math.min(1, Math.max(0, (textEndX - s.x) / 30));
 
             ctx.beginPath();
             ctx.arc(s.x, currentY, s.size, 0, Math.PI * 2);
             ctx.fillStyle = s.color;
-            ctx.globalAlpha = s.alpha * Math.max(0.2, env);
+            ctx.globalAlpha = s.alpha * fadeIn * fadeOut * Math.max(0.2, env);
             ctx.shadowColor = s.color;
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 6;
             ctx.fill();
             ctx.globalAlpha = 1.0;
             ctx.shadowBlur = 0;
