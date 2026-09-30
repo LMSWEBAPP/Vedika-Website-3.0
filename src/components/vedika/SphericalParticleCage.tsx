@@ -258,7 +258,7 @@ export function SphericalParticleCage() {
     });
 
     // Position the entire satellite cage in lockstep with Vedika in the right partition
-    const targetCageX = isMobile ? 0 : 0.52;
+    const targetCageX = isMobile ? 0 : 0.58;
     let cageX = 0;
     if (scrollProgress <= 3.25) {
       const pTravel = Math.max(0, Math.min(1, (scrollProgress - 2.0) / 0.70));

@@ -169,7 +169,7 @@ export function ParticleSphereSection() {
         }}
         style={{
           position: 'absolute',
-          left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
+          left: isMobile ? '50%' : 'calc(50% + 27.2vh)',
           top: isMobile ? '50%' : 'calc(50% + 1.8vh)',
           transform: 'translate(-50%, -50%)',
           width: '270px',
@@ -184,8 +184,8 @@ export function ParticleSphereSection() {
       />
 
       {/* ============================================================ */}
-      {/* 3. 5 LAB NAME LABELS (Centered neatly beneath each bubble)   */}
-      {/* Aligned in the right partition matching 3D satellite coords  */}
+      {/* 3. 5 LAB NAME LABELS (Left labs on left, right labs on right)*/}
+      {/* Math Lab placed on its right side as requested               */}
       {/* ============================================================ */}
       <div
         style={{
@@ -197,13 +197,13 @@ export function ParticleSphereSection() {
           zIndex: 32,
         }}
       >
-        {/* Math Lab: Below Top Sphere */}
+        {/* Math Lab: Right side of Top Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
-            top: isMobile ? 'calc(50% - 170px)' : 'calc(50% - 22.5vh)',
-            transform: 'translate(-50%, 0)',
+            left: isMobile ? 'calc(50% + 75px)' : 'calc(50% + 27.2vh + 13.5vh)',
+            top: isMobile ? 'calc(50% - 170px)' : 'calc(50% - 37.5vh)',
+            transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
             gap: '7px',
@@ -216,16 +216,16 @@ export function ParticleSphereSection() {
           }}
         >
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#D97706', display: 'inline-block', boxShadow: '0 0 8px rgba(217, 119, 6, 0.6)' }} />
-          Math Lab
+          <span>Math Lab</span>
         </div>
 
-        {/* Computer Lab: Below Upper Left Sphere */}
+        {/* Computer Lab: Left side of Upper Left Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% - 290px)' : 'calc(50% + 24.4vh - 37.5vh)',
-            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 3.5vh)',
-            transform: 'translate(-50%, 0)',
+            left: isMobile ? 'calc(50% - 290px - 75px)' : 'calc(50% + 27.2vh - 37.5vh - 13.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% - 10.3vh)',
+            transform: 'translate(-100%, -50%)',
             display: 'flex',
             alignItems: 'center',
             gap: '7px',
@@ -237,17 +237,17 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span>Computer Lab</span>
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1D4ED8', display: 'inline-block', boxShadow: '0 0 8px rgba(29, 78, 216, 0.6)' }} />
-          Computer Lab
         </div>
 
-        {/* Biology Lab: Below Lower Left Sphere */}
+        {/* Biology Lab: Left side of Lower Left Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% - 180px)' : 'calc(50% + 24.4vh - 23vh)',
-            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 44vh)',
-            transform: 'translate(-50%, 0)',
+            left: isMobile ? 'calc(50% - 180px - 75px)' : 'calc(50% + 27.2vh - 23vh - 13.5vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 33.7vh)',
+            transform: 'translate(-100%, -50%)',
             display: 'flex',
             alignItems: 'center',
             gap: '7px',
@@ -259,17 +259,17 @@ export function ParticleSphereSection() {
             whiteSpace: 'nowrap',
           }}
         >
+          <span>Biology Lab</span>
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#7C3AED', display: 'inline-block', boxShadow: '0 0 8px rgba(124, 58, 237, 0.6)' }} />
-          Biology Lab
         </div>
 
-        {/* Physics Lab: Below Upper Right Sphere */}
+        {/* Physics Lab: Right side of Upper Right Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% + 290px)' : 'calc(50% + 24.4vh + 37.5vh)',
-            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% + 3.5vh)',
-            transform: 'translate(-50%, 0)',
+            left: isMobile ? 'calc(50% + 290px + 75px)' : 'calc(50% + 27.2vh + 37.5vh + 13.5vh)',
+            top: isMobile ? 'calc(50% + 20px)' : 'calc(50% - 10.3vh)',
+            transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
             gap: '7px',
@@ -282,16 +282,16 @@ export function ParticleSphereSection() {
           }}
         >
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#0284C7', display: 'inline-block', boxShadow: '0 0 8px rgba(2, 132, 199, 0.6)' }} />
-          Physics Lab
+          <span>Physics Lab</span>
         </div>
 
-        {/* Chemistry Lab: Below Lower Right Sphere */}
+        {/* Chemistry Lab: Right side of Lower Right Sphere */}
         <div
           style={{
             position: 'absolute',
-            left: isMobile ? 'calc(50% + 180px)' : 'calc(50% + 24.4vh + 23vh)',
-            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 44vh)',
-            transform: 'translate(-50%, 0)',
+            left: isMobile ? 'calc(50% + 180px + 75px)' : 'calc(50% + 27.2vh + 23vh + 13.5vh)',
+            top: isMobile ? 'calc(50% + 340px)' : 'calc(50% + 33.7vh)',
+            transform: 'translate(0, -50%)',
             display: 'flex',
             alignItems: 'center',
             gap: '7px',
@@ -304,7 +304,7 @@ export function ParticleSphereSection() {
           }}
         >
           <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#BE123C', display: 'inline-block', boxShadow: '0 0 8px rgba(190, 18, 60, 0.6)' }} />
-          Chemistry Lab
+          <span>Chemistry Lab</span>
         </div>
       </div>
 
@@ -320,7 +320,7 @@ export function ParticleSphereSection() {
         style={{
           position: 'absolute',
           bottom: 'clamp(1.5rem, 3.5vh, 2.5rem)',
-          left: isMobile ? '50%' : 'calc(50% + 24.4vh)',
+          left: isMobile ? '50%' : 'calc(50% + 27.2vh)',
           transform: 'translateX(-50%)',
           display: 'inline-flex',
           alignItems: 'center',
