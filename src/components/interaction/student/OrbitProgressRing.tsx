@@ -38,7 +38,7 @@ export default function OrbitProgressRing({
       style={{ overflow: 'visible' }}
     >
       <defs>
-        {/* Vibrant multi-pass neon glow filter for the loading ring and energy bead */}
+        {/* Subtle multi-pass glow filter for the ring and energy bead */}
         <filter
           id="vOrbitNeonGlow"
           filterUnits="userSpaceOnUse"
@@ -47,14 +47,36 @@ export default function OrbitProgressRing({
           width={ORBIT_SIZE + 120}
           height={ORBIT_SIZE + 120}
         >
-          <feGaussianBlur stdDeviation="5.0" result="wideGlow" />
-          <feGaussianBlur stdDeviation="2.2" result="tightGlow" />
+          <feGaussianBlur stdDeviation="3.5" result="wideGlow" />
+          <feGaussianBlur stdDeviation="1.5" result="tightGlow" />
           <feMerge>
             <feMergeNode in="wideGlow" />
             <feMergeNode in="tightGlow" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+
+        {/* Continuous Smooth Gold, Black, Mixed Gradient for the Ring of Vedika */}
+        <linearGradient id="vGoldBlackRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.95" />
+          <stop offset="14%" stopColor="#FDE68A" stopOpacity="1.0" />
+          <stop offset="28%" stopColor="#D4AF37" stopOpacity="0.92" />
+          <stop offset="42%" stopColor="#2A1E0C" stopOpacity="0.88" />
+          <stop offset="56%" stopColor="#080C14" stopOpacity="0.96" />
+          <stop offset="70%" stopColor="#1E1508" stopOpacity="0.90" />
+          <stop offset="84%" stopColor="#B45309" stopOpacity="0.88" />
+          <stop offset="93%" stopColor="#D4AF37" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.95" />
+        </linearGradient>
+
+        {/* Counter-flow gradient for dashed track */}
+        <linearGradient id="vGoldBlackDashedGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.6" />
+          <stop offset="26%" stopColor="#1E1609" stopOpacity="0.25" />
+          <stop offset="50%" stopColor="#080B12" stopOpacity="0.15" />
+          <stop offset="74%" stopColor="#92400E" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#FDE68A" stopOpacity="0.7" />
+        </linearGradient>
 
         {/* Individual linear gradients for each of the 9 segments */}
         {ORBIT_SEGMENTS.map((seg) => (
@@ -67,12 +89,12 @@ export default function OrbitProgressRing({
             x2={seg.endX}
             y2={seg.endY}
           >
-            <stop offset="0%" stopColor={seg.fromColor} stopOpacity="1" />
-            <stop offset="100%" stopColor={seg.toColor} stopOpacity="1" />
+            <stop offset="0%" stopColor={seg.fromColor} stopOpacity="0.95" />
+            <stop offset="100%" stopColor={seg.toColor} stopOpacity="0.95" />
           </linearGradient>
         ))}
 
-        {/* Dedicated linear gradients for each connector line: vibrant ring glow -> card accent */}
+        {/* Dedicated linear gradients for each connector line: gold ring anchor -> card accent */}
         {STUDENT_ORBIT_FEATURES.map((feat) => {
           const pos = NODE_POSITIONS[feat.index];
           if (!pos) return null;
@@ -86,35 +108,49 @@ export default function OrbitProgressRing({
               x2={pos.x2}
               y2={pos.y2}
             >
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-              <stop offset="30%" stopColor={feat.color} stopOpacity="0.9" />
-              <stop offset="100%" stopColor={feat.color} stopOpacity="0.3" />
+              <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.9" />
+              <stop offset="35%" stopColor={feat.color} stopOpacity="0.75" />
+              <stop offset="100%" stopColor={feat.color} stopOpacity="0.25" />
             </linearGradient>
           );
         })}
       </defs>
 
-      {/* ── 0. Golden Celestial Ambient Orbit Ring around Vedika (Image 1 reference) ── */}
+      {/* ── 0. Golden & Black Smooth Mixed Gradient Orbit Ring of Vedika ── */}
+      {/* Outer subtle concentric dashed track */}
       <circle
         cx={300}
         cy={300}
-        r={PROGRESS_R}
+        r={PROGRESS_R + 6}
         fill="none"
-        stroke="rgba(245, 175, 65, 0.28)"
-        strokeWidth={1.8}
-        filter="url(#vOrbitNeonGlow)"
-      />
-      <circle
-        cx={300}
-        cy={300}
-        r={PROGRESS_R}
-        fill="rgba(245, 175, 65, 0.02)"
-        stroke="rgba(251, 191, 36, 0.45)"
+        stroke="url(#vGoldBlackDashedGrad)"
         strokeWidth={1.0}
         strokeDasharray="4 6"
       />
 
-      {/* ── 1. Connectors from Orbit Nodes to Cards (with Gradient & Progressive Reveal) ── */}
+      {/* Main Solid Gold-Black Mixed Gradient Ring */}
+      <circle
+        cx={300}
+        cy={300}
+        r={PROGRESS_R}
+        fill="rgba(15, 12, 8, 0.25)"
+        stroke="url(#vGoldBlackRingGrad)"
+        strokeWidth={2.4}
+        filter="url(#vOrbitNeonGlow)"
+      />
+
+      {/* Inner subtle concentric metallic hairline ring */}
+      <circle
+        cx={300}
+        cy={300}
+        r={PROGRESS_R - 6}
+        fill="none"
+        stroke="url(#vGoldBlackRingGrad)"
+        strokeWidth={0.8}
+        opacity={0.45}
+      />
+
+      {/* ── 1. Connectors from Orbit Nodes to Cards (with subtle gradient & Progressive Reveal) ── */}
       {STUDENT_ORBIT_FEATURES.map((feat) => {
         const pos = NODE_POSITIONS[feat.index];
         if (!pos?.connectorD) return null;
@@ -124,16 +160,14 @@ export default function OrbitProgressRing({
             key={`conn-${feat.id}`}
             d={pos.connectorD}
             stroke={`url(#connGrad_${feat.id})`}
-            strokeWidth={2.0}
+            strokeWidth={1.5}
             fill="none"
-            filter="url(#vOrbitNeonGlow)"
             className={`orbit-connector-line ${isDrawn ? 'is-drawn' : ''}`}
           />
         );
       })}
 
-
-      {/* ── 2. 9 Progressive Arc Segments with vibrant active neon glow ── */}
+      {/* ── 2. 9 Progressive Arc Segments tracking progress ── */}
       {ORBIT_SEGMENTS.map((seg, i) => (
         <path
           key={`arc-${seg.gradientId}`}
@@ -143,7 +177,7 @@ export default function OrbitProgressRing({
           d={seg.pathD}
           fill="none"
           stroke={`url(#${seg.gradientId})`}
-          strokeWidth={4.0}
+          strokeWidth={3.0}
           strokeLinecap="round"
           strokeDasharray={`${seg.arcLength} ${seg.arcLength}`}
           strokeDashoffset={seg.arcLength}
@@ -153,12 +187,11 @@ export default function OrbitProgressRing({
             opacity: 0,
             visibility: 'hidden',
           }}
-          filter="url(#vOrbitNeonGlow)"
           className="orbit-segment-arc"
         />
       ))}
 
-      {/* ── 3. 9 Glowing Colored Orbit Nodes on the Ring (Progressive Reveal) ── */}
+      {/* ── 3. 9 Orbit Nodes on the Ring (Progressive Reveal) ── */}
       {STUDENT_ORBIT_FEATURES.map((feat) => {
         const pos = NODE_POSITIONS[feat.index];
         const rad = (pos.nodeAngleDeg * Math.PI) / 180;
@@ -171,9 +204,9 @@ export default function OrbitProgressRing({
             transform={`translate(${nx.toFixed(2)}, ${ny.toFixed(2)})`}
             className={`orbit-node-dot ${isDrawn ? 'is-drawn' : ''}`}
           >
-            <circle r={8} fill={feat.color} opacity={0.45} filter="url(#vOrbitNeonGlow)" />
-            <circle r={4.5} fill={feat.color} />
-            <circle r={2} fill="#FFFFFF" />
+            <circle r={7} fill={feat.color} opacity={0.25} />
+            <circle r={3.8} fill={feat.color} />
+            <circle r={1.6} fill="#FFFFFF" />
           </g>
         );
       })}
@@ -184,26 +217,25 @@ export default function OrbitProgressRing({
         transform={`translate(${BEAD_START_X}, ${BEAD_START_Y})`}
         className="orbit-energy-bead"
       >
-        {/* Diffuse glowing halo */}
+        {/* Soft glowing halo */}
         <circle
           ref={beadHaloRef}
-          r="12"
+          r="9.5"
           cx="0"
           cy="0"
           fill={initialColor}
-          opacity={0.85}
-          filter="url(#vOrbitNeonGlow)"
+          opacity={0.6}
         />
-        {/* Vibrant core bead */}
+        {/* Core bead */}
         <circle
           ref={beadCoreRef}
-          r="5.2"
+          r="4.6"
           cx="0"
           cy="0"
           fill={initialColor}
         />
-        {/* Bright white energetic center spark */}
-        <circle r="2.6" cx="0" cy="0" fill="#FFFFFF" />
+        {/* Bright white center spark */}
+        <circle r="2.0" cx="0" cy="0" fill="#FFFFFF" />
       </g>
     </svg>
   );

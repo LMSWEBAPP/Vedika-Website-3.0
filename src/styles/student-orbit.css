@@ -92,10 +92,10 @@
 /* ── Futuristic Hologram Stage Pedestal beneath Vedika (Fully inside the orbit ring) ── */
 .vedika-hologram-pedestal {
   position: absolute;
-  top: calc(50% + 16px);
+  top: calc(50% + 20px);
   left: 50%;
   transform: translateX(-50%);
-  width: 124px;
+  width: 140px;
   height: 64px;
   pointer-events: none;
   z-index: 3;
@@ -105,17 +105,17 @@
   justify-content: flex-end;
 }
 
-/* Translucent upward holographic projection cone matching the reference image */
+/* Translucent upward holographic projection cone matching reference */
 .hologram-projection-cone {
   position: absolute;
-  bottom: 10px;
-  width: 104px;
+  bottom: 12px;
+  width: 110px;
   height: 52px;
   clip-path: polygon(18% 0%, 82% 0%, 100% 100%, 0% 100%);
   background: linear-gradient(
     to top,
-    rgba(245, 158, 11, 0.22) 0%,
-    rgba(59, 130, 246, 0.12) 50%,
+    rgba(212, 175, 55, 0.18) 0%,
+    rgba(245, 158, 11, 0.08) 50%,
     transparent 100%
   );
   pointer-events: none;
@@ -129,8 +129,8 @@
   top: 0;
   bottom: 0;
   width: 1.5px;
-  background: linear-gradient(to top, rgba(245, 158, 11, 0.7) 0%, rgba(59, 130, 246, 0.25) 60%, transparent 100%);
-  filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.85));
+  background: linear-gradient(to top, rgba(254, 240, 138, 0.8) 0%, rgba(212, 175, 55, 0.3) 60%, transparent 100%);
+  filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.6));
 }
 .hologram-projection-cone::before {
   left: 0;
@@ -143,77 +143,84 @@
   transform-origin: bottom right;
 }
 
-/* Outer circular stage disc (fully framed within the ring) */
+/* Outer circular stage disc: polished obsidian & gold bevel disc */
 .hologram-disc-outer {
   position: absolute;
   bottom: 0;
-  width: 114px;
+  width: 124px;
   height: 26px;
   border-radius: 50%;
   background: radial-gradient(
-    ellipse at center,
-    rgba(28, 20, 10, 0.95) 0%,
-    rgba(14, 12, 20, 0.98) 70%,
-    rgba(8, 9, 16, 0.99) 100%
+    ellipse at 50% 30%,
+    #251A0A 0%,
+    #130E07 55%,
+    #07080E 100%
   );
-  border: 1.8px solid rgba(245, 158, 11, 0.75);
+  border: 1.6px solid rgba(212, 175, 55, 0.75);
   box-shadow:
-    0 0 15px rgba(245, 158, 11, 0.65),
-    0 0 25px rgba(59, 130, 246, 0.35),
-    inset 0 0 10px rgba(245, 158, 11, 0.45);
+    0 4px 16px rgba(0, 0, 0, 0.85),
+    0 0 14px rgba(212, 175, 55, 0.25),
+    inset 0 1.5px 2px rgba(254, 240, 138, 0.4),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Inner concentric metallic/glowing ring */
+/* Inner concentric metallic/gold precision ring */
 .hologram-disc-inner {
   position: relative;
-  width: 74px;
+  width: 78px;
   height: 16px;
   border-radius: 50%;
   border: 1.2px solid rgba(245, 158, 11, 0.65);
   box-shadow:
-    0 0 8px rgba(245, 158, 11, 0.5),
-    inset 0 0 6px rgba(59, 130, 246, 0.4);
+    0 0 8px rgba(212, 175, 55, 0.35),
+    inset 0 1px 3px rgba(254, 240, 138, 0.3),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.6);
   background: radial-gradient(
-    ellipse at center,
-    rgba(20, 15, 10, 0.9) 0%,
-    rgba(10, 8, 15, 0.95) 100%
+    ellipse at 50% 35%,
+    #1E1609 0%,
+    #0A0D15 100%
   );
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Intense luminous cyan/blue spotlight core right beneath the robot's feet */
+/* Refined warm gold & soft crystalline spotlight core beneath Vedika */
 .hologram-flare-core {
   width: 32px;
-  height: 8px;
+  height: 7px;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    #ffffff 0%,
-    #38bdf8 30%,
-    #0284c7 65%,
-    rgba(2, 132, 199, 0) 100%
+    #FFFFFF 0%,
+    #FEF08A 35%,
+    #F59E0B 75%,
+    transparent 100%
   );
   box-shadow:
-    0 0 12px 3px #00b4d8,
-    0 0 24px 6px rgba(2, 132, 199, 0.7),
-    0 0 38px 10px rgba(56, 189, 248, 0.4);
-  filter: drop-shadow(0 0 5px #ffffff);
+    0 0 8px 1px #FDE68A,
+    0 0 16px 3px rgba(245, 158, 11, 0.55),
+    0 0 24px 6px rgba(212, 175, 55, 0.3);
+  filter: drop-shadow(0 0 3px #FFFFFF);
 }
 
-/* Ambient ground aura under the entire stage */
+/* Ambient floor shadow & soft gold aura */
 .hologram-glow-floor {
   position: absolute;
   bottom: -4px;
-  width: 128px;
+  width: 140px;
   height: 28px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.35) 0%, rgba(59, 130, 246, 0.15) 45%, transparent 75%);
-  filter: blur(8px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(212, 175, 55, 0.18) 45%,
+    transparent 75%
+  );
+  filter: blur(6px);
   pointer-events: none;
 }
 
@@ -229,18 +236,18 @@
 
 /* ==========================================================================
    4. CAPSULE PILL CARD (.orbit-capsule-card)
-   Identical to reference image:
-     • Pill capsule shape (height: 54px, width: 236px)
-     • Translucent dark glassmorphism
-     • Glowing theme border and aura
-     • Left: Circular glowing icon pill badge
+   Clean, subtle styling matching Teacher & Admin panels:
+     • Pill capsule shape (width: 252px, height: 52px)
+     • Deep obsidian dark glass (no colored neon wash)
+     • Clean dark drop shadow (NO background neon glow)
+     • Left: Clean floating icon without circular badge
      • Middle: Upper uppercase eyebrow + bold white title
-     • Right: Faint watermark illustration
+     • Right: Half-faded, half-visible watermark (no circle)
    ========================================================================== */
 .orbit-capsule-card {
   position: absolute;
-  width: 260px;
-  height: 54px;
+  width: 252px;
+  height: 52px;
   border-radius: 9999px;
   display: flex;
   align-items: center;
@@ -250,34 +257,30 @@
   cursor: pointer;
   z-index: 20;
   outline: none;
-  padding: 0 10px 0 5px;
+  padding: 0 12px 0 10px;
 
-  /* Premium dark-lux glassmorphism matching Image 1 */
-  background: radial-gradient(
-    ellipse at 20% 50%,
-    rgba(var(--card-accent-rgb), 0.14) 0%,
-    rgba(9, 13, 24, 0.92) 80%
-  );
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(var(--card-accent-rgb), 0.78);
-  box-shadow:
-    0 0 18px rgba(var(--card-accent-rgb), 0.30),
-    inset 0 0 14px rgba(var(--card-accent-rgb), 0.10);
+  /* Subtle, elegant dark glass like Teacher/Admin panels without neon aura */
+  background: rgba(11, 16, 26, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-left: 2.5px solid var(--card-accent);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
 
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.25s ease,
+    background-color 0.25s ease,
     box-shadow 0.25s ease,
     opacity 0.35s ease;
 }
 
-/* Visibility during sequential tour: hidden by default until its ring step arrives */
+/* Visibility during sequential tour */
 .orbit-capsule-card.is-hidden {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translate(-50%, -50%) scale(0.85) !important;
+  transform: translate(-50%, -50%) scale(0.88) !important;
 }
 
 .orbit-capsule-card.is-visible {
@@ -287,22 +290,21 @@
   transform: translate(-50%, -50%) scale(1) !important;
 }
 
-/* Hover state */
+/* Hover state - clean elevation, subtle accent border */
 .orbit-capsule-card:hover {
-  transform: translate(-50%, -50%) scale(1.04) !important;
-  border-color: rgba(var(--card-accent-rgb), 0.95);
-  box-shadow:
-    0 0 26px rgba(var(--card-accent-rgb), 0.70),
-    inset 0 0 16px rgba(var(--card-accent-rgb), 0.20);
+  transform: translate(-50%, -50%) scale(1.03) !important;
+  background: rgba(15, 22, 36, 0.98);
+  border-color: rgba(var(--card-accent-rgb), 0.5);
+  border-left: 2.5px solid var(--card-accent);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.68);
 }
 
-/* Active node (spotlight) */
+/* Active node (spotlight) - refined, elevated */
 .orbit-capsule-card.is-active {
-  border-color: #FFFFFF;
-  border-width: 1.8px;
-  box-shadow:
-    0 0 30px rgba(var(--card-accent-rgb), 0.90),
-    inset 0 0 18px rgba(var(--card-accent-rgb), 0.25);
+  background: rgba(16, 24, 40, 0.98);
+  border-color: rgba(var(--card-accent-rgb), 0.8);
+  border-left: 3px solid var(--card-accent);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.75);
   z-index: 35;
 }
 
@@ -310,36 +312,28 @@
    5. CARD INNER ELEMENTS
    ========================================================================== */
 
-/* ── 1. Circular Glowing Icon Pill Badge on Left ── */
-.card-icon-badge {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 50%;
+/* ── 1. Clean Bare Floating Icon on Left (NO circle badge, per user request) ── */
+.card-icon-bare {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    rgba(var(--card-accent-rgb), 0.25) 0%,
-    rgba(var(--card-accent-rgb), 0.08) 100%
-  );
-  border: 1.8px solid var(--card-accent);
   color: var(--card-accent);
-  box-shadow: 0 0 14px rgba(var(--card-accent-rgb), 0.50);
+  margin-left: 4px;
+  margin-right: 4px;
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 
-.orbit-capsule-card:hover .card-icon-badge {
-  transform: scale(1.08);
-  box-shadow: 0 0 20px rgba(var(--card-accent-rgb), 0.85);
+.orbit-capsule-card:hover .card-icon-bare {
+  transform: scale(1.12);
 }
 
-.orbit-capsule-card.is-active .card-icon-badge {
+.orbit-capsule-card.is-active .card-icon-bare {
+  transform: scale(1.12);
   color: #FFFFFF;
-  background: rgba(var(--card-accent-rgb), 0.40);
-  box-shadow: 0 0 24px rgba(var(--card-accent-rgb), 1.0);
 }
 
 /* ── 2. Text Column: Eyebrow + Bold Title ── */
@@ -349,25 +343,24 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 10px;
+  margin-left: 8px;
   margin-right: 6px;
   overflow: hidden;
 }
 
 .card-eyebrow {
   font-size: 0.58rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--card-accent);
-  text-shadow: 0 0 10px rgba(var(--card-accent-rgb), 0.65);
   white-space: nowrap;
   line-height: 1.1;
   margin-bottom: 2px;
 }
 
 .card-title {
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #FFFFFF;
   margin: 0;
@@ -378,7 +371,7 @@
   text-overflow: ellipsis;
 }
 
-/* ── 3. Gradient-faded, Alive Holographic Watermark on Right ── */
+/* ── 3. Half-faded, Half-visible Watermark on Right (NO enclosing circle) ── */
 .card-watermark {
   position: relative;
   flex-shrink: 0;
@@ -386,35 +379,21 @@
   align-items: center;
   justify-content: center;
   margin-right: 4px;
-  filter: drop-shadow(0 0 8px rgba(var(--card-accent-rgb), 0.50));
-  animation: watermarkAlive 4s ease-in-out infinite alternate;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.1) 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.1) 85%, transparent 100%);
+  opacity: 0.75;
+  transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
 
-@keyframes watermarkAlive {
-  0% {
-    transform: scale(0.95) translateY(0);
-    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.40));
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(1.05) translateY(-1px);
-    filter: drop-shadow(0 0 12px rgba(var(--card-accent-rgb), 0.80));
-    opacity: 1;
-  }
-}
-
 .orbit-capsule-card:hover .card-watermark {
-  transform: scale(1.15) translateY(-2px) !important;
-  filter: drop-shadow(0 0 16px rgba(var(--card-accent-rgb), 0.95)) !important;
-  opacity: 1 !important;
+  opacity: 0.92;
+  transform: translateX(2px);
 }
 
 .orbit-capsule-card.is-active .card-watermark {
-  transform: scale(1.12) !important;
-  filter: drop-shadow(0 0 16px rgba(var(--card-accent-rgb), 0.95)) !important;
-  opacity: 1 !important;
+  opacity: 1;
+  transform: translateX(2px);
 }
 
 /* Shimmer sweep */
@@ -425,12 +404,16 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(var(--card-accent-rgb), 0.22) 50%,
+    rgba(255, 255, 255, 0.08) 50%,
     transparent 100%
   );
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
+}
+
+.orbit-capsule-card.is-active .card-shimmer-sweep {
+  opacity: 1;
 }
 
 .orbit-capsule-card.is-active .card-shimmer-sweep {
@@ -499,10 +482,10 @@
     height: 50px;
   }
 
-  .card-icon-badge {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
+  .card-icon-bare {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
   }
 
   .card-title {
